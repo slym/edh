@@ -1,0 +1,44 @@
+version: '2'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  miria-server:
+    image: atempo/miria-full:2021r1
+    container_name: miria-server
+    restart: unless-stopped
+    networks:
+      - easy-docker-host
+    ports:
+      - 80
+      - 9111
+      - 2524
+      - 5432
+    hostname: miria-server
+    environment:
+      - MM_AGENT=1
+      - MM_SERVER=1
+  miria-agent1:
+    image:  atempo/miria-agent:2021r1
+    container_name: miria-agent1
+    restart: unless-stopped
+    networks:
+      - easy-docker-host
+    ports:
+      - 2524
+    hostname: miria-agent1
+    environment:
+      - MIRIA_SERVER=miria-server
+  miria-agent2:
+    image:  atempo/miria-agent:2021r1
+    container_name: miria-agent2
+    restart: unless-stopped
+    networks:
+      - easy-docker-host
+    ports:
+      - 2524
+    hostname: miria-agent2
+    environment:
+      - MIRIA_SERVER=miria-server
