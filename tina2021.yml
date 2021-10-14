@@ -1,0 +1,24 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  tina-server:
+    image: atempo/tina:2021
+    container_name: tina-server
+    restart: unless-stopped
+    networks:
+      - easy-docker-host
+    ports:
+      - 80
+      - 25088:25088
+      - 9111
+      - 2525
+    hostname: tina-server
+    environment:
+      - TINA_ENABLE_HTTP=1
+      - TINA_ADMIN_PASSWORD=Atempo1992
+      - TINA_CATALOG_MAXSIZE_GB=100
+      - TINA_CATALOG_NAME=catalog
