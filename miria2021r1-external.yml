@@ -24,7 +24,6 @@ services:
       - 80
       - 9111
       - 2524
-      - 5432
     hostname: miria-server
     depends_on:
       - "miria-db"
