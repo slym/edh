@@ -5,7 +5,7 @@ networks:
     external: true
 
 services:
-  miria2021r2-server:
+  miria2021r2:
     image: hub.atempo.cloud/releases/miria:2021r2
     container_name: miria2021r2
     restart: unless-stopped
