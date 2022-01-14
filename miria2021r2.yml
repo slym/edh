@@ -5,7 +5,7 @@ networks:
     external: true
 
 services:
-  miria-server:
+  miria2021r2-server:
     image: hub.atempo.cloud/releases/miria:2021r2
     container_name: miria2021r2
     restart: unless-stopped
@@ -21,7 +21,7 @@ services:
     environment:
       - MM_AGENT=1
       - MM_SERVER=1
-  miria-agent1:
+  miria2021r2-agent1:
     image:  hub.atempo.cloud/releases/miria-agent:2021r2
     container_name: miria2021r2-agent1
     restart: unless-stopped
@@ -32,7 +32,7 @@ services:
     hostname: miria2021r2-agent1
     environment:
       - MIRIA_SERVER=miria2021r2
-  miria-agent2:
+  miria2021r2-agent2:
     image:  hub.atempo.cloud/releases/miria-agent:2021r2
     container_name: miria2021r2-agent2
     restart: unless-stopped
