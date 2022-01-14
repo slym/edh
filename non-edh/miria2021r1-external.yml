@@ -9,7 +9,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=rzKX2C5%bVY
   miria-server:
-    image: atempo/miria-full:2021r1
+    image: atempo/miria:2021r1
     container_name: miria-server
     restart: unless-stopped
     ports:
