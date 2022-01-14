@@ -5,7 +5,7 @@ networks:
     external: true
 
 services:
-  miria-db:
+  miria2021r2-db:
     image: postgres:13.5
     container_name: miria2021r2-db
     restart: unless-stopped
@@ -14,7 +14,7 @@ services:
       - POSTGRES_PASSWORD=rzKX2C5%bVY
     networks:
       - easy-docker-host
-  miria-server:
+  miria2021r2:
     image: hub.atempo.cloud/releases/miria:2021r2
     container_name: miria2021r2
     restart: unless-stopped
@@ -27,7 +27,7 @@ services:
       - 5432
     hostname: miria2021r2
     depends_on:
-      - "miria-db"
+      - "miria2021r2-db"
     environment:
       - MM_AGENT=1
       - MM_SERVER=1
@@ -36,7 +36,7 @@ services:
       - POSTGRES_PASSWORD=rzKX2C5%bVY
       - POSTGRES_PORT=5432
       - DB_NAME=MIRIA
-  miria-agent1:
+  miria2021r2-agent1:
     image:  hub.atempo.cloud/releases/miria-agent:2021r2
     container_name: miria2021r2-agent1
     restart: unless-stopped
@@ -47,7 +47,7 @@ services:
     hostname: miria2021r2-agent1
     environment:
       - MIRIA_SERVER=miria2021r2
-  miria-agent2:
+  miria2021r2-agent2:
     image:  hub.atempo.cloud/releases/miria-agent:2021r2
     container_name: miria2021r2-agent2
     restart: unless-stopped
