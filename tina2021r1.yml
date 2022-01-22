@@ -5,9 +5,9 @@ networks:
     external: true
 
 services:
-  tina2021:
-    image: atempo/tina:2021
-    container_name: tina2021
+  tina2021r1:
+    image: atempo/tina:2021r1
+    container_name: tina2021r1
     restart: unless-stopped
     networks:
       - easy-docker-host
@@ -16,7 +16,7 @@ services:
       - 25088:25088
       - 9111
       - 2525
-    hostname: tina2021
+    hostname: tina2021r1
     environment:
       - TINA_ENABLE_HTTP=1
       - TINA_ADMIN_PASSWORD=Atempo1992
