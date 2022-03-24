@@ -15,8 +15,8 @@ services:
     environment:
       - MM_AGENT=1
       - MM_SERVER=1
-      - DEMO_LICENSE=1
 #      - INITIAL_PASSWORD=ATempo1992#
+#      - DEMO_LICENSE=1 (requires INITIAL_PASSWORD)
   miria2021r2-agent1:
     image:  hub.atempo.cloud/releases/miria-agent:3.14.0.13
     container_name: miria2021r2-agent1
