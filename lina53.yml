@@ -1,0 +1,67 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  lina:
+    image: hub.atempo.cloud/releases/lina:5.3-latest-full
+    container_name: lina
+    restart: unless-stopped
+    ports:
+      - 8181     
+    networks:
+      - easy-docker-host
+  lina-agent01:
+    image: hub.atempo.cloud/releases/lina-agent:5.3-latest
+    container_name: lina-agent01
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina
+      - LINA_AGENTNAME=lina-agent01   
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina"
+  lina-agent02:
+    image: hub.atempo.cloud/releases/lina-agent:5.3-latest
+    container_name: lina-agent02
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina
+      - LINA_AGENTNAME=lina-agent02   
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina"
+  lina-agent03:
+    image: hub.atempo.cloud/releases/lina-agent:5.3-latest
+    container_name: lina-agent03
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina
+      - LINA_AGENTNAME=lina-agent03   
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina"
+  lina-agent04:
+    image: hub.atempo.cloud/releases/lina-agent:5.3-latest
+    container_name: lina-agent04
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina
+      - LINA_AGENTNAME=lina-agent04   
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina"      
