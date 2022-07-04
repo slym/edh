@@ -1,0 +1,67 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  miria315-db:
+    image: postgres:13.5
+    pull_policy: always
+    container_name: miria315-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=rzKX2C5%bVY
+    networks:
+      - easy-docker-host
+  miria315:
+    image: hub.atempo.cloud/internal/miria:3.15.0-latest
+    pull_policy: always
+    container_name: miria315
+    restart: unless-stopped
+    networks:
+      - easy-docker-host
+    ports:
+      - 80
+      - 443
+      - 9111
+      - 2524
+      - 5432
+    hostname: miria315
+    depends_on:
+      - "miria315-db"
+    environment:
+      - MM_AGENT=1
+      - MM_SERVER=1
+      - POSTGRES_SERVER=miria315-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=rzKX2C5%bVY
+      - POSTGRES_PORT=5432
+      - DB_NAME=MIRIA
+      - INITIAL_PASSWORD=ATempo1992$$
+      - DEMO_LICENSE=1
+  miria315-agent1:
+    image:  hub.atempo.cloud/internal/miria-agent:3.15.0-latest
+    pull_policy: always
+    container_name: miria315-agent1
+    restart: unless-stopped
+    networks:
+      - easy-docker-host
+    ports:
+      - 2524
+    hostname: miria315-agent1
+    environment:
+      - MIRIA_SERVER=miria315
+  miria315-agent2:
+    image:  hub.atempo.cloud/internal/miria-agent:3.15.0-latest
+    pull_policy: always
+    container_name: miria315-agent2
+    restart: unless-stopped
+    networks:
+      - easy-docker-host
+    ports:
+      - 2524
+    hostname: miria315-agent2
+    environment:
+      - MIRIA_SERVER=miria315
