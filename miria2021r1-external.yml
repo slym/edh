@@ -7,6 +7,7 @@ networks:
 services:
   miria-db:
     image: postgres:latest
+    pull_policy: always    
     container_name: miria-db
     restart: unless-stopped
     environment:
@@ -16,6 +17,7 @@ services:
       - easy-docker-host
   miria-server:
     image: atempo/miria:2021r1
+    pull_policy: always    
     container_name: miria-server
     restart: unless-stopped
     networks:
@@ -37,6 +39,7 @@ services:
       - DB_NAME=MIRIA
   miria-agent1:
     image:  atempo/miria-agent:2021r1
+    pull_policy: always    
     container_name: miria-agent1
     restart: unless-stopped
     networks:
@@ -48,6 +51,7 @@ services:
       - MIRIA_SERVER=miria-server
   miria-agent2:
     image:  atempo/miria-agent:2021r1
+    pull_policy: always    
     container_name: miria-agent2
     restart: unless-stopped
     networks:

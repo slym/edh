@@ -7,6 +7,7 @@ networks:
 services:
   miria2021r2:
     image: hub.atempo.cloud/releases/miria:3.14.0.13
+    pull_policy: always    
     container_name: miria2021r2
     restart: unless-stopped
     networks:
@@ -25,6 +26,7 @@ services:
 #      - DEMO_LICENSE=1 (requires INITIAL_PASSWORD)
   miria2021r2-agent1:
     image:  hub.atempo.cloud/releases/miria-agent:3.14.0.13
+    pull_policy: always    
     container_name: miria2021r2-agent1
     restart: unless-stopped
     networks:
@@ -36,6 +38,7 @@ services:
       - MIRIA_SERVER=miria2021r2
   miria2021r2-agent2:
     image:  hub.atempo.cloud/releases/miria-agent:3.14.0.13
+    pull_policy: always
     container_name: miria2021r2-agent2
     restart: unless-stopped
     networks:

@@ -7,6 +7,7 @@ networks:
 services:
   miria-server:
     image: atempo/miria:2021r1
+    pull_policy: always    
     container_name: miria-server
     restart: unless-stopped
     networks:
@@ -23,6 +24,7 @@ services:
       - MM_SERVER=1
   miria-agent1:
     image:  atempo/miria-agent:2021r1
+    pull_policy: always    
     container_name: miria-agent1
     restart: unless-stopped
     networks:
@@ -34,6 +36,7 @@ services:
       - MIRIA_SERVER=miria-server
   miria-agent2:
     image:  atempo/miria-agent:2021r1
+    pull_policy: always    
     container_name: miria-agent2
     restart: unless-stopped
     networks:

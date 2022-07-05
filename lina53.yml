@@ -7,6 +7,7 @@ networks:
 services:
   lina:
     image: hub.atempo.cloud/releases/lina:5.3-latest-full
+    pull_policy: always    
     container_name: lina
     restart: unless-stopped
     ports:
@@ -15,6 +16,7 @@ services:
       - easy-docker-host
   lina-agent01:
     image: hub.atempo.cloud/releases/lina-agent:5.3-latest
+    pull_policy: always    
     container_name: lina-agent01
     restart: unless-stopped
     environment:
@@ -28,6 +30,7 @@ services:
       - "lina"
   lina-agent02:
     image: hub.atempo.cloud/releases/lina-agent:5.3-latest
+    pull_policy: always    
     container_name: lina-agent02
     restart: unless-stopped
     environment:
@@ -41,6 +44,7 @@ services:
       - "lina"
   lina-agent03:
     image: hub.atempo.cloud/releases/lina-agent:5.3-latest
+    pull_policy: always    
     container_name: lina-agent03
     restart: unless-stopped
     environment:
@@ -54,6 +58,7 @@ services:
       - "lina"
   lina-agent04:
     image: hub.atempo.cloud/releases/lina-agent:5.3-latest
+    pull_policy: always    
     container_name: lina-agent04
     restart: unless-stopped
     environment:

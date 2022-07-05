@@ -7,6 +7,7 @@ networks:
 services:
   tina2021r1:
     image: hub.atempo.cloud/releases/tina:2021r1
+    pull_policy: always    
     container_name: tina2021r1
     restart: unless-stopped
     networks:

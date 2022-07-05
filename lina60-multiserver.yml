@@ -7,6 +7,7 @@ networks:
 services:
   lina60-master:
     image: hub.atempo.cloud/internal/lina:6.0.0-latest-full
+    pull_policy: always    
     container_name: lina60-master
     hostname: lina60-master    
     restart: unless-stopped
@@ -20,6 +21,7 @@ services:
       - easy-docker-host
   lina60-srv1:
     image: hub.atempo.cloud/internal/lina:6.0.0-latest-full
+    pull_policy: always    
     container_name: lina60-srv1
     hostname: lina60-srv1    
     restart: unless-stopped
@@ -32,6 +34,7 @@ services:
       - easy-docker-host
   lina60-srv2:
     image: hub.atempo.cloud/internal/lina:6.0.0-latest-full
+    pull_policy: always    
     container_name: lina60-srv2
     hostname: lina60-srv2    
     restart: unless-stopped
@@ -44,6 +47,7 @@ services:
       - easy-docker-host      
   lina60-agent001:
     image: hub.atempo.cloud/internal/lina-agent:6.0.0-latest
+    pull_policy: always    
     container_name: lina60-agent001
     hostname: lina60-agent001
     restart: unless-stopped
@@ -58,6 +62,7 @@ services:
       - "lina60-master"
   lina60-agent002:
     image: hub.atempo.cloud/internal/lina-agent:6.0.0-latest
+    pull_policy: always    
     container_name: lina60-agent002
     hostname: lina60-agent002    
     restart: unless-stopped
