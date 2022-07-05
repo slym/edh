@@ -12,8 +12,8 @@ services:
     hostname: lina60-master    
     restart: unless-stopped
     ports:
-      - 8181
-      - 8182      
+      - 443
+      - 8181      
     environment:
       - LINA_MASTERMODE=1
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
