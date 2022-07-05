@@ -11,9 +11,9 @@ services:
     container_name: m4a10-db
     restart: unless-stopped
     environment:
-      - POSTGRES_DATABASE=ssy
-      - POSTGRES_USER=ssy
-      - POSTGRES_PASSWORD=Pg2021$$
+      - POSTGRES_DATABASE=m4a
+      - POSTGRES_USER=m4a
+      - POSTGRES_PASSWORD=6PhmavGc#H58q
     networks:
       - easy-docker-host
   m4a10:
@@ -29,6 +29,11 @@ services:
       - 9111
     hostname: m4a10
     environment:
+      - POSTGRES_SERVER=m4a10-db
+      - POSTGRES_DATABASE=m4a
+      - POSTGRES_USER=m4a
+      - POSTGRES_PASSWORD=6PhmavGc#H58q 
+      - POSTGRES_PORT=5432 
       - INITIAL_PASSWORD=ATempo1992$$    
     labels:
       - traefik.http.services.m4a10.loadbalancer.server.port=443
