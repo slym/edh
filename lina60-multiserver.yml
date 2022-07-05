@@ -32,6 +32,8 @@ services:
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef      
     networks:
       - easy-docker-host
+    depends_on:
+      - "lina60-master"
   lina60-srv2:
     image: hub.atempo.cloud/internal/lina:6.0.0-latest-full
     pull_policy: always    
@@ -44,34 +46,66 @@ services:
       - LINA_MASTER=lina60-master
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef        
     networks:
-      - easy-docker-host      
-  lina60-agent001:
+      - easy-docker-host
+    depends_on:
+      - "lina60-master"    
+  lina60-agent1:
     image: hub.atempo.cloud/internal/lina-agent:6.0.0-latest
     pull_policy: always    
-    container_name: lina60-agent001
-    hostname: lina60-agent001
+    container_name: lina60-agent1
+    hostname: lina60-agent1
     restart: unless-stopped
     environment:
       - LINA_SERVERNAME=lina60-master
-      - LINA_AGENTNAME=lina60-agent001 
+      - LINA_AGENTNAME=lina60-agent1
     networks:
       - easy-docker-host
     ports:
       - 27261
     depends_on:
       - "lina60-master"
-  lina60-agent002:
+  lina60-agent2:
     image: hub.atempo.cloud/internal/lina-agent:6.0.0-latest
     pull_policy: always    
-    container_name: lina60-agent002
-    hostname: lina60-agent002    
+    container_name: lina60-agent2
+    hostname: lina60-agent2    
     restart: unless-stopped
     environment:
       - LINA_SERVERNAME=lina60-master
-      - LINA_AGENTNAME=lina60-agent002   
+      - LINA_AGENTNAME=lina60-agent2 
     networks:
       - easy-docker-host
     ports:
       - 27261
     depends_on:
       - "lina60-master"
+  lina60-agent3:
+    image: hub.atempo.cloud/internal/lina-agent:6.0.0-latest
+    pull_policy: always    
+    container_name: lina60-agent3
+    hostname: lina60-agent3   
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina60-master
+      - LINA_AGENTNAME=lina60-agent3 
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina60-master"
+  lina60-agent4:
+    image: hub.atempo.cloud/internal/lina-agent:6.0.0-latest
+    pull_policy: always    
+    container_name: lina60-agent4
+    hostname: lina60-agent4   
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina60-master
+      - LINA_AGENTNAME=lina60-agent4 
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina60-master"      
