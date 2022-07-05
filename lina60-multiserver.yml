@@ -58,6 +58,9 @@ services:
     environment:
       - LINA_SERVERNAME=lina60-master
       - LINA_AGENTNAME=lina60-agent1
+      - ROOT_PASSWORD=Atempo1992$$
+      - LINA_ADVSETTINGS=HN_LINUX_BYPASS_FS_TYPE_TEST=true  
+#      - LINA_DEBUGMODE=VOLS:5;         
     networks:
       - easy-docker-host
     ports:
@@ -72,7 +75,10 @@ services:
     restart: unless-stopped
     environment:
       - LINA_SERVERNAME=lina60-master
-      - LINA_AGENTNAME=lina60-agent2 
+      - LINA_AGENTNAME=lina60-agent2
+      - ROOT_PASSWORD=Atempo1992$$
+      - LINA_ADVSETTINGS=HN_LINUX_BYPASS_FS_TYPE_TEST=true  
+#      - LINA_DEBUGMODE=VOLS:5;         
     networks:
       - easy-docker-host
     ports:
@@ -87,7 +93,10 @@ services:
     restart: unless-stopped
     environment:
       - LINA_SERVERNAME=lina60-master
-      - LINA_AGENTNAME=lina60-agent3 
+      - LINA_AGENTNAME=lina60-agent3
+      - ROOT_PASSWORD=Atempo1992$$
+      - LINA_ADVSETTINGS=HN_LINUX_BYPASS_FS_TYPE_TEST=true  
+#      - LINA_DEBUGMODE=VOLS:5;        
     networks:
       - easy-docker-host
     ports:
@@ -102,7 +111,10 @@ services:
     restart: unless-stopped
     environment:
       - LINA_SERVERNAME=lina60-master
-      - LINA_AGENTNAME=lina60-agent4 
+      - LINA_AGENTNAME=lina60-agent4
+      - ROOT_PASSWORD=Atempo1992$$
+      - LINA_ADVSETTINGS=HN_LINUX_BYPASS_FS_TYPE_TEST=true  
+#      - LINA_DEBUGMODE=VOLS:5;           
     networks:
       - easy-docker-host
     ports:
