@@ -1,0 +1,50 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  m4a-db:
+    image: postgres:12
+    pull_policy: always
+    container_name: m4a-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DATABASE=ssy
+      - POSTGRES_USER=ssy
+      - POSTGRES_PASSWORD=Pg2021$$
+    networks:
+      - easy-docker-host
+  m4a:
+    image: hub.atempo.cloud/releases/miria-analytics:1.0-latest
+    pull_policy: always    
+    container_name: m4a
+    restart: unless-stopped
+    networks:
+      - easy-docker-host
+    privileged: true
+    ports:
+      - 443
+      - 9111
+    hostname: m4a
+    environment:
+      - INITIAL_PASSWORD=ATempo1992$$    
+    labels:
+      - traefik.http.services.m4a10.loadbalancer.server.port=443
+      - traefik.http.services.m4a10.loadbalancer.server.scheme=https          
+    depends_on:
+      - "m4a-db"
+  nfs-nas:
+    image: itsthenetwork/nfs-server-alpine:12
+    container_name: nfs-nas
+    restart: unless-stopped
+    privileged: true
+    networks:
+      - easy-docker-host    
+    environment:
+      - SHARED_DIRECTORY=/data
+    volumes:
+      - /docker/nfs-storage:/data
+    ports:
+      - 2049

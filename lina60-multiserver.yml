@@ -19,11 +19,11 @@ services:
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
     networks:
       - easy-docker-host
-  lina60-srv1:
+  lina60-node1:
     image: hub.atempo.cloud/internal/lina:6.0.0-latest-full
     pull_policy: always    
-    container_name: lina60-srv1
-    hostname: lina60-srv1    
+    container_name: lina60-node1
+    hostname: lina60-node1    
     restart: unless-stopped
     ports:
       - 8181
@@ -34,11 +34,11 @@ services:
       - easy-docker-host
     depends_on:
       - "lina60-master"
-  lina60-srv2:
+  lina60-node2:
     image: hub.atempo.cloud/internal/lina:6.0.0-latest-full
     pull_policy: always    
-    container_name: lina60-srv2
-    hostname: lina60-srv2    
+    container_name: lina60-node2
+    hostname: lina60-node2    
     restart: unless-stopped
     ports:
       - 8181
