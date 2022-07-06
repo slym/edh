@@ -9,7 +9,7 @@ services:
     image: hub.atempo.cloud/internal/lina:6.0.0-latest-full
     pull_policy: always    
     container_name: lina60-master
-    hostname: lina60-master    
+    hostname: lina60-master
     restart: unless-stopped
     ports:
       - 443
@@ -21,14 +21,14 @@ services:
       - easy-docker-host
   lina60-node1:
     image: hub.atempo.cloud/internal/lina:6.0.0-latest-full
-    pull_policy: always    
+    pull_policy: always
     container_name: lina60-node1
-    hostname: lina60-node1    
+    hostname: lina60-node1 
     restart: unless-stopped
     ports:
       - 8181
     environment:
-      - LINA_MASTER=lina60-master:8181
+      - LINA_MASTER=lina60-master
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef      
     networks:
       - easy-docker-host
@@ -43,7 +43,7 @@ services:
     ports:
       - 8181
     environment:
-      - LINA_MASTER=lina60-master:8181
+      - LINA_MASTER=lina60-master
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef        
     networks:
       - easy-docker-host
