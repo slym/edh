@@ -28,7 +28,7 @@ services:
     ports:
       - 8181
     environment:
-      - LINA_MASTER=lina60-master
+      - LINA_MASTER=lina60-master:8181
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef      
     networks:
       - easy-docker-host
@@ -43,7 +43,7 @@ services:
     ports:
       - 8181
     environment:
-      - LINA_MASTER=lina60-master
+      - LINA_MASTER=lina60-master:8181
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef        
     networks:
       - easy-docker-host
