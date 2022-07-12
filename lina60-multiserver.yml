@@ -6,7 +6,7 @@ networks:
 
 services:
   lina60-master:
-    image: hub.atempo.cloud/internal/lina:6.0.0-latest-full
+    image: hub.atempo.cloud/releases/lina:6.0.0.22140-full
     pull_policy: always    
     container_name: lina60-master
     hostname: lina60-master
@@ -20,7 +20,7 @@ services:
     networks:
       - easy-docker-host
   lina60-node1:
-    image: hub.atempo.cloud/internal/lina:6.0.0-latest-full
+    image: hub.atempo.cloud/releases/lina:6.0.0.22140-full
     pull_policy: always
     container_name: lina60-node1
     hostname: lina60-node1 
@@ -35,7 +35,7 @@ services:
     depends_on:
       - "lina60-master"
   lina60-node2:
-    image: hub.atempo.cloud/internal/lina:6.0.0-latest-full
+    image: hub.atempo.cloud/releases/lina:6.0.0.22140-full
     pull_policy: always    
     container_name: lina60-node2
     hostname: lina60-node2    
@@ -50,7 +50,7 @@ services:
     depends_on:
       - "lina60-master"    
   lina60-agent1:
-    image: hub.atempo.cloud/internal/lina-agent:6.0.0-latest
+    image: hub.atempo.cloud/releases/lina-agent:6.0.0.22140
     pull_policy: always    
     container_name: lina60-agent1
     hostname: lina60-agent1
@@ -68,7 +68,7 @@ services:
     depends_on:
       - "lina60-master"
   lina60-agent2:
-    image: hub.atempo.cloud/internal/lina-agent:6.0.0-latest
+    image: hub.atempo.cloud/releases/lina-agent:6.0.0.22140
     pull_policy: always    
     container_name: lina60-agent2
     hostname: lina60-agent2    
@@ -86,7 +86,7 @@ services:
     depends_on:
       - "lina60-master"
   lina60-agent3:
-    image: hub.atempo.cloud/internal/lina-agent:6.0.0-latest
+    image: hub.atempo.cloud/releases/lina-agent:6.0.0.22140
     pull_policy: always    
     container_name: lina60-agent3
     hostname: lina60-agent3   
@@ -104,7 +104,7 @@ services:
     depends_on:
       - "lina60-master"
   lina60-agent4:
-    image: hub.atempo.cloud/internal/lina-agent:6.0.0-latest
+    image: hub.atempo.cloud/releases/lina-agent:6.0.0.22140
     pull_policy: always    
     container_name: lina60-agent4
     hostname: lina60-agent4   
