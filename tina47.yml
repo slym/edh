@@ -20,5 +20,5 @@ services:
     environment:
       - TINA_ENABLE_HTTP=1
       - TINA_ADMIN_PASSWORD=ATempo1992$$
-      - TINA_CATALOG_MAXSIZE_GB=300
+      - TINA_CATALOG_MAXSIZE_GB=100
       - TINA_CATALOG_NAME=catalog
