@@ -17,9 +17,12 @@ services:
       - 9111
       - 2525
     hostname: tina47
-    environment:
-      - TINA_ENABLE_HTTP=1
-      - TINA_CATALOG_NAME=catalog
-      - DEFAULT_USER=admin
-      - DEFAULT_PASSWORD=ATempo1992$$
-      - PASSWORD_POLICY_MIN_SIZE=11
+    env_file:
+     - stack.env
+
+# Env variables are provided by stack, below the list to use them manually if needed : 
+#      - TINA_ENABLE_HTTP=$TINA_ENABLE_HTTP
+#      - TINA_CATALOG_NAME=$TINA_CATALOG_NAME
+#      - DEFAULT_USER=$DEFAULT_USER
+#      - DEFAULT_PASSWORD=DEFAULT_PASSWORD
+#      - PASSWORD_POLICY_MIN_SIZE=11
