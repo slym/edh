@@ -19,6 +19,7 @@ services:
     hostname: tina47
     environment:
       - TINA_ENABLE_HTTP=1
-      - TINA_ADMIN_PASSWORD=ATempo1992$$
-      - TINA_CATALOG_MAXSIZE_GB=100
       - TINA_CATALOG_NAME=catalog
+      - DEFAULT_USER=admin
+      - DEFAULT_PASSWORD=ATempo1992$$
+      - PASSWORD_POLICY_MIN_SIZE=11
