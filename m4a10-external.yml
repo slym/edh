@@ -52,6 +52,6 @@ services:
     environment:
       - SHARED_DIRECTORY=/data
     volumes:
-      - /docker/nfs-storage:/data
+      - ${NFS_ROOT_ON_HOST}:/data
     ports:
       - 2049
