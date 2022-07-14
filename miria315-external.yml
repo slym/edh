@@ -38,11 +38,11 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=rzKX2C5%bVY
       - POSTGRES_PORT=5432
+      - MM_AGENT=1
+      - MM_SERVER=1
     env_file:
      - stack.env
 # Env variables are provided by stack, below the list to use them manually if needed : 
-#      - MM_AGENT=1
-#      - MM_SERVER=1
 #      - POSTGRES_SERVER=miria315-db
 #      - POSTGRES_USER=postgres
 #      - POSTGRES_PASSWORD=rzKX2C5%bVY
