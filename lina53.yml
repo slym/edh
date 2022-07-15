@@ -13,7 +13,9 @@ services:
     env_file:
      - stack.env    
     ports:
-      - 8181     
+      - 8181
+    labels:
+      - traefik.http.services.lina533.loadbalancer.server.port=8181           
     networks:
       - easy-docker-host
   lina533-agent01:
