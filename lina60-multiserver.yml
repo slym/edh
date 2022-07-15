@@ -17,6 +17,8 @@ services:
     environment:
       - LINA_MASTERMODE=1
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
+    env_file:
+     - stack.env      
     networks:
       - easy-docker-host
   lina60-node1:
@@ -29,7 +31,9 @@ services:
       - 8181
     environment:
       - LINA_MASTER=lina60-master
-      - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef      
+      - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
+    env_file:
+     - stack.env      
     networks:
       - easy-docker-host
     depends_on:
@@ -44,7 +48,9 @@ services:
       - 8181
     environment:
       - LINA_MASTER=lina60-master
-      - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef        
+      - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
+    env_file:
+     - stack.env              
     networks:
       - easy-docker-host
     depends_on:
@@ -58,9 +64,11 @@ services:
     environment:
       - LINA_SERVERNAME=lina60-master
       - LINA_AGENTNAME=lina60-agent1
-      - ROOT_PASSWORD=Atempo1992$$
-      - LINA_ADVSETTINGS=HN_LINUX_BYPASS_FS_TYPE_TEST=true  
-#      - LINA_DEBUGMODE=VOLS:5;         
+#      - ROOT_PASSWORD=Atempo1992$$
+      - LINA_ADVSETTINGS=HN_LINUX_BYPASS_FS_TYPE_TEST=true        
+#      - LINA_DEBUGMODE=VOLS:5;
+    env_file:
+     - stack.env         
     networks:
       - easy-docker-host
     ports:
@@ -76,9 +84,11 @@ services:
     environment:
       - LINA_SERVERNAME=lina60-master
       - LINA_AGENTNAME=lina60-agent2
-      - ROOT_PASSWORD=Atempo1992$$
+#      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_LINUX_BYPASS_FS_TYPE_TEST=true  
-#      - LINA_DEBUGMODE=VOLS:5;         
+#      - LINA_DEBUGMODE=VOLS:5;
+    env_file:
+     - stack.env         
     networks:
       - easy-docker-host
     ports:
@@ -94,9 +104,11 @@ services:
     environment:
       - LINA_SERVERNAME=lina60-master
       - LINA_AGENTNAME=lina60-agent3
-      - ROOT_PASSWORD=Atempo1992$$
+#      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_LINUX_BYPASS_FS_TYPE_TEST=true  
-#      - LINA_DEBUGMODE=VOLS:5;        
+#      - LINA_DEBUGMODE=VOLS:5;
+    env_file:
+     - stack.env        
     networks:
       - easy-docker-host
     ports:
@@ -112,9 +124,11 @@ services:
     environment:
       - LINA_SERVERNAME=lina60-master
       - LINA_AGENTNAME=lina60-agent4
-      - ROOT_PASSWORD=Atempo1992$$
+#      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_LINUX_BYPASS_FS_TYPE_TEST=true  
-#      - LINA_DEBUGMODE=VOLS:5;           
+#      - LINA_DEBUGMODE=VOLS:5;
+    env_file:
+     - stack.env           
     networks:
       - easy-docker-host
     ports:
