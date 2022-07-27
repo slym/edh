@@ -11,9 +11,12 @@ services:
     container_name: mail
     restart: unless-stopped
     ports:
-      - 1080
-      - 1025
+      - 80
+      - 25
     labels:
-      - traefik.http.services.mail.loadbalancer.server.port=1080
+      - traefik.http.services.mail.loadbalancer.server.port=80
+    environment:
+      - MAILDEV_SMTP_PORT=25
+      - MAILDEV_WEB_PORT=80
     networks:
       - easy-docker-host
