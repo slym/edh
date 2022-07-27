@@ -16,7 +16,10 @@ services:
     labels:
       - traefik.http.services.mail.loadbalancer.server.port=80
     environment:
+      - TZ=Europe/Paris
       - MAILDEV_SMTP_PORT=25
       - MAILDEV_WEB_PORT=80
     networks:
       - easy-docker-host
+    healthcheck:
+      disable: true
