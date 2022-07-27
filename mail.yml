@@ -1,0 +1,19 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  mail:
+    image: maildev/maildev
+    pull_policy: always    
+    container_name: mail
+    restart: unless-stopped
+    ports:
+      - 1080
+      - 1025
+    labels:
+      - traefik.http.services.mail.loadbalancer.server.port=1080
+    networks:
+      - easy-docker-host
