@@ -12,7 +12,7 @@ services:
     restart: unless-stopped
     ports:
       - 80
-      - 25
+      - 25:25
     labels:
       - traefik.http.services.mail.loadbalancer.server.port=80
     environment:

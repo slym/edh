@@ -1,0 +1,23 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  syslog:
+    image: pbertera/syslogserver
+    pull_policy: always    
+    container_name: syslog
+    restart: unless-stopped
+    ports:
+      - 80 # Admin console
+      - 514:514/udp  
+    networks:
+      - easy-docker-host
+    env_file:
+     - stack.env
+# Env variables are provided by stack, below the list to use them manually if needed :
+#    environment:
+#      - SYSLOG_USERNAME=root
+#      - SYSLOG_PASSWORD=ATempo1992$$       
