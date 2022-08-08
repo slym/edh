@@ -1,0 +1,39 @@
+
+# Deploys a Miria for Analytics 1.0 all-in one container (except for Postgres DB in another container).
+# will listen on port 9443 (HTTPS)
+# default login : admin / admin
+# mount an NFS share in /crawlme in the m4a10 container then create a "volume discover" task on the mounted folder
+# mount -v -t nfs -o nolock nas-server:/nfs-export /crawlme
+
+version: '3'
+
+services:
+  m4a10-db:
+    image: postgres:12
+    pull_policy: always
+    container_name: m4a10-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DATABASE=m4a
+      - POSTGRES_USER=m4a
+      - POSTGRES_PASSWORD=6PhmavGc#H58q
+  m4a10:
+    image: hub.atempo.cloud/releases/miria-analytics:1.0-latest
+    pull_policy: always    
+    container_name: m4a10
+    restart: unless-stopped
+    privileged: true # Needed to mount NFS share inside container
+    ports:
+      - 9443:443
+    hostname: m4a10
+    environment:
+      - POSTGRES_SERVER=m4a10-db
+      - POSTGRES_DATABASE=m4a
+      - POSTGRES_USER=m4a
+      - POSTGRES_PASSWORD=6PhmavGc#H58q 
+      - POSTGRES_PORT=5432
+    labels:
+      - traefik.http.services.m4a10.loadbalancer.server.port=443
+      - traefik.http.services.m4a10.loadbalancer.server.scheme=https          
+    depends_on:
+      - "m4a10-db"

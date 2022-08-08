@@ -32,6 +32,8 @@ services:
     environment:
       - LINA_MASTER=lina60-master
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
+    labels:
+      - traefik.http.services.lina60-node1.loadbalancer.server.port=8181        
     env_file:
      - stack.env      
     networks:
@@ -49,6 +51,8 @@ services:
     environment:
       - LINA_MASTER=lina60-master
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
+    labels:
+      - traefik.http.services.lina60-node2.loadbalancer.server.port=8181      
     env_file:
      - stack.env              
     networks:
