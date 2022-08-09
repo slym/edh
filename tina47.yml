@@ -13,15 +13,18 @@ services:
     networks:
       - easy-docker-host
     ports:
-      - 80
+      - 25088
       - 9111
       - 2525
     hostname: tina47
     env_file:
      - stack.env
+    labels:
+      - traefik.http.services.tina47.loadbalancer.server.port=25088
+      - traefik.http.services.tina47.loadbalancer.server.scheme=https          
 
 # Env variables are provided by stack, below the list to use them manually if needed : 
-#      - TINA_ENABLE_HTTP=$TINA_ENABLE_HTTP
+#      - TINA_ENABLE_HTTP=$TINA_ENABLE_HTTP # won't work in Tina 4.7 ?
 #      - TINA_CATALOG_NAME=$TINA_CATALOG_NAME
 #      - DEFAULT_USER=$DEFAULT_USER
 #      - DEFAULT_PASSWORD=DEFAULT_PASSWORD

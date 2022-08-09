@@ -12,8 +12,8 @@ services:
     hostname: lina60-master
     restart: unless-stopped
     ports:
-      - 443
-      - 8181      
+      - 443 # Used for both webUI only
+      - 8181 # Used for data (to nodes and from agents) 
     environment:
       - LINA_MASTERMODE=1
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
@@ -28,7 +28,7 @@ services:
     hostname: lina60-node1 
     restart: unless-stopped
     ports:
-      - 8181
+      - 8181 # Used for both data and webUI
     environment:
       - LINA_MASTER=lina60-master
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
@@ -47,7 +47,7 @@ services:
     hostname: lina60-node2    
     restart: unless-stopped
     ports:
-      - 8181
+      - 8181 # Used for both data and webUI
     environment:
       - LINA_MASTER=lina60-master
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
