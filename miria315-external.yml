@@ -22,6 +22,7 @@ services:
     pull_policy: always
     container_name: miria315
     restart: unless-stopped
+    privileged: true # Required to mount NFS
     networks:
       - easy-docker-host
     ports:
@@ -55,6 +56,7 @@ services:
     pull_policy: always
     container_name: miria315-agent1
     restart: unless-stopped
+    privileged: true # Required to mount NFS
     networks:
       - easy-docker-host
     ports:
@@ -69,6 +71,7 @@ services:
     pull_policy: always
     container_name: miria315-agent2
     restart: unless-stopped
+    privileged: true # Required to mount NFS
     networks:
       - easy-docker-host
     ports:
