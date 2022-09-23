@@ -18,7 +18,7 @@ services:
     env_file:
      - stack.env      
   miria315:
-    image: hub.atempo.cloud/releases/miria:3.15.0.7
+    image: hub.atempo.cloud/releases/miria:3.15.0.11
     pull_policy: always
     container_name: miria315
     restart: unless-stopped
@@ -52,7 +52,7 @@ services:
 #      - INITIAL_PASSWORD=ATempo1992$$
 #      - DEMO_LICENSE=1      
   miria315-agent1:
-    image:  hub.atempo.cloud/releases/miria-agent:3.15.0.7
+    image:  hub.atempo.cloud/releases/miria-agent:3.15.0.11
     pull_policy: always
     container_name: miria315-agent1
     restart: unless-stopped
@@ -67,7 +67,7 @@ services:
     env_file:
      - stack.env      
   miria315-agent2:
-    image:  hub.atempo.cloud/releases/miria-agent:3.15.0.7
+    image:  hub.atempo.cloud/releases/miria-agent:3.15.0.11
     pull_policy: always
     container_name: miria315-agent2
     restart: unless-stopped
