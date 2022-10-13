@@ -1,0 +1,82 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  lina533:
+    image: hub.atempo.cloud/releases/lina:5.3.3.20991-full
+    pull_policy: always    
+    container_name: lina533
+    restart: unless-stopped
+    env_file:
+     - stack.env    
+    ports:
+      - 8181
+    labels:
+      - traefik.http.services.lina533.loadbalancer.server.port=8181           
+    networks:
+      - easy-docker-host
+  lina533-agent01:
+    image: hub.atempo.cloud/releases/lina-agent:5.3.3.20991
+    pull_policy: always    
+    container_name: lina533-agent01
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina533
+      - LINA_AGENTNAME=lina533-agent01
+    env_file:
+     - stack.env         
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina533"
+  lina533-agent02:
+    image: hub.atempo.cloud/releases/lina-agent:5.3.3.20991
+    pull_policy: always    
+    container_name: lina533-agent02
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina533
+      - LINA_AGENTNAME=lina533-agent02
+    env_file:
+     - stack.env       
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina533"
+  lina533-agent03:
+    image: hub.atempo.cloud/releases/lina-agent:5.3.3.20991
+    pull_policy: always    
+    container_name: lina533-agent03
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina533
+      - LINA_AGENTNAME=lina533-agent03
+    env_file:
+     - stack.env         
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina533"
+  lina533-agent04:
+    image: hub.atempo.cloud/releases/lina-agent:5.3.3.20991
+    pull_policy: always    
+    container_name: lina533-agent04
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina533
+      - LINA_AGENTNAME=lina533-agent04   
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina533"      
