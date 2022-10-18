@@ -6,7 +6,7 @@ networks:
 
 services:
   tina471cr:
-    image: hub.atempo.cloud/releases/tina:4.7.1.6420
+    image: hub.atempo.cloud/releases/tina:4.7.1.4620
     pull_policy: always   
     container_name: tina471cr
     restart: unless-stopped
