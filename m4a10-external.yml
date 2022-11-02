@@ -11,8 +11,8 @@ services:
     container_name: m4a10-db
     restart: unless-stopped
     environment:
-      - POSTGRES_DATABASE=m4a
-      - POSTGRES_USER=m4a
+      - POSTGRES_DATABASE=ssy
+      - POSTGRES_USER=ssy
       - POSTGRES_PASSWORD=6PhmavGc#H58q
     networks:
       - easy-docker-host
@@ -30,8 +30,8 @@ services:
     hostname: m4a10
     environment:
       - POSTGRES_SERVER=m4a10-db
-      - POSTGRES_DATABASE=m4a
-      - POSTGRES_USER=m4a
+      - POSTGRES_DATABASE=ssy
+      - POSTGRES_USER=ssy
       - POSTGRES_PASSWORD=6PhmavGc#H58q 
       - POSTGRES_PORT=5432
 #      - INITIAL_PASSWORD=ATempo1992$$        
