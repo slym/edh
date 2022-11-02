@@ -33,8 +33,7 @@ services:
       - POSTGRES_DATABASE=ssy
       - POSTGRES_USER=ssy
       - POSTGRES_PASSWORD=6PhmavGc#H58q 
-      - POSTGRES_PORT=5432
-#      - INITIAL_PASSWORD=ATempo1992$$        
+      - POSTGRES_PORT=5432 
     env_file:
      - stack.env
     labels:
