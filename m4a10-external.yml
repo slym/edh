@@ -34,8 +34,8 @@ services:
       - POSTGRES_USER=ssy
       - POSTGRES_PASSWORD=6PhmavGc#H58q 
       - POSTGRES_PORT=5432
-      - CUSTOM_CMD1=mount -t nfs dc01ddistrib1p.atempo.com:/export/published -o nolock,x-mount.mkdir /mnt/dt-published;mount -t nfs dc01ddistrib1p.atempo.com:/export/sources -o nolock,x-mount.mkdir /mnt/dt-sources;mount -t nfs dc01ddistrib1p.atempo.com:/export/internal -o nolock,x-mount.mkdir /mnt/dt-internal;
-      - INITIAL_PASSWORD=ATempo1992$$
+#      - CUSTOM_CMD1=mount -t nfs dc01ddistrib1p.atempo.com:/export/published -o nolock,x-mount.mkdir /mnt/dt-published;mount -t nfs dc01ddistrib1p.atempo.com:/export/sources -o nolock,x-mount.mkdir /mnt/dt-sources;mount -t nfs dc01ddistrib1p.atempo.com:/export/internal -o nolock,x-mount.mkdir /mnt/dt-internal;
+#      - INITIAL_PASSWORD=ATempo1992$$
     env_file:
      - stack.env
     labels:
