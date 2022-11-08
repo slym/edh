@@ -156,7 +156,7 @@ services:
     restart: unless-stopped
     ports:
       - 80 # Admin console
-      - 514:514/udp  
+      - 514
     networks:
       - easy-docker-host
     env_file:
@@ -173,7 +173,7 @@ services:
     restart: unless-stopped
     ports:
       - 80
-      - 25:25
+      - 25
     labels:
       - traefik.http.services.miria40beta-mail.loadbalancer.server.port=80
     environment:
