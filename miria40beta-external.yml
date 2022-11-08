@@ -4,6 +4,11 @@ networks:
   easy-docker-host:
     external: true
 
+volumes:
+  postgres_data:
+  s3_data:
+  nfs_data:
+
 services:
   miria40beta-db:
     image: postgres:13.5
