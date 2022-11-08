@@ -1,0 +1,181 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  miria40beta-db:
+    image: postgres:13.5
+    pull_policy: always
+    container_name: miria40beta-db
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=rzKX2C5%bVY
+      - POSTGRES_HOST_AUTH_METHOD=trust # /!\ Unsecured but should fix DB backup from miria  
+    networks:
+      - easy-docker-host
+    env_file:
+     - stack.env      
+  miria40beta:
+    image: hub.atempo.cloud/internal/miria:4.0-latest
+    pull_policy: always
+    container_name: miria40beta
+    restart: unless-stopped
+    privileged: true # Required to mount NFS
+    networks:
+      - easy-docker-host
+    ports:
+      - 80
+      - 443
+      - 9111
+      - 2524
+      - 5432
+    hostname: miria40beta
+    depends_on:
+      - "miria40beta-db"
+      - "miria40beta-mail"
+      - "miria40beta-syslog"
+    environment:
+      - POSTGRES_SERVER=miria40beta-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=rzKX2C5%bVY
+      - POSTGRES_PORT=5432
+      - MM_AGENT=1
+      - MM_SERVER=1
+    env_file:
+     - stack.env
+# Env variables are provided by stack, below the list to use them manually if needed : 
+#      - POSTGRES_SERVER=miria40beta-db
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=rzKX2C5%bVY
+#      - POSTGRES_PORT=5432
+#      - DB_NAME=MIRIA
+#      - INITIAL_PASSWORD=ATempo1992$$
+#      - DEMO_LICENSE=1
+
+  miria40beta-agent1:
+    image:  hub.atempo.cloud/internal/miria-agent:4.0-latest
+    pull_policy: always
+    container_name: miria40beta-agent1
+    restart: unless-stopped
+    privileged: true # Required to mount NFS
+    networks:
+      - easy-docker-host
+    ports:
+      - 2524
+    hostname: miria40beta-agent1
+    environment:
+      - MIRIA_SERVER=miria40beta
+    depends_on:
+      - "miria40beta"
+      - "miria40beta-s3"
+      - "miria40beta-nfs"
+    env_file:
+     - stack.env
+# Env variables are provided by stack, below the list to use them manually if needed : 
+#      - CUSTOM_CMD=mkdir -p /mnt/nfs-nas && mount -v -o vers=4,loud nfs-nas:/ /nas-mounts/nfs1 
+
+  miria40beta-agent2:
+    image:  hub.atempo.cloud/internal/miria-agent:4.0-latest
+    pull_policy: always
+    container_name: miria40beta-agent2
+    restart: unless-stopped
+    privileged: true # Required to mount NFS
+    networks:
+      - easy-docker-host
+    ports:
+      - 2524
+    hostname: miria40beta-agent2
+    environment:
+      - MIRIA_SERVER=miria40beta
+    depends_on:
+      - "miria40beta"
+      - "miria40beta-s3"
+      - "miria40beta-nfs"
+    env_file:
+     - stack.env
+# Env variables are provided by stack, below the list to use them manually if needed : 
+#      - CUSTOM_CMD=mkdir -p /mnt/nfs-nas && mount -v -o vers=4,loud nfs-nas:/ /nas-mounts/nfs1
+
+  miria40beta-nfs:
+    image: itsthenetwork/nfs-server-alpine:12
+    container_name: miria40beta-nfs
+    restart: unless-stopped
+    privileged: true
+    networks:
+      - easy-docker-host    
+    environment:
+      - SHARED_DIRECTORY=/data
+    volumes:
+      - nfs_data:/data
+    ports:
+      - 2049
+
+  miria40beta-s3:
+    image: quay.io/minio/minio
+    pull_policy: always    
+    container_name: miria40beta-s3
+    restart: unless-stopped
+    command: server /data --console-address ":9001" --address ":443"
+    ports:
+      - 443 # To use same data (S3) port from container and externally
+      - 9001 # Administration console
+    volumes:
+     - s3_data:/data
+    labels:
+      - traefik.http.services.miria40beta-s3.loadbalancer.server.port=443
+      # Will match all URL containing minio-s3.* => forwarding to s3 data port
+      - traefik.http.routers.miria40beta-s3.rule=HostRegexp(`{miniosubdomains:^miria40beta-s3.*}`)
+      - traefik.http.routers.miria40beta-s3.service=miria40beta-s3
+      - traefik.http.services.miria40beta-console.loadbalancer.server.port=9001
+      # Will match all URL containing minio-console.* => forwarding to admin console port
+      - traefik.http.routers.miria40beta-console.rule=HostRegexp(`{minioconsolesubdomains:^miria40beta-console.*}`)
+      - traefik.http.routers.miria40beta-console.service=miria40beta-console 
+    networks:
+      - easy-docker-host
+    env_file:
+     - stack.env
+# Env variables are provided by stack, below the list to use them manually if needed :
+    environment:
+      - MINIO_ROOT_USER=root
+      - MINIO_ROOT_PASSWORD=ATempo1992#
+
+  miria40beta-syslog:
+    image: pbertera/syslogserver
+    pull_policy: always    
+    container_name: miria40beta-syslog
+    restart: unless-stopped
+    ports:
+      - 80 # Admin console
+      - 514:514/udp  
+    networks:
+      - easy-docker-host
+    env_file:
+     - stack.env
+# Env variables are provided by stack, below the list to use them manually if needed :
+    environment:
+      - SYSLOG_USERNAME=root
+      - SYSLOG_PASSWORD=ATempo1992#
+
+  miria40beta-mail:
+    image: maildev/maildev
+    pull_policy: always    
+    container_name: miria40beta-mail
+    restart: unless-stopped
+    ports:
+      - 80
+      - 25:25
+    labels:
+      - traefik.http.services.miria40beta-mail.loadbalancer.server.port=80
+    environment:
+      - TZ=Europe/Paris
+      - MAILDEV_SMTP_PORT=25
+      - MAILDEV_WEB_PORT=80
+    networks:
+      - easy-docker-host
+    healthcheck:
+      disable: true   
