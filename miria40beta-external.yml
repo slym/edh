@@ -136,10 +136,10 @@ services:
       # Will match all URL containing minio-s3.* => forwarding to s3 data port
       - traefik.http.routers.miria40beta-s3.rule=HostRegexp(`{miniosubdomains:^miria40beta-s3.*}`)
       - traefik.http.routers.miria40beta-s3.service=miria40beta-s3
-      - traefik.http.services.miria40beta-console.loadbalancer.server.port=9001
-      # Will match all URL containing minio-console.* => forwarding to admin console port
-      - traefik.http.routers.miria40beta-console.rule=HostRegexp(`{minioconsolesubdomains:^miria40beta-console.*}`)
-      - traefik.http.routers.miria40beta-console.service=miria40beta-console 
+      - traefik.http.services.miria40beta-minio.loadbalancer.server.port=9001
+      # Will match all URL containing miria40beta-minio.* => forwarding to admin console port
+      - traefik.http.routers.miria40beta-minio.rule=HostRegexp(`{minioconsolesubdomains:^miria40beta-minio.*}`)
+      - traefik.http.routers.miria40beta-minio.service=miria40beta-minio
     networks:
       - easy-docker-host
     env_file:
