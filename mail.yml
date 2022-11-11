@@ -23,3 +23,7 @@ services:
       - easy-docker-host
     healthcheck:
       disable: true
+# Env variables are provided by stack, below the list to use them manually if needed :
+#    environment:
+#      - SYSLOG_USERNAME=root
+#      - SYSLOG_PASSWORD=ATempo1992$$   
