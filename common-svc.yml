@@ -14,7 +14,7 @@ services:
       - 80
       - 25:25
     labels:
-      - traefik.http.services.mail.loadbalancer.server.port=80
+      - traefik.http.services.common-mail.loadbalancer.server.port=80
     environment:
       - TZ=Europe/Paris
       - MAILDEV_SMTP_PORT=25
@@ -49,14 +49,14 @@ services:
     volumes:
      - /data
     labels:
-      - traefik.http.services.minio-s3.loadbalancer.server.port=443
+      - traefik.http.services.common-minio-s3.loadbalancer.server.port=443
       # Will match all URL containing minio-s3.* => forwarding to s3 data port
-      - traefik.http.routers.minio-s3.rule=HostRegexp(`{miniosubdomains:^minio-s3.*}`)
-      - traefik.http.routers.minio-s3.service=minio-s3
-      - traefik.http.services.minio-console.loadbalancer.server.port=9001
+      - traefik.http.routers.common-minio-s3.rule=HostRegexp(`{miniosubdomains:^minio-s3.*}`)
+      - traefik.http.routers.common-minio-s3.service=common-minio-s3
+      - traefik.http.services.common-minio-console.loadbalancer.server.port=9001
       # Will match all URL containing minio-console.* => forwarding to admin console port
-      - traefik.http.routers.minio-console.rule=HostRegexp(`{minioconsolesubdomains:^minio-console.*}`)
-      - traefik.http.routers.minio-console.service=minio-console    
+      - traefik.http.routers.common-minio-console.rule=HostRegexp(`{minioconsolesubdomains:^minio-console.*}`)
+      - traefik.http.routers.common-minio-console.service=common-minio-console    
     networks:
       - easy-docker-host
     env_file:
