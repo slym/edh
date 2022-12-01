@@ -1,0 +1,83 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  dataflow40-db:
+    image: postgres:13.5
+    pull_policy: always
+    container_name: dataflow40-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=rzKX2C5%bVY
+    networks:
+      - easy-docker-host
+    env_file:
+     - stack.env      
+  dataflow40:
+    image: hub.atempo.cloud/releases/panmove:4.0-latest
+    pull_policy: always
+    container_name: dataflow40
+    restart: unless-stopped
+    privileged: true # Required to mount NFS
+    networks:
+      - easy-docker-host
+    ports:
+      - 80
+      - 443
+      - 9111
+      - 2524
+      - 5432
+    hostname: dataflow40
+    depends_on:
+      - "dataflow40-db"
+    environment:
+      - POSTGRES_SERVER=dataflow40-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=rzKX2C5%bVY
+      - POSTGRES_PORT=5432
+      - MM_AGENT=1
+      - MM_SERVER=1
+    env_file:
+     - stack.env
+# Env variables are provided by stack, below the list to use them manually if needed : 
+#      - POSTGRES_SERVER=dataflow40-db
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=rzKX2C5%bVY
+#      - POSTGRES_PORT=5432
+#      - DB_NAME=MIRIA
+#      - INITIAL_PASSWORD=ATempo1992$$
+#      - DEMO_LICENSE=1      
+  dataflow40-agent1:
+    image:  hub.atempo.cloud/releases/dataflow-agent:4.0-latest
+    pull_policy: always
+    container_name: dataflow40-agent1
+    restart: unless-stopped
+    privileged: true # Required to mount NFS
+    networks:
+      - easy-docker-host
+    ports:
+      - 2524
+    hostname: dataflow40-agent1
+    environment:
+      - MIRIA_SERVER=dataflow40
+    env_file:
+     - stack.env      
+  dataflow40-agent2:
+    image:  hub.atempo.cloud/releases/dataflow-agent:4.0-latest
+    pull_policy: always
+    container_name: dataflow40-agent2
+    restart: unless-stopped
+    privileged: true # Required to mount NFS
+    networks:
+      - easy-docker-host
+    ports:
+      - 2524
+    hostname: dataflow40-agent2
+    environment:
+      - MIRIA_SERVER=dataflow40
+    env_file:
+     - stack.env      
