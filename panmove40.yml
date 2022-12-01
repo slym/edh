@@ -5,10 +5,10 @@ networks:
     external: true
 
 services:
-  panmove40beta-db:
+  panmove40-db:
     image: postgres:13.5
     pull_policy: always
-    container_name: panmove40beta-db
+    container_name: panmove40-db
     restart: unless-stopped
     environment:
       - POSTGRES_USER=postgres
@@ -17,10 +17,10 @@ services:
       - easy-docker-host
     env_file:
      - stack.env      
-  panmove40beta:
-    image: hub.atempo.cloud/internal/panmove:4.0.0.3
+  panmove40:
+    image: hub.atempo.cloud/releases/panmove:4.0-latest
     pull_policy: always
-    container_name: panmove40beta
+    container_name: panmove40
     restart: unless-stopped
     privileged: true # Required to mount NFS
     networks:
@@ -31,11 +31,11 @@ services:
       - 9111
       - 2524
       - 5432
-    hostname: panmove40beta
+    hostname: panmove40
     depends_on:
-      - "panmove40beta-db"
+      - "panmove40-db"
     environment:
-      - POSTGRES_SERVER=panmove40beta-db
+      - POSTGRES_SERVER=panmove40-db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=rzKX2C5%bVY
       - POSTGRES_PORT=5432
@@ -44,40 +44,40 @@ services:
     env_file:
      - stack.env
 # Env variables are provided by stack, below the list to use them manually if needed : 
-#      - POSTGRES_SERVER=panmove40beta-db
+#      - POSTGRES_SERVER=panmove40-db
 #      - POSTGRES_USER=postgres
 #      - POSTGRES_PASSWORD=rzKX2C5%bVY
 #      - POSTGRES_PORT=5432
 #      - DB_NAME=MIRIA
 #      - INITIAL_PASSWORD=ATempo1992$$
 #      - DEMO_LICENSE=1      
-  panmove40beta-agent1:
-    image:  hub.atempo.cloud/internal/panmove-agent:4.0.0.3
+  panmove40-agent1:
+    image:  hub.atempo.cloud/releases/panmove-agent:4.0-latest
     pull_policy: always
-    container_name: panmove40beta-agent1
+    container_name: panmove40-agent1
     restart: unless-stopped
     privileged: true # Required to mount NFS
     networks:
       - easy-docker-host
     ports:
       - 2524
-    hostname: panmove40beta-agent1
+    hostname: panmove40-agent1
     environment:
-      - MIRIA_SERVER=panmove40beta
+      - MIRIA_SERVER=panmove40
     env_file:
      - stack.env      
-  panmove40beta-agent2:
-    image:  hub.atempo.cloud/internal/panmove-agent:4.0.0.3
+  panmove40-agent2:
+    image:  hub.atempo.cloud/releases/panmove-agent:4.0-latest
     pull_policy: always
-    container_name: panmove40beta-agent2
+    container_name: panmove40-agent2
     restart: unless-stopped
     privileged: true # Required to mount NFS
     networks:
       - easy-docker-host
     ports:
       - 2524
-    hostname: panmove40beta-agent2
+    hostname: panmove40-agent2
     environment:
-      - MIRIA_SERVER=panmove40beta
+      - MIRIA_SERVER=panmove40
     env_file:
      - stack.env      
