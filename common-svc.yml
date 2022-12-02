@@ -75,6 +75,17 @@ services:
     environment:
       - SHARED_DIRECTORY=/data
     volumes:
-      - ${NFS_ROOT_ON_HOST}:/data
+      - common_nfs_data:/data
     ports:
-      - 2049 
+      - 2049:2049
+  ldap:
+    image: rroemhild/test-openldap
+    container_name: ldap
+    restart: unless-stopped
+    networks:
+      - easy-docker-host
+    labels:
+      - traefik.http.services.common-ldap.loadbalancer.server.port=389  
+    ports:
+      - 389:389
+      - 636:636
