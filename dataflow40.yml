@@ -18,7 +18,7 @@ services:
     env_file:
      - stack.env      
   dataflow40:
-    image: hub.atempo.cloud/releases/panmove:4.0-latest
+    image: hub.atempo.cloud/releases/dataflow:4.0-latest
     pull_policy: always
     container_name: dataflow40
     restart: unless-stopped
