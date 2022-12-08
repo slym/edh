@@ -60,7 +60,7 @@ services:
     depends_on:
       - "lina61beta-master"    
   lina61beta-agent1:
-    image: hub.atempo.cloud/internal/lina-agent:6.1-latest-full
+    image: hub.atempo.cloud/internal/lina-agent:6.1-latest
     pull_policy: always    
     container_name: lina61beta-agent1
     hostname: lina61beta-agent1
@@ -80,7 +80,7 @@ services:
     depends_on:
       - "lina61beta-master"
   lina61beta-agent2:
-    image: hub.atempo.cloud/internal/lina-agent:6.1-latest-full
+    image: hub.atempo.cloud/internal/lina-agent:6.1-latest
     pull_policy: always    
     container_name: lina61beta-agent2
     hostname: lina61beta-agent2    
@@ -100,7 +100,7 @@ services:
     depends_on:
       - "lina61beta-master"
   lina61beta-agent3:
-    image: hub.atempo.cloud/internal/lina-agent:6.1-latest-full
+    image: hub.atempo.cloud/internal/lina-agent:6.1-latest
     pull_policy: always    
     container_name: lina61beta-agent3
     hostname: lina61beta-agent3   
@@ -120,7 +120,7 @@ services:
     depends_on:
       - "lina61beta-master"
   lina61beta-agent4:
-    image: hub.atempo.cloud/internal/lina-agent:6.1-latest-full
+    image: hub.atempo.cloud/internal/lina-agent:6.1-latest
     pull_policy: always    
     container_name: lina61beta-agent4
     hostname: lina61beta-agent4   
