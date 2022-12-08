@@ -1,0 +1,141 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  lina61beta-master:
+    image: hub.atempo.cloud/internal/lina:6.1-latest-full
+    pull_policy: always    
+    container_name: lina61beta-master
+    hostname: lina61beta-master
+    restart: unless-stopped
+    ports:
+      - 443 # Used for both webUI only
+      - 8181 # Used for data (to nodes and from agents) 
+    environment:
+      - LINA_MASTERMODE=1
+      - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
+    env_file:
+     - stack.env      
+    networks:
+      - easy-docker-host
+  lina61beta-node1:
+    image: hub.atempo.cloud/internal/lina:6.1-latest-full
+    pull_policy: always
+    container_name: lina61beta-node1
+    hostname: lina61beta-node1 
+    restart: unless-stopped
+    ports:
+      - 8181 # Used for both data and webUI
+    environment:
+      - LINA_MASTER=lina61beta-master
+      - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
+    labels:
+      - traefik.http.services.lina61beta-node1.loadbalancer.server.port=8181        
+    env_file:
+     - stack.env      
+    networks:
+      - easy-docker-host
+    depends_on:
+      - "lina61beta-master"
+  lina61beta-node2:
+    image: hub.atempo.cloud/internal/lina:6.1-latest-full
+    pull_policy: always    
+    container_name: lina61beta-node2
+    hostname: lina61beta-node2    
+    restart: unless-stopped
+    ports:
+      - 8181 # Used for both data and webUI
+    environment:
+      - LINA_MASTER=lina61beta-master
+      - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
+    labels:
+      - traefik.http.services.lina61beta-node2.loadbalancer.server.port=8181      
+    env_file:
+     - stack.env              
+    networks:
+      - easy-docker-host
+    depends_on:
+      - "lina61beta-master"    
+  lina61beta-agent1:
+    image: hub.atempo.cloud/internal/lina-agent:6.1-latest-full
+    pull_policy: always    
+    container_name: lina61beta-agent1
+    hostname: lina61beta-agent1
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina61beta-master
+      - LINA_AGENTNAME=lina61beta-agent1
+#      - ROOT_PASSWORD=Atempo1992$$
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true        
+#      - LINA_DEBUGMODE=VOLS:5;
+    env_file:
+     - stack.env         
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina61beta-master"
+  lina61beta-agent2:
+    image: hub.atempo.cloud/internal/lina-agent:6.1-latest-full
+    pull_policy: always    
+    container_name: lina61beta-agent2
+    hostname: lina61beta-agent2    
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina61beta-master
+      - LINA_AGENTNAME=lina61beta-agent2
+#      - ROOT_PASSWORD=Atempo1992$$
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
+#      - LINA_DEBUGMODE=VOLS:5;
+    env_file:
+     - stack.env         
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina61beta-master"
+  lina61beta-agent3:
+    image: hub.atempo.cloud/internal/lina-agent:6.1-latest-full
+    pull_policy: always    
+    container_name: lina61beta-agent3
+    hostname: lina61beta-agent3   
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina61beta-master
+      - LINA_AGENTNAME=lina61beta-agent3
+#      - ROOT_PASSWORD=Atempo1992$$
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
+#      - LINA_DEBUGMODE=VOLS:5;
+    env_file:
+     - stack.env        
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina61beta-master"
+  lina61beta-agent4:
+    image: hub.atempo.cloud/internal/lina-agent:6.1-latest-full
+    pull_policy: always    
+    container_name: lina61beta-agent4
+    hostname: lina61beta-agent4   
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina61beta-master
+      - LINA_AGENTNAME=lina61beta-agent4
+#      - ROOT_PASSWORD=Atempo1992$$
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
+#      - LINA_DEBUGMODE=VOLS:5;
+    env_file:
+     - stack.env           
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina61beta-master"      
