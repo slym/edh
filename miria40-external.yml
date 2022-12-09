@@ -6,8 +6,7 @@ networks:
 
 volumes:
   postgres_data:
-  s3_data:
-  nfs_data:
+
 
 services:
   miria40-db:
