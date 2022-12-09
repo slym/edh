@@ -41,8 +41,6 @@ services:
     hostname: miria40
     depends_on:
       - "miria40-db"
-      - "miria40-mail"
-      - "miria40-syslog"
     environment:
       - POSTGRES_SERVER=miria40-db
       - POSTGRES_USER=postgres
@@ -76,8 +74,6 @@ services:
       - MIRIA_SERVER=miria40
     depends_on:
       - "miria40"
-      - "miria40-s3"
-      - "miria40-nfs"
     env_file:
      - stack.env
 # Env variables are provided by stack, below the list to use them manually if needed : 
