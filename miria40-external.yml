@@ -4,18 +4,12 @@ networks:
   easy-docker-host:
     external: true
 
-volumes:
-  postgres_data:
-
-
 services:
   miria40-db:
     image: postgres:13.5
     pull_policy: always
     container_name: miria40-db
     restart: unless-stopped
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=rzKX2C5%bVY
