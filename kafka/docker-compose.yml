@@ -67,7 +67,7 @@ services:
       CDK_IN_CONF_FILE: /opt/conduktor/platform-config.yaml
       CDK_ORGANIZATION_NAME: "atempo"
       CDK_CLUSTERS_0_ID: "local"
-      CDK_CLUSTERS_0_NAME: "kafka.atempo.cloud"
+      CDK_CLUSTERS_0_NAME: "{{EXTERNAL_HOST}}"
       CDK_CLUSTERS_0_IGNOREUNTRUSTEDCERTIFICATE: "true"
       CDK_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:9092"
       CDK_CLUSTERS_0_ZOOKEEPERSERVER: "zookeeper:2181"
