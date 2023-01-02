@@ -1,0 +1,88 @@
+version: "3"
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    container_name: kafdrop
+    restart: always
+    ports:
+      - 9000
+    environment:
+      - KAFKA_BROKERCONNECT=kafka:9093
+      - JVM_OPTS=-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify
+    networks:
+      - easy-docker-host
+    depends_on:
+      - kafka
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - 2181
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - easy-docker-host
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka
+    ports:
+      - 9092:9092
+      - 9093
+    environment:
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9093,EXTERNAL://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9093,EXTERNAL://atempo.cloud:9092
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
+    networks:
+      - easy-docker-host
+
+  conduktor:
+    image: conduktor/conduktor-platform:latest
+    container_name: conduktor
+    ports:
+      - 8080
+    networks:
+      - easy-docker-host
+# default config with persistence
+#    volumes:
+#      - conduktor_data:/var/conduktor
+#      - type: bind
+#        source: "./${CONF_NAME:-platform-config}.yaml"
+#        target: /opt/conduktor/platform-config.yaml
+#        read_only: true
+    depends_on:
+      - kafka
+# My touch to use an empty config file the  use only env variables
+    command: sh -c "touch /opt/conduktor/platform-config.yaml && /opt/conduktor/scripts/run.sh"
+    environment:
+      CDK_IN_CONF_FILE: /opt/conduktor/platform-config.yaml
+      CDK_ORGANIZATION_NAME: "atempo"
+      CDK_CLUSTERS_0_ID: "local"
+      CDK_CLUSTERS_0_NAME: "kafka.atempo.cloud"
+      CDK_CLUSTERS_0_IGNOREUNTRUSTEDCERTIFICATE: "true"
+      CDK_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:9092"
+      CDK_CLUSTERS_0_ZOOKEEPERSERVER: "zookeeper:2181"
+      CDK_AUTH_LOCALUSERS_0_EMAIL: "admin"
+      CDK_AUTH_LOCALUSERS_0_PASSWORD: "{{ADMIN_PASSWORD}}"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl --fail http://localhost:${CDK_LISTENING_PORT:-8080}/platform/api/modules/health/live"
+        ]
+      interval: 30s
+      start_period: 120s # Leave time for the psql init scripts to run
+      timeout: 5s
+      retries: 3
+
+#volumes:
+#  conduktor_data: {}
