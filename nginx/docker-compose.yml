@@ -1,0 +1,16 @@
+
+version: '2.3'
+
+networks:
+  easy-docker-host:
+    external: true  
+
+services:
+  nginx:
+    image: nginx
+    volumes:
+    - ./html:/usr/share/nginx/html:ro
+    networks:
+    - easy-docker-host
+    ports:
+    - 80
