@@ -26,6 +26,7 @@ services:
       - ./setup/roles:/roles:ro,Z
       - setup:/state:Z
     environment:
+      PROXY_SUBDOMAIN: ${PROXY_SUBDOMAIN} 
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
       LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
       KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
@@ -91,12 +92,14 @@ services:
       context: kibana/
       args:
         ELASTIC_VERSION: ${ELASTIC_VERSION}
+        PROXY_SUBDOMAIN: ${PROXY_SUBDOMAIN} 
     volumes:
       - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
     ports:
       - 5601:5601
     environment:
       KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
+      PROXY_SUBDOMAIN: ${PROXY_SUBDOMAIN} 
     networks:
       - easy-docker-host
     container_name: kibana  
