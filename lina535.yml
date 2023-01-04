@@ -1,0 +1,82 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  lina535:
+    image: hub.atempo.cloud/releases/lina:5.3.5.25066-full
+    pull_policy: always    
+    container_name: lina535
+    restart: unless-stopped
+    env_file:
+     - stack.env    
+    ports:
+      - 8181
+    labels:
+      - traefik.http.services.lina535.loadbalancer.server.port=8181           
+    networks:
+      - easy-docker-host
+  lina535-agent01:
+    image: hub.atempo.cloud/releases/lina-agent:5.3.5.25066
+    pull_policy: always    
+    container_name: lina535-agent01
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina535
+      - LINA_AGENTNAME=lina535-agent01
+    env_file:
+     - stack.env         
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina535"
+  lina535-agent02:
+    image: hub.atempo.cloud/releases/lina-agent:5.3.5.25066
+    pull_policy: always    
+    container_name: lina535-agent02
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina535
+      - LINA_AGENTNAME=lina535-agent02
+    env_file:
+     - stack.env       
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina535"
+  lina535-agent03:
+    image: hub.atempo.cloud/releases/lina-agent:5.3.5.25066
+    pull_policy: always    
+    container_name: lina535-agent03
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina535
+      - LINA_AGENTNAME=lina535-agent03
+    env_file:
+     - stack.env         
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina535"
+  lina535-agent04:
+    image: hub.atempo.cloud/releases/lina-agent:5.3.5.25066
+    pull_policy: always    
+    container_name: lina535-agent04
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina535
+      - LINA_AGENTNAME=lina535-agent04   
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina535"      
