@@ -1,0 +1,18 @@
+version: '3'
+# Fake SNS
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  sns:
+    image: s12v/sns
+    pull_policy: always   
+    container_name: sns
+    restart: unless-stopped
+    ports:
+      - 9911
+    networks:
+      - easy-docker-host
+    env_file:
+     - stack.env
