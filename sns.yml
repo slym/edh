@@ -14,5 +14,3 @@ services:
       - 9911
     networks:
       - easy-docker-host
-    env_file:
-     - stack.env
