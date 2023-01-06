@@ -1,16 +1,16 @@
 version: '3'
-# Fake SNS
+
 networks:
   easy-docker-host:
     external: true
 
 services:
   sns:
-    image: s12v/sns
+    image: vardhanv/onprem-sns
     pull_policy: always   
     container_name: sns
     restart: unless-stopped
     ports:
-      - 9911
+      - 8080
     networks:
       - easy-docker-host
