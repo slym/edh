@@ -26,6 +26,7 @@ services:
     environment:
       - LINA_SERVERNAME=lina535
       - LINA_AGENTNAME=lina535-agent01
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
     env_file:
      - stack.env         
     networks:
@@ -42,6 +43,7 @@ services:
     environment:
       - LINA_SERVERNAME=lina535
       - LINA_AGENTNAME=lina535-agent02
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true
     env_file:
      - stack.env       
     networks:
@@ -58,6 +60,7 @@ services:
     environment:
       - LINA_SERVERNAME=lina535
       - LINA_AGENTNAME=lina535-agent03
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true
     env_file:
      - stack.env         
     networks:
@@ -73,7 +76,8 @@ services:
     restart: unless-stopped
     environment:
       - LINA_SERVERNAME=lina535
-      - LINA_AGENTNAME=lina535-agent04   
+      - LINA_AGENTNAME=lina535-agent04
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true 
     networks:
       - easy-docker-host
     ports:
