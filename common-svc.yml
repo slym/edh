@@ -75,7 +75,7 @@ services:
     environment:
       - SHARED_DIRECTORY=/data
     volumes:
-      - common_nfs_data:/data
+      - ${NFS_ROOT_ON_HOST}:/data:/data
     ports:
       - 2049:2049
   ldap:

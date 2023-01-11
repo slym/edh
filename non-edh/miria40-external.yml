@@ -1,0 +1,59 @@
+# Deploys a Miria 4.0 server with 2 agents attached and Media Manager (agent + server) enabled on Miria Server
+# will listen on port 8443 (HTTPS) and 8080 (HTTP)
+# webui is on /webapp/ (link is available on first page)
+# default login : root / (empty password)
+# Next step : manually enable demo license (15 days) and add waiting agents in infrastructure
+# connect NFS share inside data movers containers using command : mkdir /myshare && mount -v -t nfs -o nolock nas-server:/nfs-export /myshare
+
+version: '3'
+
+services:
+  miria40-db:
+    image: postgres:13.5
+    pull_policy: always
+    container_name: miria40-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=gd0276nR%Y8K7
+  miria40:
+    image: hub.atempo.cloud/releases/miria:4.0-latest
+    pull_policy: always
+    container_name: miria40
+    restart: unless-stopped
+    ports:
+      - 8080:80
+      - 8443:443
+      - 2524
+    hostname: miria40
+    depends_on:
+      - "miria40-db"
+    environment:
+      - POSTGRES_SERVER=miria40-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=gd0276nR%Y8K7
+      - POSTGRES_PORT=5432
+      - MM_AGENT=1
+      - MM_SERVER=1    
+  miria40-agent1:
+    image:  hub.atempo.cloud/releases/miria-agent:4.0-latest
+    pull_policy: always
+    container_name: miria40-agent1
+    restart: unless-stopped
+    privileged: true # Needed to mount NFS share inside container    
+    ports:
+      - 2524
+    hostname: miria40-agent1
+    environment:
+      - MIRIA_SERVER=miria40   
+  miria40-agent2:
+    image:  hub.atempo.cloud/releases/miria-agent:4.0-latest
+    pull_policy: always
+    container_name: miria40-agent2
+    restart: unless-stopped
+    privileged: true # Needed to mount NFS share inside container    
+    ports:
+      - 2524
+    hostname: miria40-agent2
+    environment:
+      - MIRIA_SERVER=miria40   
