@@ -85,7 +85,7 @@ services:
     networks:
       - easy-docker-host
     labels:
-      - traefik.http.services.common-ldap.loadbalancer.server.port=389  
+      - traefik.http.services.common-ldap.loadbalancer.server.port=10389  
     ports:
-      - 389:389
-      - 636:636
+      - 389:10389
+      - 636:10636
