@@ -5,10 +5,10 @@ networks:
     external: true
 
 services:
-  tina471cr:
-    image: hub.atempo.cloud/releases/tina:4.7.1.6420
+  tina471:
+    image: hub.atempo.cloud/releases/tina:4.7.1.6432
     pull_policy: always   
-    container_name: tina471cr
+    container_name: tina471
     restart: unless-stopped
     networks:
       - easy-docker-host
@@ -16,12 +16,12 @@ services:
       - 25088
       - 9111
       - 2525
-    hostname: tina471cr
+    hostname: tina471
     env_file:
      - stack.env
     labels:
-      - traefik.http.services.tina471cr.loadbalancer.server.port=25088
-      - traefik.http.services.tina471cr.loadbalancer.server.scheme=https          
+      - traefik.http.services.tina471.loadbalancer.server.port=25088
+      - traefik.http.services.tina471.loadbalancer.server.scheme=https          
 
 # Env variables are provided by stack, below the list to use them manually if needed : 
 #      - TINA_ENABLE_HTTP=$TINA_ENABLE_HTTP # won't work in Tina 4.7 ?
