@@ -1,0 +1,83 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  macrowing315-db:
+    image: postgres:13.5
+    pull_policy: always
+    container_name: macrowing315-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=rzKX2C5%bVY
+    networks:
+      - easy-docker-host
+    env_file:
+     - stack.env      
+  macrowing315:
+    image: hub.atempo.cloud/releases/macrowing:3.15.0.11
+    pull_policy: always
+    container_name: macrowing315
+    restart: unless-stopped
+    privileged: true # Required to mount NFS
+    networks:
+      - easy-docker-host
+    ports:
+      - 80
+      - 443
+      - 9111
+      - 2524
+      - 5432
+    hostname: macrowing315
+    depends_on:
+      - "macrowing315-db"
+    environment:
+      - POSTGRES_SERVER=macrowing315-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=rzKX2C5%bVY
+      - POSTGRES_PORT=5432
+      - MM_AGENT=1
+      - MM_SERVER=1
+    env_file:
+     - stack.env
+# Env variables are provided by stack, below the list to use them manually if needed : 
+#      - POSTGRES_SERVER=macrowing315-db
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=rzKX2C5%bVY
+#      - POSTGRES_PORT=5432
+#      - DB_NAME=MIRIA
+#      - INITIAL_PASSWORD=ATempo1992$$
+#      - DEMO_LICENSE=1      
+  macrowing315-agent1:
+    image:  hub.atempo.cloud/releases/macrowing-agent:3.15.0.11
+    pull_policy: always
+    container_name: macrowing315-agent1
+    restart: unless-stopped
+    privileged: true # Required to mount NFS
+    networks:
+      - easy-docker-host
+    ports:
+      - 2524
+    hostname: macrowing315-agent1
+    environment:
+      - MIRIA_SERVER=macrowing315
+    env_file:
+     - stack.env      
+  macrowing315-agent2:
+    image:  hub.atempo.cloud/releases/miria-agent:3.15.0.11
+    pull_policy: always
+    container_name: macrowing315-agent2
+    restart: unless-stopped
+    privileged: true # Required to mount NFS
+    networks:
+      - easy-docker-host
+    ports:
+      - 2524
+    hostname: macrowing315-agent2
+    environment:
+      - MIRIA_SERVER=macrowing315
+    env_file:
+     - stack.env      
