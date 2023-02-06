@@ -67,7 +67,7 @@ services:
     env_file:
      - stack.env      
   macrowing315-agent2:
-    image:  hub.atempo.cloud/releases/miria-agent:3.15.0.11
+    image:  hub.atempo.cloud/releases/macrowing-agent:3.15.0.11
     pull_policy: always
     container_name: macrowing315-agent2
     restart: unless-stopped
