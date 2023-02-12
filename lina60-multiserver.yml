@@ -40,6 +40,7 @@ services:
       - easy-docker-host
     depends_on:
       - "lina60-master"
+      
   lina60-node2:
     image: hub.atempo.cloud/releases/lina:6.0.0.22727-full
     pull_policy: always    
