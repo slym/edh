@@ -20,7 +20,7 @@ services:
     labels:
       - traefik.http.services.lina60-master.loadbalancer.server.port=443
       - traefik.http.routers.lina60-master.rule=HostRegexp(`{lina60subdomains:^lina60-master.*}`)
-      - traefik.http.routers.lina60-master.service=lina-master
+      - traefik.http.routers.lina60-master.service=lina60-master
       - traefik.http.services.lina60-master-data.loadbalancer.server.port=8181
       - traefik.http.routers.lina60-master-data.rule=HostRegexp(`{lina60datasubdomains:^lina60-master-data.*}`)
       - traefik.http.routers.lina60-master-data.service=lina60-master-data
