@@ -1,0 +1,86 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  lina536:
+    image: hub.atempo.cloud/releases/lina:5.3.6.27394-full
+    pull_policy: always    
+    container_name: lina536
+    restart: unless-stopped
+    env_file:
+     - stack.env    
+    ports:
+      - 8181
+    labels:
+      - traefik.http.services.lina536.loadbalancer.server.port=8181           
+    networks:
+      - easy-docker-host
+  lina536-agent01:
+    image: hub.atempo.cloud/releases/lina-agent:5.3.6.27394
+    pull_policy: always    
+    container_name: lina536-agent01
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina536
+      - LINA_AGENTNAME=lina536-agent01
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
+    env_file:
+     - stack.env         
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina536"
+  lina536-agent02:
+    image: hub.atempo.cloud/releases/lina-agent:5.3.6.27394
+    pull_policy: always    
+    container_name: lina536-agent02
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina536
+      - LINA_AGENTNAME=lina536-agent02
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true
+    env_file:
+     - stack.env       
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina536"
+  lina536-agent03:
+    image: hub.atempo.cloud/releases/lina-agent:5.3.6.27394
+    pull_policy: always    
+    container_name: lina536-agent03
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina536
+      - LINA_AGENTNAME=lina536-agent03
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true
+    env_file:
+     - stack.env         
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina536"
+  lina536-agent04:
+    image: hub.atempo.cloud/releases/lina-agent:5.3.6.27394
+    pull_policy: always    
+    container_name: lina536-agent04
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=lina536
+      - LINA_AGENTNAME=lina536-agent04
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true 
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "lina536"      
