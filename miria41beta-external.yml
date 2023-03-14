@@ -5,18 +5,16 @@ networks:
     external: true
 
 volumes:
-  postgres_data:
-  s3_data:
-  nfs_data:
+  miria41beta_postgres_data:
 
 services:
-  miria40beta-db:
+  miria41beta-db:
     image: postgres:13.5
     pull_policy: always
-    container_name: miria40beta-db
+    container_name: miria41beta-db
     restart: unless-stopped
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - miria41beta_postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=rzKX2C5%bVY
@@ -25,10 +23,10 @@ services:
       - easy-docker-host
     env_file:
      - stack.env      
-  miria40beta:
-    image: hub.atempo.cloud/internal/miria:4.0-latest
+  miria41beta:
+    image: hub.atempo.cloud/internal/miria:4.1-latest
     pull_policy: always
-    container_name: miria40beta
+    container_name: miria41beta
     restart: unless-stopped
     privileged: true # Required to mount NFS
     networks:
@@ -39,11 +37,11 @@ services:
       - 9111
       - 2524
       - 5432
-    hostname: miria40beta
+    hostname: miria41beta
     depends_on:
-      - "miria40beta-db"
+      - "miria41beta-db"
     environment:
-      - POSTGRES_SERVER=miria40beta-db
+      - POSTGRES_SERVER=miria41beta-db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=rzKX2C5%bVY
       - POSTGRES_PORT=5432
@@ -52,7 +50,7 @@ services:
     env_file:
      - stack.env
 # Env variables are provided by stack, below the list to use them manually if needed : 
-#      - POSTGRES_SERVER=miria40beta-db
+#      - POSTGRES_SERVER=miria41beta-db
 #      - POSTGRES_USER=postgres
 #      - POSTGRES_PASSWORD=rzKX2C5%bVY
 #      - POSTGRES_PORT=5432
@@ -60,41 +58,41 @@ services:
 #      - INITIAL_PASSWORD=ATempo1992$$
 #      - DEMO_LICENSE=1
 
-  miria40beta-agent1:
-    image:  hub.atempo.cloud/internal/miria-agent:4.0-latest
+  miria41beta-agent1:
+    image:  hub.atempo.cloud/internal/miria-agent:4.1-latest
     pull_policy: always
-    container_name: miria40beta-agent1
+    container_name: miria41beta-agent1
     restart: unless-stopped
     privileged: true # Required to mount NFS
     networks:
       - easy-docker-host
     ports:
       - 2524
-    hostname: miria40beta-agent1
+    hostname: miria41beta-agent1
     environment:
-      - MIRIA_SERVER=miria40beta
+      - MIRIA_SERVER=miria41beta
     depends_on:
-      - "miria40beta"
+      - "miria41beta"
     env_file:
      - stack.env
 # Env variables are provided by stack, below the list to use them manually if needed : 
 #      - CUSTOM_CMD=mkdir -p /mnt/nfs-nas && mount -v -o vers=4,loud nfs-nas:/ /nas-mounts/nfs1 
 
-  miria40beta-agent2:
-    image:  hub.atempo.cloud/internal/miria-agent:4.0-latest
+  miria41beta-agent2:
+    image:  hub.atempo.cloud/internal/miria-agent:4.1-latest
     pull_policy: always
-    container_name: miria40beta-agent2
+    container_name: miria41beta-agent2
     restart: unless-stopped
     privileged: true # Required to mount NFS
     networks:
       - easy-docker-host
     ports:
       - 2524
-    hostname: miria40beta-agent2
+    hostname: miria41beta-agent2
     environment:
-      - MIRIA_SERVER=miria40beta
+      - MIRIA_SERVER=miria41beta
     depends_on:
-      - "miria40beta"
+      - "miria41beta"
     env_file:
      - stack.env
 # Env variables are provided by stack, below the list to use them manually if needed : 
