@@ -41,16 +41,3 @@ services:
       - traefik.http.services.m4a10.loadbalancer.server.scheme=https          
     depends_on:
       - "m4a10-db"
-  nfs-nas:
-    image: itsthenetwork/nfs-server-alpine:12
-    container_name: nfs-nas
-    restart: unless-stopped
-    privileged: true
-    networks:
-      - easy-docker-host    
-    environment:
-      - SHARED_DIRECTORY=/data
-    volumes:
-      - ${NFS_ROOT_ON_HOST}:/data
-    ports:
-      - 2049
