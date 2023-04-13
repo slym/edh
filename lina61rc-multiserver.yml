@@ -5,11 +5,11 @@ networks:
     external: true
 
 services:
-  lina61rc-master:
+  lina61cr-master:
     image: hub.atempo.cloud/controlreleases/lina:6.1-latest-full
     pull_policy: always    
-    container_name: lina61rc-master
-    hostname: lina61rc-master
+    container_name: lina61cr-master
+    hostname: lina61cr-master
     restart: unless-stopped
     ports:
       - 443 # Used for both webUI only
@@ -18,63 +18,63 @@ services:
       - LINA_MASTERMODE=1
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
     labels:
-      - traefik.http.services.lina61rc-master.loadbalancer.server.port=443
-      - traefik.http.routers.lina61rc-master.rule=HostRegexp(`{lina61rcsubdomains:^lina61rc-master.*}`)
-      - traefik.http.routers.lina61rc-master.service=lina61rc-master
-      - traefik.http.services.lina61rc-master-data.loadbalancer.server.port=8181
-      - traefik.http.routers.lina61rc-master-data.rule=HostRegexp(`{lina61rcdatasubdomains:^lina61rc-master-data.*}`)
-      - traefik.http.routers.lina61rc-master-data.service=lina61rc-master-data
+      - traefik.http.services.lina61cr-master.loadbalancer.server.port=443
+      - traefik.http.routers.lina61cr-master.rule=HostRegexp(`{lina61crsubdomains:^lina61cr-master.*}`)
+      - traefik.http.routers.lina61cr-master.service=lina61cr-master
+      - traefik.http.services.lina61cr-master-data.loadbalancer.server.port=8181
+      - traefik.http.routers.lina61cr-master-data.rule=HostRegexp(`{lina61crdatasubdomains:^lina61cr-master-data.*}`)
+      - traefik.http.routers.lina61cr-master-data.service=lina61cr-master-data
     env_file:
      - stack.env      
     networks:
       - easy-docker-host
-  lina61rc-node1:
+  lina61cr-node1:
     image: hub.atempo.cloud/controlreleases/lina:6.1-latest-full
     pull_policy: always
-    container_name: lina61rc-node1
-    hostname: lina61rc-node1 
+    container_name: lina61cr-node1
+    hostname: lina61cr-node1 
     restart: unless-stopped
     ports:
       - 8181 # Used for both data and webUI
     environment:
-      - LINA_MASTER=lina61rc-master
+      - LINA_MASTER=lina61cr-master
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
     labels:
-      - traefik.http.services.lina61rc-node1.loadbalancer.server.port=8181        
+      - traefik.http.services.lina61cr-node1.loadbalancer.server.port=8181        
     env_file:
      - stack.env      
     networks:
       - easy-docker-host
     depends_on:
-      - "lina61rc-master"
-  lina61rc-node2:
+      - "lina61cr-master"
+  lina61cr-node2:
     image: hub.atempo.cloud/controlreleases/lina:6.1-latest-full
     pull_policy: always    
-    container_name: lina61rc-node2
-    hostname: lina61rc-node2    
+    container_name: lina61cr-node2
+    hostname: lina61cr-node2    
     restart: unless-stopped
     ports:
       - 8181 # Used for both data and webUI
     environment:
-      - LINA_MASTER=lina61rc-master
+      - LINA_MASTER=lina61cr-master
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
     labels:
-      - traefik.http.services.lina61rc-node2.loadbalancer.server.port=8181      
+      - traefik.http.services.lina61cr-node2.loadbalancer.server.port=8181      
     env_file:
      - stack.env              
     networks:
       - easy-docker-host
     depends_on:
-      - "lina61rc-master"    
-  lina61rc-agent1:
+      - "lina61cr-master"    
+  lina61cr-agent1:
     image: hub.atempo.cloud/controlreleases/lina-agent:6.1-latest
     pull_policy: always    
-    container_name: lina61rc-agent1
-    hostname: lina61rc-agent1
+    container_name: lina61cr-agent1
+    hostname: lina61cr-agent1
     restart: unless-stopped
     environment:
-      - LINA_SERVERNAME=lina61rc-master
-      - LINA_AGENTNAME=lina61rc-agent1
+      - LINA_SERVERNAME=lina61cr-master
+      - LINA_AGENTNAME=lina61cr-agent1
 #      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true        
 #      - LINA_DEBUGMODE=VOLS:5;
@@ -85,16 +85,16 @@ services:
     ports:
       - 27261
     depends_on:
-      - "lina61rc-master"
-  lina61rc-agent2:
+      - "lina61cr-master"
+  lina61cr-agent2:
     image: hub.atempo.cloud/controlreleases/lina-agent:6.1-latest
     pull_policy: always    
-    container_name: lina61rc-agent2
-    hostname: lina61rc-agent2    
+    container_name: lina61cr-agent2
+    hostname: lina61cr-agent2    
     restart: unless-stopped
     environment:
-      - LINA_SERVERNAME=lina61rc-master
-      - LINA_AGENTNAME=lina61rc-agent2
+      - LINA_SERVERNAME=lina61cr-master
+      - LINA_AGENTNAME=lina61cr-agent2
 #      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
 #      - LINA_DEBUGMODE=VOLS:5;
@@ -105,16 +105,16 @@ services:
     ports:
       - 27261
     depends_on:
-      - "lina61rc-master"
-  lina61rc-agent3:
+      - "lina61cr-master"
+  lina61cr-agent3:
     image: hub.atempo.cloud/controlreleases/lina-agent:6.1-latest
     pull_policy: always    
-    container_name: lina61rc-agent3
-    hostname: lina61rc-agent3   
+    container_name: lina61cr-agent3
+    hostname: lina61cr-agent3   
     restart: unless-stopped
     environment:
-      - LINA_SERVERNAME=lina61rc-master
-      - LINA_AGENTNAME=lina61rc-agent3
+      - LINA_SERVERNAME=lina61cr-master
+      - LINA_AGENTNAME=lina61cr-agent3
 #      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
 #      - LINA_DEBUGMODE=VOLS:5;
@@ -125,16 +125,16 @@ services:
     ports:
       - 27261
     depends_on:
-      - "lina61rc-master"
-  lina61rc-agent4:
+      - "lina61cr-master"
+  lina61cr-agent4:
     image: hub.atempo.cloud/controlreleases/lina-agent:6.1-latest
     pull_policy: always    
-    container_name: lina61rc-agent4
-    hostname: lina61rc-agent4   
+    container_name: lina61cr-agent4
+    hostname: lina61cr-agent4   
     restart: unless-stopped
     environment:
-      - LINA_SERVERNAME=lina61rc-master
-      - LINA_AGENTNAME=lina61rc-agent4
+      - LINA_SERVERNAME=lina61cr-master
+      - LINA_AGENTNAME=lina61cr-agent4
 #      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
 #      - LINA_DEBUGMODE=VOLS:5;
@@ -145,4 +145,4 @@ services:
     ports:
       - 27261
     depends_on:
-      - "lina61rc-master"      
+      - "lina61cr-master"      
