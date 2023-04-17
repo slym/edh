@@ -1,0 +1,148 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  linabeta-master:
+    image: hub.atempo.cloud/internal/lina:$LINA_VERSION-full
+    pull_policy: always    
+    container_name: linabeta-master
+    hostname: linabeta-master
+    restart: unless-stopped
+    ports:
+      - 443 # Used for both webUI only
+      - 8181 # Used for data (to nodes and from agents) 
+    environment:
+      - LINA_MASTERMODE=1
+      - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
+    labels:
+      - traefik.http.services.linabeta-master.loadbalancer.server.port=443
+      - traefik.http.routers.linabeta-master.rule=HostRegexp(`{linabetasubdomains:^linabeta-master.*}`)
+      - traefik.http.routers.linabeta-master.service=linabeta-master
+      - traefik.http.services.linabeta-master-data.loadbalancer.server.port=8181
+      - traefik.http.routers.linabeta-master-data.rule=HostRegexp(`{linabetadatasubdomains:^linabeta-master-data.*}`)
+      - traefik.http.routers.linabeta-master-data.service=linabeta-master-data
+    env_file:
+     - stack.env      
+    networks:
+      - easy-docker-host
+  linabeta-node1:
+    image: hub.atempo.cloud/internal/lina:$LINA_VERSION-full
+    pull_policy: always
+    container_name: linabeta-node1
+    hostname: linabeta-node1 
+    restart: unless-stopped
+    ports:
+      - 8181 # Used for both data and webUI
+    environment:
+      - LINA_MASTER=linabeta-master
+      - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
+    labels:
+      - traefik.http.services.linabeta-node1.loadbalancer.server.port=8181        
+    env_file:
+     - stack.env      
+    networks:
+      - easy-docker-host
+    depends_on:
+      - "linabeta-master"
+  linabeta-node2:
+    image: hub.atempo.cloud/internal/lina:$LINA_VERSION-full
+    pull_policy: always    
+    container_name: linabeta-node2
+    hostname: linabeta-node2    
+    restart: unless-stopped
+    ports:
+      - 8181 # Used for both data and webUI
+    environment:
+      - LINA_MASTER=linabeta-master
+      - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
+    labels:
+      - traefik.http.services.linabeta-node2.loadbalancer.server.port=8181      
+    env_file:
+     - stack.env              
+    networks:
+      - easy-docker-host
+    depends_on:
+      - "linabeta-master"    
+  linabeta-agent1:
+    image: hub.atempo.cloud/internal/lina-agent:$LINA_VERSION
+    pull_policy: always    
+    container_name: linabeta-agent1
+    hostname: linabeta-agent1
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=linabeta-master
+      - LINA_AGENTNAME=linabeta-agent1
+#      - ROOT_PASSWORD=Atempo1992$$
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true        
+#      - LINA_DEBUGMODE=VOLS:5;
+    env_file:
+     - stack.env         
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "linabeta-master"
+  linabeta-agent2:
+    image: hub.atempo.cloud/internal/lina-agent:$LINA_VERSION
+    pull_policy: always    
+    container_name: linabeta-agent2
+    hostname: linabeta-agent2    
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=linabeta-master
+      - LINA_AGENTNAME=linabeta-agent2
+#      - ROOT_PASSWORD=Atempo1992$$
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
+#      - LINA_DEBUGMODE=VOLS:5;
+    env_file:
+     - stack.env         
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "linabeta-master"
+  linabeta-agent3:
+    image: hub.atempo.cloud/internal/lina-agent:$LINA_VERSION
+    pull_policy: always    
+    container_name: linabeta-agent3
+    hostname: linabeta-agent3   
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=linabeta-master
+      - LINA_AGENTNAME=linabeta-agent3
+#      - ROOT_PASSWORD=Atempo1992$$
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
+#      - LINA_DEBUGMODE=VOLS:5;
+    env_file:
+     - stack.env        
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "linabeta-master"
+  linabeta-agent4:
+    image: hub.atempo.cloud/internal/lina-agent:$LINA_VERSION
+    pull_policy: always    
+    container_name: linabeta-agent4
+    hostname: linabeta-agent4   
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=linabeta-master
+      - LINA_AGENTNAME=linabeta-agent4
+#      - ROOT_PASSWORD=Atempo1992$$
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
+#      - LINA_DEBUGMODE=VOLS:5;
+    env_file:
+     - stack.env           
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "linabeta-master"      
