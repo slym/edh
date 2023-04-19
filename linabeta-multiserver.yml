@@ -6,7 +6,7 @@ networks:
 
 services:
   linabeta-master:
-    image: hub.atempo.cloud/internal/lina:$LINA_VERSION-full
+    image: hub.atempo.cloud/internal/lina:$LINA_VERSION$FULL_OR_LIGHT
     pull_policy: always    
     container_name: linabeta-master
     hostname: linabeta-master
@@ -29,7 +29,7 @@ services:
     networks:
       - easy-docker-host
   linabeta-node1:
-    image: hub.atempo.cloud/internal/lina:$LINA_VERSION-full
+    image: hub.atempo.cloud/internal/lina:$LINA_VERSION$FULL_OR_LIGHT
     pull_policy: always
     container_name: linabeta-node1
     hostname: linabeta-node1 
@@ -48,7 +48,7 @@ services:
     depends_on:
       - "linabeta-master"
   linabeta-node2:
-    image: hub.atempo.cloud/internal/lina:$LINA_VERSION-full
+    image: hub.atempo.cloud/internal/lina:$LINA_VERSION$FULL_OR_LIGHT
     pull_policy: always    
     container_name: linabeta-node2
     hostname: linabeta-node2    
