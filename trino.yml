@@ -1,0 +1,16 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  trino:
+    image: trinodb/trino
+    pull_policy: always   
+    container_name: trino
+    restart: unless-stopped
+    ports:
+      - 8080
+    networks:
+      - easy-docker-host
