@@ -6,9 +6,9 @@ networks:
 
 services:
   tinaflex:
-    image: hub.atempo.cloud/internal/tina:4.8-latest
+    image: hub.atempo.cloud/$VERSION_TYPE/tina:$VERSION
     pull_policy: always   
-    container_name: tinaflex
+    container_name: $DEPLOYMENTNAME
     restart: unless-stopped
     networks:
       - easy-docker-host
