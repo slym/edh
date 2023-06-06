@@ -6,7 +6,7 @@ networks:
 
 services:
   tinaflex:
-    image: hub.atempo.cloud/$VERSION_TYPE/tina:$VERSION
+    image: hub.atempo.cloud/internal/tina:4.8-latest
     pull_policy: always   
     container_name: tinaflex
     restart: unless-stopped
