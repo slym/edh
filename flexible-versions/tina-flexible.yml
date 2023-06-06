@@ -1,0 +1,31 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  $DEPLOYMENT_NAME:
+    image: hub.atempo.cloud/$VERSION_TYPE/tina:$VERSION
+    pull_policy: always   
+    container_name: $DEPLOYMENT_NAME
+    restart: unless-stopped
+    networks:
+      - easy-docker-host
+    ports:
+      - 25088
+      - 9111
+      - 2525
+    hostname: $DEPLOYMENT_NAME
+    env_file:
+     - stack.env
+    labels:
+      - traefik.http.services.$DEPLOYMENT_NAME.loadbalancer.server.port=25088
+      - traefik.http.services.$DEPLOYMENT_NAME.loadbalancer.server.scheme=https          
+
+# Env variables are provided by stack, below the list to use them manually if needed : 
+#      - TINA_ENABLE_HTTP=$TINA_ENABLE_HTTP # won't work in Tina 4.7 ?
+#      - TINA_CATALOG_NAME=$TINA_CATALOG_NAME
+#      - DEFAULT_USER=$DEFAULT_USER
+#      - DEFAULT_PASSWORD=DEFAULT_PASSWORD
+#      - PASSWORD_POLICY_MIN_SIZE=11

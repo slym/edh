@@ -1,0 +1,99 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+volumes:
+  $DEPLOYMENT_NAME_postgres_data:
+
+services:
+  $DEPLOYMENT_NAME-db:
+    image: postgres:$POSTGRES_VERSION
+    pull_policy: always
+    container_name: $DEPLOYMENT_NAME-db
+    restart: unless-stopped
+    volumes:
+      - $DEPLOYMENT_NAME_postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=rzKX2C5%bVY
+      - POSTGRES_HOST_AUTH_METHOD=trust # /!\ Unsecured but should fix DB backup from miria  
+    networks:
+      - easy-docker-host
+    env_file:
+     - stack.env      
+  $DEPLOYMENT_NAME:
+    image: hub.atempo.cloud/$VERSION_TYPE/miria:$VERSION
+    pull_policy: always
+    container_name: $DEPLOYMENT_NAME
+    restart: unless-stopped
+    privileged: true # Required to mount NFS
+    networks:
+      - easy-docker-host
+    ports:
+      - 80
+      - 443
+      - 9111
+      - 2524
+      - 5432
+    hostname: $DEPLOYMENT_NAME
+    depends_on:
+      - "$DEPLOYMENT_NAME-db"
+    environment:
+      - POSTGRES_SERVER=$DEPLOYMENT_NAME-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=rzKX2C5%bVY
+      - POSTGRES_PORT=5432
+      - MM_AGENT=1
+      - MM_SERVER=1
+    env_file:
+     - stack.env
+# Env variables are provided by stack, below the list to use them manually if needed : 
+#      - POSTGRES_SERVER=$DEPLOYMENT_NAME-db
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=rzKX2C5%bVY
+#      - POSTGRES_PORT=5432
+#      - DB_NAME=MIRIA
+#      - INITIAL_PASSWORD=ATempo1992$$
+#      - DEMO_LICENSE=1
+
+  $DEPLOYMENT_NAME-agent1:
+    image:  hub.atempo.cloud/$VERSION_TYPE/miria-agent:$VERSION
+    pull_policy: always
+    container_name: $DEPLOYMENT_NAME-agent1
+    restart: unless-stopped
+    privileged: true # Required to mount NFS
+    networks:
+      - easy-docker-host
+    ports:
+      - 2524
+    hostname: $DEPLOYMENT_NAME-agent1
+    environment:
+      - MIRIA_SERVER=$DEPLOYMENT_NAME
+    depends_on:
+      - "$DEPLOYMENT_NAME"
+    env_file:
+     - stack.env
+# Env variables are provided by stack, below the list to use them manually if needed : 
+#      - CUSTOM_CMD=mkdir -p /mnt/nfs-nas && mount -v -o vers=4,loud nfs-nas:/ /nas-mounts/nfs1 
+
+  $DEPLOYMENT_NAME-agent2:
+    image:  hub.atempo.cloud/$VERSION_TYPE/miria-agent:$VERSION
+    pull_policy: always
+    container_name: $DEPLOYMENT_NAME-agent2
+    restart: unless-stopped
+    privileged: true # Required to mount NFS
+    networks:
+      - easy-docker-host
+    ports:
+      - 2524
+    hostname: $DEPLOYMENT_NAME-agent2
+    environment:
+      - MIRIA_SERVER=$DEPLOYMENT_NAME
+    depends_on:
+      - "$DEPLOYMENT_NAME"
+    env_file:
+     - stack.env
+# Env variables are provided by stack, below the list to use them manually if needed : 
+#      - CUSTOM_CMD=mkdir -p /mnt/nfs-nas && mount -v -o vers=4,loud nfs-nas:/ /nas-mounts/nfs1
