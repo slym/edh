@@ -5,11 +5,11 @@ networks:
     external: true
 
 services:
-  $DEPLOYMENT_NAME-master:
+  $DEPLOYMENTNAME-master:
     image: hub.atempo.cloud/$VERSION_TYPE/lina:$VERSION$FULL_OR_LIGHT
     pull_policy: always    
-    container_name: $DEPLOYMENT_NAME-master
-    hostname: $DEPLOYMENT_NAME-master
+    container_name: $DEPLOYMENTNAME-master
+    hostname: $DEPLOYMENTNAME-master
     restart: unless-stopped
     ports:
       - 443 # Used for both webUI only
@@ -18,63 +18,63 @@ services:
       - LINA_MASTERMODE=1
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
     labels:
-      - traefik.http.services.$DEPLOYMENT_NAME-master.loadbalancer.server.port=443
-      - traefik.http.routers.$DEPLOYMENT_NAME-master.rule=HostRegexp(`{$DEPLOYMENT_NAMEsubdomains:^$DEPLOYMENT_NAME-master.*}`)
-      - traefik.http.routers.$DEPLOYMENT_NAME-master.service=$DEPLOYMENT_NAME-master
-      - traefik.http.services.$DEPLOYMENT_NAME-master-data.loadbalancer.server.port=8181
-      - traefik.http.routers.$DEPLOYMENT_NAME-master-data.rule=HostRegexp(`{$DEPLOYMENT_NAMEdatasubdomains:^$DEPLOYMENT_NAME-master-data.*}`)
-      - traefik.http.routers.$DEPLOYMENT_NAME-master-data.service=$DEPLOYMENT_NAME-master-data
+      - traefik.http.services.$DEPLOYMENTNAME-master.loadbalancer.server.port=443
+      - traefik.http.routers.$DEPLOYMENTNAME-master.rule=HostRegexp(`{$DEPLOYMENTNAMEsubdomains:^$DEPLOYMENTNAME-master.*}`)
+      - traefik.http.routers.$DEPLOYMENTNAME-master.service=$DEPLOYMENTNAME-master
+      - traefik.http.services.$DEPLOYMENTNAME-master-data.loadbalancer.server.port=8181
+      - traefik.http.routers.$DEPLOYMENTNAME-master-data.rule=HostRegexp(`{$DEPLOYMENTNAMEdatasubdomains:^$DEPLOYMENTNAME-master-data.*}`)
+      - traefik.http.routers.$DEPLOYMENTNAME-master-data.service=$DEPLOYMENTNAME-master-data
     env_file:
      - stack.env      
     networks:
       - easy-docker-host
-  $DEPLOYMENT_NAME-node1:
+  $DEPLOYMENTNAME-node1:
     image: hub.atempo.cloud/$VERSION_TYPE/lina:$VERSION$FULL_OR_LIGHT
     pull_policy: always
-    container_name: $DEPLOYMENT_NAME-node1
-    hostname: $DEPLOYMENT_NAME-node1 
+    container_name: $DEPLOYMENTNAME-node1
+    hostname: $DEPLOYMENTNAME-node1 
     restart: unless-stopped
     ports:
       - 8181 # Used for both data and webUI
     environment:
-      - LINA_MASTER=$DEPLOYMENT_NAME-master
+      - LINA_MASTER=$DEPLOYMENTNAME-master
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
     labels:
-      - traefik.http.services.$DEPLOYMENT_NAME-node1.loadbalancer.server.port=8181        
+      - traefik.http.services.$DEPLOYMENTNAME-node1.loadbalancer.server.port=8181        
     env_file:
      - stack.env      
     networks:
       - easy-docker-host
     depends_on:
-      - "$DEPLOYMENT_NAME-master"
-  $DEPLOYMENT_NAME-node2:
+      - "$DEPLOYMENTNAME-master"
+  $DEPLOYMENTNAME-node2:
     image: hub.atempo.cloud/$VERSION_TYPE/lina:$VERSION$FULL_OR_LIGHT
     pull_policy: always    
-    container_name: $DEPLOYMENT_NAME-node2
-    hostname: $DEPLOYMENT_NAME-node2    
+    container_name: $DEPLOYMENTNAME-node2
+    hostname: $DEPLOYMENTNAME-node2    
     restart: unless-stopped
     ports:
       - 8181 # Used for both data and webUI
     environment:
-      - LINA_MASTER=$DEPLOYMENT_NAME-master
+      - LINA_MASTER=$DEPLOYMENTNAME-master
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
     labels:
-      - traefik.http.services.$DEPLOYMENT_NAME-node2.loadbalancer.server.port=8181      
+      - traefik.http.services.$DEPLOYMENTNAME-node2.loadbalancer.server.port=8181      
     env_file:
      - stack.env              
     networks:
       - easy-docker-host
     depends_on:
-      - "$DEPLOYMENT_NAME-master"    
-  $DEPLOYMENT_NAME-agent1:
+      - "$DEPLOYMENTNAME-master"    
+  $DEPLOYMENTNAME-agent1:
     image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
     pull_policy: always    
-    container_name: $DEPLOYMENT_NAME-agent1
-    hostname: $DEPLOYMENT_NAME-agent1
+    container_name: $DEPLOYMENTNAME-agent1
+    hostname: $DEPLOYMENTNAME-agent1
     restart: unless-stopped
     environment:
-      - LINA_SERVERNAME=$DEPLOYMENT_NAME-master
-      - LINA_AGENTNAME=$DEPLOYMENT_NAME-agent1
+      - LINA_SERVERNAME=$DEPLOYMENTNAME-master
+      - LINA_AGENTNAME=$DEPLOYMENTNAME-agent1
 #      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true        
 #      - LINA_DEBUGMODE=VOLS:5;
@@ -85,16 +85,16 @@ services:
     ports:
       - 27261
     depends_on:
-      - "$DEPLOYMENT_NAME-master"
-  $DEPLOYMENT_NAME-agent2:
+      - "$DEPLOYMENTNAME-master"
+  $DEPLOYMENTNAME-agent2:
     image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
     pull_policy: always    
-    container_name: $DEPLOYMENT_NAME-agent2
-    hostname: $DEPLOYMENT_NAME-agent2    
+    container_name: $DEPLOYMENTNAME-agent2
+    hostname: $DEPLOYMENTNAME-agent2    
     restart: unless-stopped
     environment:
-      - LINA_SERVERNAME=$DEPLOYMENT_NAME-master
-      - LINA_AGENTNAME=$DEPLOYMENT_NAME-agent2
+      - LINA_SERVERNAME=$DEPLOYMENTNAME-master
+      - LINA_AGENTNAME=$DEPLOYMENTNAME-agent2
 #      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
 #      - LINA_DEBUGMODE=VOLS:5;
@@ -105,16 +105,16 @@ services:
     ports:
       - 27261
     depends_on:
-      - "$DEPLOYMENT_NAME-master"
-  $DEPLOYMENT_NAME-agent3:
+      - "$DEPLOYMENTNAME-master"
+  $DEPLOYMENTNAME-agent3:
     image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
     pull_policy: always    
-    container_name: $DEPLOYMENT_NAME-agent3
-    hostname: $DEPLOYMENT_NAME-agent3   
+    container_name: $DEPLOYMENTNAME-agent3
+    hostname: $DEPLOYMENTNAME-agent3   
     restart: unless-stopped
     environment:
-      - LINA_SERVERNAME=$DEPLOYMENT_NAME-master
-      - LINA_AGENTNAME=$DEPLOYMENT_NAME-agent3
+      - LINA_SERVERNAME=$DEPLOYMENTNAME-master
+      - LINA_AGENTNAME=$DEPLOYMENTNAME-agent3
 #      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
 #      - LINA_DEBUGMODE=VOLS:5;
@@ -125,16 +125,16 @@ services:
     ports:
       - 27261
     depends_on:
-      - "$DEPLOYMENT_NAME-master"
-  $DEPLOYMENT_NAME-agent4:
+      - "$DEPLOYMENTNAME-master"
+  $DEPLOYMENTNAME-agent4:
     image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
     pull_policy: always    
-    container_name: $DEPLOYMENT_NAME-agent4
-    hostname: $DEPLOYMENT_NAME-agent4   
+    container_name: $DEPLOYMENTNAME-agent4
+    hostname: $DEPLOYMENTNAME-agent4   
     restart: unless-stopped
     environment:
-      - LINA_SERVERNAME=$DEPLOYMENT_NAME-master
-      - LINA_AGENTNAME=$DEPLOYMENT_NAME-agent4
+      - LINA_SERVERNAME=$DEPLOYMENTNAME-master
+      - LINA_AGENTNAME=$DEPLOYMENTNAME-agent4
 #      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
 #      - LINA_DEBUGMODE=VOLS:5;
@@ -145,4 +145,4 @@ services:
     ports:
       - 27261
     depends_on:
-      - "$DEPLOYMENT_NAME-master"      
+      - "$DEPLOYMENTNAME-master"      
