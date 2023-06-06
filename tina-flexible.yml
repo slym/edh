@@ -16,7 +16,7 @@ services:
       - 25088
       - 9111
       - 2525
-    hostname: tinaflex
+    hostname: $DEPLOYMENTNAME
     env_file:
      - stack.env
     labels:
