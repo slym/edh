@@ -5,7 +5,7 @@ networks:
     external: true
 
 services:
-  $DEPLOYMENTNAME:
+  "$DEPLOYMENTNAME":
     image: hub.atempo.cloud/$VERSION_TYPE/tina:$VERSION
     pull_policy: always   
     container_name: $DEPLOYMENTNAME
