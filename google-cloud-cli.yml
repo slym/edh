@@ -1,0 +1,14 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  google-cloud-cli:
+    image: gcr.io/google.com/cloudsdktool/google-cloud-cli:$CLI_VERSION
+    pull_policy: always   
+    container_name: google-cloud-cli
+    restart: unless-stopped
+    networks:
+      - easy-docker-host
