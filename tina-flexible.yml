@@ -5,10 +5,10 @@ networks:
     external: true
 
 services:
-  ${DEPLOYMENTNAME}:
+  tinaflex:
     image: hub.atempo.cloud/internal/tina:4.8-latest
     pull_policy: always   
-    container_name: ${DEPLOYMENTNAME}
+    container_name: tinaflex
     restart: unless-stopped
     networks:
       - easy-docker-host
@@ -16,12 +16,12 @@ services:
       - 25088
       - 9111
       - 2525
-    hostname: ${DEPLOYMENTNAME}
+    hostname: tinaflex
     env_file:
      - stack.env
     labels:
-      - traefik.http.services.${DEPLOYMENTNAME}.loadbalancer.server.port=25088
-      - traefik.http.services.${DEPLOYMENTNAME}.loadbalancer.server.scheme=https          
+      - traefik.http.services.$DEPLOYMENTNAME.loadbalancer.server.port=25088
+      - traefik.http.services.$DEPLOYMENTNAME.loadbalancer.server.scheme=https          
 
 # Env variables are provided by stack, below the list to use them manually if needed : 
 #      - TINA_ENABLE_HTTP=$TINA_ENABLE_HTTP # won't work in Tina 4.7 ?
