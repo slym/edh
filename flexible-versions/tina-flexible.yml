@@ -18,7 +18,7 @@ services:
       - 2525
     hostname: tinaflex
     env_file:
-     - stack.env
+     - ../stack.env
     labels:
       - traefik.http.services.tinaflex.loadbalancer.server.port=25088
       - traefik.http.services.tinaflex.loadbalancer.server.scheme=https          
