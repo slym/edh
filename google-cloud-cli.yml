@@ -10,5 +10,6 @@ services:
     pull_policy: always   
     container_name: google-cloud-cli
     restart: unless-stopped
+    entrypoint: tail -f /dev/null
     networks:
       - easy-docker-host
