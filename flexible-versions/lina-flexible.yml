@@ -5,7 +5,7 @@ networks:
     external: true
 
 services:
-  $DEPLOYMENTNAME-master:
+  linaflex-master:
     image: hub.atempo.cloud/$VERSION_TYPE/lina:$VERSION$FULL_OR_LIGHT
     pull_policy: always    
     container_name: $DEPLOYMENTNAME-master
@@ -19,16 +19,16 @@ services:
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
     labels:
       - traefik.http.services.$DEPLOYMENTNAME-master.loadbalancer.server.port=443
-      - traefik.http.routers.$DEPLOYMENTNAME-master.rule=HostRegexp(`{$DEPLOYMENTNAMEsubdomains:^$DEPLOYMENTNAME-master.*}`)
+      - traefik.http.routers.$DEPLOYMENTNAME-master.rule=HostRegexp(`{subdomain:^$DEPLOYMENTNAME-master.*}`)
       - traefik.http.routers.$DEPLOYMENTNAME-master.service=$DEPLOYMENTNAME-master
       - traefik.http.services.$DEPLOYMENTNAME-master-data.loadbalancer.server.port=8181
-      - traefik.http.routers.$DEPLOYMENTNAME-master-data.rule=HostRegexp(`{$DEPLOYMENTNAMEdatasubdomains:^$DEPLOYMENTNAME-master-data.*}`)
+      - traefik.http.routers.$DEPLOYMENTNAME-master-data.rule=HostRegexp(`{subdomain:^$DEPLOYMENTNAME-master-data.*}`)
       - traefik.http.routers.$DEPLOYMENTNAME-master-data.service=$DEPLOYMENTNAME-master-data
     env_file:
      - stack.env      
     networks:
       - easy-docker-host
-  $DEPLOYMENTNAME-node1:
+  linaflex-node1:
     image: hub.atempo.cloud/$VERSION_TYPE/lina:$VERSION$FULL_OR_LIGHT
     pull_policy: always
     container_name: $DEPLOYMENTNAME-node1
@@ -40,14 +40,16 @@ services:
       - LINA_MASTER=$DEPLOYMENTNAME-master
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
     labels:
-      - traefik.http.services.$DEPLOYMENTNAME-node1.loadbalancer.server.port=8181        
+      - traefik.http.services.$DEPLOYMENTNAME-node1.loadbalancer.server.port=8181
+      - traefik.http.routers.$DEPLOYMENTNAME-node1.rule=HostRegexp(`{subdomain:^${DEPLOYMENTNAME}-node1.*}`)
+      - traefik.http.routers.$DEPLOYMENTNAME-node1.service=$DEPLOYMENTNAME-node1              
     env_file:
      - stack.env      
     networks:
       - easy-docker-host
     depends_on:
-      - "$DEPLOYMENTNAME-master"
-  $DEPLOYMENTNAME-node2:
+      - "linaflex-master"
+  linaflex-node2:
     image: hub.atempo.cloud/$VERSION_TYPE/lina:$VERSION$FULL_OR_LIGHT
     pull_policy: always    
     container_name: $DEPLOYMENTNAME-node2
@@ -59,14 +61,16 @@ services:
       - LINA_MASTER=$DEPLOYMENTNAME-master
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
     labels:
-      - traefik.http.services.$DEPLOYMENTNAME-node2.loadbalancer.server.port=8181      
+      - traefik.http.services.$DEPLOYMENTNAME-node2.loadbalancer.server.port=8181
+      - traefik.http.routers.$DEPLOYMENTNAME-node2.rule=HostRegexp(`{subdomain:^${DEPLOYMENTNAME}-node2.*}`)
+      - traefik.http.routers.$DEPLOYMENTNAME-node2.service=$DEPLOYMENTNAME-node2               
     env_file:
      - stack.env              
     networks:
       - easy-docker-host
     depends_on:
-      - "$DEPLOYMENTNAME-master"    
-  $DEPLOYMENTNAME-agent1:
+      - "linaflex-master"    
+  linaflex-agent1:
     image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
     pull_policy: always    
     container_name: $DEPLOYMENTNAME-agent1
@@ -84,9 +88,13 @@ services:
       - easy-docker-host
     ports:
       - 27261
+    labels:
+      - traefik.http.services.$DEPLOYMENTNAME-agent1.loadbalancer.server.port=27261
+      - traefik.http.routers.$DEPLOYMENTNAME-agent1.rule=HostRegexp(`{subdomain:^${DEPLOYMENTNAME}-agent1.*}`)
+      - traefik.http.routers.$DEPLOYMENTNAME-agent1.service=$DEPLOYMENTNAME-agent1 
     depends_on:
-      - "$DEPLOYMENTNAME-master"
-  $DEPLOYMENTNAME-agent2:
+      - "linaflex-master"
+  linaflex-agent2:
     image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
     pull_policy: always    
     container_name: $DEPLOYMENTNAME-agent2
@@ -98,6 +106,10 @@ services:
 #      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
 #      - LINA_DEBUGMODE=VOLS:5;
+    labels:
+      - traefik.http.services.$DEPLOYMENTNAME-agent2.loadbalancer.server.port=27261
+      - traefik.http.routers.$DEPLOYMENTNAME-agent2.rule=HostRegexp(`{subdomain:^${DEPLOYMENTNAME}-agent2.*}`)
+      - traefik.http.routers.$DEPLOYMENTNAME-agent2.service=$DEPLOYMENTNAME-agent2 
     env_file:
      - stack.env         
     networks:
@@ -105,8 +117,8 @@ services:
     ports:
       - 27261
     depends_on:
-      - "$DEPLOYMENTNAME-master"
-  $DEPLOYMENTNAME-agent3:
+      - "linaflex-master"
+  linaflex-agent3:
     image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
     pull_policy: always    
     container_name: $DEPLOYMENTNAME-agent3
@@ -118,6 +130,10 @@ services:
 #      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
 #      - LINA_DEBUGMODE=VOLS:5;
+    labels:
+      - traefik.http.services.$DEPLOYMENTNAME-agent3.loadbalancer.server.port=27261
+      - traefik.http.routers.$DEPLOYMENTNAME-agent3.rule=HostRegexp(`{subdomain:^${DEPLOYMENTNAME}-agent3.*}`)
+      - traefik.http.routers.$DEPLOYMENTNAME-agent3.service=$DEPLOYMENTNAME-agent3 
     env_file:
      - stack.env        
     networks:
@@ -125,8 +141,8 @@ services:
     ports:
       - 27261
     depends_on:
-      - "$DEPLOYMENTNAME-master"
-  $DEPLOYMENTNAME-agent4:
+      - "linaflex-master"
+  linaflex-agent4:
     image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
     pull_policy: always    
     container_name: $DEPLOYMENTNAME-agent4
@@ -138,6 +154,10 @@ services:
 #      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
 #      - LINA_DEBUGMODE=VOLS:5;
+    labels:
+      - traefik.http.services.$DEPLOYMENTNAME-agent4.loadbalancer.server.port=27261
+      - traefik.http.routers.$DEPLOYMENTNAME-agent4.rule=HostRegexp(`{subdomain:^${DEPLOYMENTNAME}-agent4.*}`)
+      - traefik.http.routers.$DEPLOYMENTNAME-agent4.service=$DEPLOYMENTNAME-agent4 
     env_file:
      - stack.env           
     networks:
@@ -145,4 +165,4 @@ services:
     ports:
       - 27261
     depends_on:
-      - "$DEPLOYMENTNAME-master"      
+      - "linaflex-master"      
