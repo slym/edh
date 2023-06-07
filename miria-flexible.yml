@@ -5,7 +5,7 @@ networks:
     external: true
 
 volumes:
-  $DEPLOYMENT_NAME_postgres_data:
+  miriaflex_postgres_data:
 
 services:
   miriaflex-db:
@@ -14,7 +14,7 @@ services:
     container_name: $DEPLOYMENT_NAME-db
     restart: unless-stopped
     volumes:
-      - $DEPLOYMENT_NAME_postgres_data:/var/lib/postgresql/data
+      - miriaflex_postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=rzKX2C5%bVY
