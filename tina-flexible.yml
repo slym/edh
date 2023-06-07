@@ -22,7 +22,8 @@ services:
     labels:
       - traefik.http.services.$DEPLOYMENTNAME.loadbalancer.server.port=25088
       - traefik.http.services.$DEPLOYMENTNAME.loadbalancer.server.scheme=https
-      - com.docker.compose.service=$DEPLOYMENTNAME          
+      - traefik.http.routers.$DEPLOYMENTNAME.rule=HostRegexp(`{$DEPLOYMENTNAMEsubdomains:^$DEPLOYMENTNAME.*}`)
+      - traefik.http.routers.$DEPLOYMENTNAME.service=$DEPLOYMENTNAME              
 
 # Env variables are provided by stack, below the list to use them manually if needed : 
 #      - TINA_ENABLE_HTTP=$TINA_ENABLE_HTTP # won't work in Tina 4.7 ?
