@@ -22,7 +22,7 @@ services:
     labels:
       - traefik.http.services.$DEPLOYMENTNAME.loadbalancer.server.port=25088
       - traefik.http.services.$DEPLOYMENTNAME.loadbalancer.server.scheme=https
-      - traefik.http.routers.$DEPLOYMENTNAME.rule=HostRegexp(`{$DEPLOYMENTNAMEsubdomains:^$DEPLOYMENTNAME.*}`)
+      - traefik.http.routers.$DEPLOYMENTNAME.rule=HostRegexp(`{^${DEPLOYMENTNAME}.*}`)
       - traefik.http.routers.$DEPLOYMENTNAME.service=$DEPLOYMENTNAME              
 
 # Env variables are provided by stack, below the list to use them manually if needed : 
