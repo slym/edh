@@ -8,8 +8,8 @@ services:
   linaflex-master:
     image: hub.atempo.cloud/$VERSION_TYPE/lina:$VERSION$FULL_OR_LIGHT
     pull_policy: always    
-    container_name: $DEPLOYMENTNAME-master
-    hostname: $DEPLOYMENTNAME-master
+    container_name: $DEPLOYMENT_NAME-master
+    hostname: $DEPLOYMENT_NAME-master
     restart: unless-stopped
     ports:
       - 443 # Used for both webUI only
@@ -18,12 +18,12 @@ services:
       - LINA_MASTERMODE=1
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
     labels:
-      - traefik.http.services.$DEPLOYMENTNAME-master.loadbalancer.server.port=443
-      - traefik.http.routers.$DEPLOYMENTNAME-master.rule=HostRegexp(`{subdomain:^$DEPLOYMENTNAME-master.*}`)
-      - traefik.http.routers.$DEPLOYMENTNAME-master.service=$DEPLOYMENTNAME-master
-      - traefik.http.services.$DEPLOYMENTNAME-master-data.loadbalancer.server.port=8181
-      - traefik.http.routers.$DEPLOYMENTNAME-master-data.rule=HostRegexp(`{subdomain:^$DEPLOYMENTNAME-master-data.*}`)
-      - traefik.http.routers.$DEPLOYMENTNAME-master-data.service=$DEPLOYMENTNAME-master-data
+      - traefik.http.services.$DEPLOYMENT_NAME-master.loadbalancer.server.port=443
+      - traefik.http.routers.$DEPLOYMENT_NAME-master.rule=HostRegexp(`{subdomain:^$DEPLOYMENT_NAME-master.*}`)
+      - traefik.http.routers.$DEPLOYMENT_NAME-master.service=$DEPLOYMENT_NAME-master
+      - traefik.http.services.$DEPLOYMENT_NAME-master-data.loadbalancer.server.port=8181
+      - traefik.http.routers.$DEPLOYMENT_NAME-master-data.rule=HostRegexp(`{subdomain:^$DEPLOYMENT_NAME-master-data.*}`)
+      - traefik.http.routers.$DEPLOYMENT_NAME-master-data.service=$DEPLOYMENT_NAME-master-data
     env_file:
      - stack.env      
     networks:
@@ -31,18 +31,18 @@ services:
   linaflex-node1:
     image: hub.atempo.cloud/$VERSION_TYPE/lina:$VERSION$FULL_OR_LIGHT
     pull_policy: always
-    container_name: $DEPLOYMENTNAME-node1
-    hostname: $DEPLOYMENTNAME-node1 
+    container_name: $DEPLOYMENT_NAME-node1
+    hostname: $DEPLOYMENT_NAME-node1 
     restart: unless-stopped
     ports:
       - 8181 # Used for both data and webUI
     environment:
-      - LINA_MASTER=$DEPLOYMENTNAME-master
+      - LINA_MASTER=$DEPLOYMENT_NAME-master
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
     labels:
-      - traefik.http.services.$DEPLOYMENTNAME-node1.loadbalancer.server.port=8181
-      - traefik.http.routers.$DEPLOYMENTNAME-node1.rule=HostRegexp(`{subdomain:^${DEPLOYMENTNAME}-node1.*}`)
-      - traefik.http.routers.$DEPLOYMENTNAME-node1.service=$DEPLOYMENTNAME-node1              
+      - traefik.http.services.$DEPLOYMENT_NAME-node1.loadbalancer.server.port=8181
+      - traefik.http.routers.$DEPLOYMENT_NAME-node1.rule=HostRegexp(`{subdomain:^${DEPLOYMENT_NAME}-node1.*}`)
+      - traefik.http.routers.$DEPLOYMENT_NAME-node1.service=$DEPLOYMENT_NAME-node1              
     env_file:
      - stack.env      
     networks:
@@ -52,18 +52,18 @@ services:
   linaflex-node2:
     image: hub.atempo.cloud/$VERSION_TYPE/lina:$VERSION$FULL_OR_LIGHT
     pull_policy: always    
-    container_name: $DEPLOYMENTNAME-node2
-    hostname: $DEPLOYMENTNAME-node2    
+    container_name: $DEPLOYMENT_NAME-node2
+    hostname: $DEPLOYMENT_NAME-node2    
     restart: unless-stopped
     ports:
       - 8181 # Used for both data and webUI
     environment:
-      - LINA_MASTER=$DEPLOYMENTNAME-master
+      - LINA_MASTER=$DEPLOYMENT_NAME-master
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
     labels:
-      - traefik.http.services.$DEPLOYMENTNAME-node2.loadbalancer.server.port=8181
-      - traefik.http.routers.$DEPLOYMENTNAME-node2.rule=HostRegexp(`{subdomain:^${DEPLOYMENTNAME}-node2.*}`)
-      - traefik.http.routers.$DEPLOYMENTNAME-node2.service=$DEPLOYMENTNAME-node2               
+      - traefik.http.services.$DEPLOYMENT_NAME-node2.loadbalancer.server.port=8181
+      - traefik.http.routers.$DEPLOYMENT_NAME-node2.rule=HostRegexp(`{subdomain:^${DEPLOYMENT_NAME}-node2.*}`)
+      - traefik.http.routers.$DEPLOYMENT_NAME-node2.service=$DEPLOYMENT_NAME-node2               
     env_file:
      - stack.env              
     networks:
@@ -73,12 +73,12 @@ services:
   linaflex-agent1:
     image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
     pull_policy: always    
-    container_name: $DEPLOYMENTNAME-agent1
-    hostname: $DEPLOYMENTNAME-agent1
+    container_name: $DEPLOYMENT_NAME-agent1
+    hostname: $DEPLOYMENT_NAME-agent1
     restart: unless-stopped
     environment:
-      - LINA_SERVERNAME=$DEPLOYMENTNAME-master
-      - LINA_AGENTNAME=$DEPLOYMENTNAME-agent1
+      - LINA_SERVERNAME=$DEPLOYMENT_NAME-master
+      - LINA_AGENTNAME=$DEPLOYMENT_NAME-agent1
 #      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true        
 #      - LINA_DEBUGMODE=VOLS:5;
@@ -89,27 +89,27 @@ services:
     ports:
       - 27261
     labels:
-      - traefik.http.services.$DEPLOYMENTNAME-agent1.loadbalancer.server.port=27261
-      - traefik.http.routers.$DEPLOYMENTNAME-agent1.rule=HostRegexp(`{subdomain:^${DEPLOYMENTNAME}-agent1.*}`)
-      - traefik.http.routers.$DEPLOYMENTNAME-agent1.service=$DEPLOYMENTNAME-agent1 
+      - traefik.http.services.$DEPLOYMENT_NAME-agent1.loadbalancer.server.port=27261
+      - traefik.http.routers.$DEPLOYMENT_NAME-agent1.rule=HostRegexp(`{subdomain:^${DEPLOYMENT_NAME}-agent1.*}`)
+      - traefik.http.routers.$DEPLOYMENT_NAME-agent1.service=$DEPLOYMENT_NAME-agent1 
     depends_on:
       - "linaflex-master"
   linaflex-agent2:
     image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
     pull_policy: always    
-    container_name: $DEPLOYMENTNAME-agent2
-    hostname: $DEPLOYMENTNAME-agent2    
+    container_name: $DEPLOYMENT_NAME-agent2
+    hostname: $DEPLOYMENT_NAME-agent2    
     restart: unless-stopped
     environment:
-      - LINA_SERVERNAME=$DEPLOYMENTNAME-master
-      - LINA_AGENTNAME=$DEPLOYMENTNAME-agent2
+      - LINA_SERVERNAME=$DEPLOYMENT_NAME-master
+      - LINA_AGENTNAME=$DEPLOYMENT_NAME-agent2
 #      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
 #      - LINA_DEBUGMODE=VOLS:5;
     labels:
-      - traefik.http.services.$DEPLOYMENTNAME-agent2.loadbalancer.server.port=27261
-      - traefik.http.routers.$DEPLOYMENTNAME-agent2.rule=HostRegexp(`{subdomain:^${DEPLOYMENTNAME}-agent2.*}`)
-      - traefik.http.routers.$DEPLOYMENTNAME-agent2.service=$DEPLOYMENTNAME-agent2 
+      - traefik.http.services.$DEPLOYMENT_NAME-agent2.loadbalancer.server.port=27261
+      - traefik.http.routers.$DEPLOYMENT_NAME-agent2.rule=HostRegexp(`{subdomain:^${DEPLOYMENT_NAME}-agent2.*}`)
+      - traefik.http.routers.$DEPLOYMENT_NAME-agent2.service=$DEPLOYMENT_NAME-agent2 
     env_file:
      - stack.env         
     networks:
@@ -121,19 +121,19 @@ services:
   linaflex-agent3:
     image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
     pull_policy: always    
-    container_name: $DEPLOYMENTNAME-agent3
-    hostname: $DEPLOYMENTNAME-agent3   
+    container_name: $DEPLOYMENT_NAME-agent3
+    hostname: $DEPLOYMENT_NAME-agent3   
     restart: unless-stopped
     environment:
-      - LINA_SERVERNAME=$DEPLOYMENTNAME-master
-      - LINA_AGENTNAME=$DEPLOYMENTNAME-agent3
+      - LINA_SERVERNAME=$DEPLOYMENT_NAME-master
+      - LINA_AGENTNAME=$DEPLOYMENT_NAME-agent3
 #      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
 #      - LINA_DEBUGMODE=VOLS:5;
     labels:
-      - traefik.http.services.$DEPLOYMENTNAME-agent3.loadbalancer.server.port=27261
-      - traefik.http.routers.$DEPLOYMENTNAME-agent3.rule=HostRegexp(`{subdomain:^${DEPLOYMENTNAME}-agent3.*}`)
-      - traefik.http.routers.$DEPLOYMENTNAME-agent3.service=$DEPLOYMENTNAME-agent3 
+      - traefik.http.services.$DEPLOYMENT_NAME-agent3.loadbalancer.server.port=27261
+      - traefik.http.routers.$DEPLOYMENT_NAME-agent3.rule=HostRegexp(`{subdomain:^${DEPLOYMENT_NAME}-agent3.*}`)
+      - traefik.http.routers.$DEPLOYMENT_NAME-agent3.service=$DEPLOYMENT_NAME-agent3 
     env_file:
      - stack.env        
     networks:
@@ -145,19 +145,19 @@ services:
   linaflex-agent4:
     image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
     pull_policy: always    
-    container_name: $DEPLOYMENTNAME-agent4
-    hostname: $DEPLOYMENTNAME-agent4   
+    container_name: $DEPLOYMENT_NAME-agent4
+    hostname: $DEPLOYMENT_NAME-agent4   
     restart: unless-stopped
     environment:
-      - LINA_SERVERNAME=$DEPLOYMENTNAME-master
-      - LINA_AGENTNAME=$DEPLOYMENTNAME-agent4
+      - LINA_SERVERNAME=$DEPLOYMENT_NAME-master
+      - LINA_AGENTNAME=$DEPLOYMENT_NAME-agent4
 #      - ROOT_PASSWORD=Atempo1992$$
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
 #      - LINA_DEBUGMODE=VOLS:5;
     labels:
-      - traefik.http.services.$DEPLOYMENTNAME-agent4.loadbalancer.server.port=27261
-      - traefik.http.routers.$DEPLOYMENTNAME-agent4.rule=HostRegexp(`{subdomain:^${DEPLOYMENTNAME}-agent4.*}`)
-      - traefik.http.routers.$DEPLOYMENTNAME-agent4.service=$DEPLOYMENTNAME-agent4 
+      - traefik.http.services.$DEPLOYMENT_NAME-agent4.loadbalancer.server.port=27261
+      - traefik.http.routers.$DEPLOYMENT_NAME-agent4.rule=HostRegexp(`{subdomain:^${DEPLOYMENT_NAME}-agent4.*}`)
+      - traefik.http.routers.$DEPLOYMENT_NAME-agent4.service=$DEPLOYMENT_NAME-agent4 
     env_file:
      - stack.env           
     networks:
