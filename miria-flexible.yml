@@ -37,6 +37,10 @@ services:
       - 9111
       - 2524
       - 5432
+    labels:
+      - traefik.http.services.$DEPLOYMENT_NAME.loadbalancer.server.port=80
+      - traefik.http.routers.$DEPLOYMENT_NAME.rule=HostRegexp(`{subdomain:^${DEPLOYMENT_NAME}.*}`)
+      - traefik.http.routers.$DEPLOYMENT_NAME.service=$DEPLOYMENT_NAME       
     hostname: $DEPLOYMENT_NAME
     depends_on:
       - "miriaflex-db"
