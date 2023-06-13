@@ -38,7 +38,8 @@ services:
       - 2524
       - 5432
     labels:
-      - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.port=80
+      - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.port=443
+      - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.scheme=https
       - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}.*}`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME.service=$COMPOSE_PROJECT_NAME       
     hostname: $COMPOSE_PROJECT_NAME
