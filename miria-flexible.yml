@@ -18,11 +18,13 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=rzKX2C5%bVY
-      - POSTGRES_HOST_AUTH_METHOD=trust # /!\ Unsecured but should fix DB backup from miria  
+      - POSTGRES_HOST_AUTH_METHOD=trust # /!\ Unsecured but should fix DB backup from miria
+    ports:
+      - 5432        
     networks:
       - easy-docker-host
     env_file:
-     - stack.env      
+     - stack.env          
   miriaflex:
     image: hub.atempo.cloud/$VERSION_TYPE/miria:$VERSION
     pull_policy: always
@@ -80,6 +82,8 @@ services:
       - "miriaflex"
     env_file:
      - stack.env
+    labels:
+      - traefik.enable=false      
 # Env variables are provided by stack, below the list to use them manually if needed : 
 #      - CUSTOM_CMD=mkdir -p /mnt/nfs-nas && mount -v -o vers=4,loud nfs-nas:/ /nas-mounts/nfs1 
 
@@ -100,5 +104,7 @@ services:
       - "miriaflex"
     env_file:
      - stack.env
+    labels:
+      - traefik.enable=false     
 # Env variables are provided by stack, below the list to use them manually if needed : 
 #      - CUSTOM_CMD=mkdir -p /mnt/nfs-nas && mount -v -o vers=4,loud nfs-nas:/ /nas-mounts/nfs1
