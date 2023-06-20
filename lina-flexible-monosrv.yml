@@ -45,7 +45,7 @@ services:
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent01.service=$COMPOSE_PROJECT_NAME-agent01 
     depends_on:
       - "linaflex-server"
-linaflex-agent02:
+  linaflex-agent02:
     image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
     pull_policy: always    
     container_name: $COMPOSE_PROJECT_NAME-agent02
@@ -69,7 +69,7 @@ linaflex-agent02:
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent02.service=$COMPOSE_PROJECT_NAME-agent02 
     depends_on:
       - "linaflex-server"
-linaflex-agent03:
+  linaflex-agent03:
     image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
     pull_policy: always    
     container_name: $COMPOSE_PROJECT_NAME-agent03
@@ -93,7 +93,7 @@ linaflex-agent03:
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent03.service=$COMPOSE_PROJECT_NAME-agent03 
     depends_on:
       - "linaflex-server"
-linaflex-agent04:
+  linaflex-agent04:
     image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
     pull_policy: always    
     container_name: $COMPOSE_PROJECT_NAME-agent04
