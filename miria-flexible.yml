@@ -13,8 +13,6 @@ services:
     pull_policy: always
     container_name: $COMPOSE_PROJECT_NAME-db
     restart: unless-stopped
-    volumes:
-      - miriaflex_postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=rzKX2C5%bVY
