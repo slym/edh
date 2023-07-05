@@ -1,0 +1,44 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  miria-analytics-flex-db:
+    image: postgres:$POSTGRES_VERSION
+    pull_policy: always
+    container_name: $COMPOSE_PROJECT_NAME-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DATABASE=ssy
+      - POSTGRES_USER=ssy
+      - POSTGRES_PASSWORD=6PhmavGc#H58q
+    networks:
+      - easy-docker-host
+  miria-analytics-flex:
+    image: hub.atempo.cloud/$VERSION_TYPE/$PRODUCT_NAME:$VERSION
+    #image: hub.atempo.cloud/releases/miria-analytics:1.0-latest
+    pull_policy: always    
+    container_name: $COMPOSE_PROJECT_NAME
+    restart: unless-stopped
+    networks:
+      - easy-docker-host
+    privileged: true
+    ports:
+      - 443
+      - 9111
+    hostname: $COMPOSE_PROJECT_NAME
+    environment:
+      - POSTGRES_SERVER=$COMPOSE_PROJECT_NAME-db
+      - POSTGRES_DATABASE=ssy
+      - POSTGRES_USER=ssy
+      - POSTGRES_PASSWORD=6PhmavGc#H58q 
+      - POSTGRES_PORT=5432 
+    env_file:
+     - stack.env
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.port=443
+      - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.scheme=https          
+    depends_on:
+      - "$COMPOSE_PROJECT_NAME-db"

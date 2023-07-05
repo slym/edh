@@ -4,9 +4,6 @@ networks:
   easy-docker-host:
     external: true
 
-volumes:
-  miriaflex_postgres_data:
-
 services:
   miriaflex-db:
     image: postgres:$POSTGRES_VERSION
