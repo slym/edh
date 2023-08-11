@@ -14,6 +14,8 @@ services:
       - POSTGRES_DATABASE=ssy
       - POSTGRES_USER=ssy
       - POSTGRES_PASSWORD=6PhmavGc#H58q
+    ports:
+      - 5432
     networks:
       - easy-docker-host
   miria-analytics-flex:

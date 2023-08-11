@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: admin
+#      PGADMIN_DEFAULT_PASSWORD: qsdqsdqsdqdqsd
+    env_file:
+     - stack.env
+    ports:
+      - "80"
+    networks:
+      - easy-docker-host
+
+volumes:
+  pgadmin-data:
+    name: pgadmin-data
+    
+networks:
+  easy-docker-host:
+    external: true  
+    
