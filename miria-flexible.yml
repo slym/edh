@@ -13,7 +13,6 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=rzKX2C5%bVY
-      - POSTGRES_HOST_AUTH_METHOD=trust # /!\ Unsecured but should fix DB backup from miria
     ports:
       - 5432        
     networks:
