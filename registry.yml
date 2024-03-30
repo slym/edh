@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  registry:
+    image: registry:latest
+    container_name: registry
+    restart: always    
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 5000:5000
+    networks: 
+      - easy-docker-host
+    volumes:
+      - registry_data:/var/lib/registry
+    environment:
+      - REGISTRY_STORAGE_DELETE_ENABLED=true
+
+  registry-browser:
+    image:  klausmeyer/docker-registry-browser:latest
+    container_name: registry-browser
+    restart: always  
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 5001:8080
+    networks: 
+      - easy-docker-host
+    environment:
+      - DOCKER_REGISTRY_URL=http://registry:5000
+      - ENABLE_DELETE_IMAGES=true
+      - PUBLIC_REGISTRY_URL=https://registry.hostname.com
+    depends_on:
+      - "registry"
+
+networks:
+  easy-docker-host:
+    external: true
