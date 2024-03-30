@@ -8,7 +8,7 @@ services:
     security_opt:
       - no-new-privileges:true
     ports:
-      - 5000:5000
+      - 5000
     networks: 
       - easy-docker-host
     volumes:
@@ -23,7 +23,7 @@ services:
     security_opt:
       - no-new-privileges:true
     ports:
-      - 5001:8080
+      - 8080
     networks: 
       - easy-docker-host
     environment:
@@ -32,6 +32,8 @@ services:
       - PUBLIC_REGISTRY_URL=https://registry.hostname.com
     depends_on:
       - "registry"
+volumes:
+  web_data:
 
 networks:
   easy-docker-host:
