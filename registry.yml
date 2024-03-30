@@ -30,6 +30,7 @@ services:
       - DOCKER_REGISTRY_URL=http://registry:5000
       - ENABLE_DELETE_IMAGES=true
       - PUBLIC_REGISTRY_URL=https://registry.hostname.com
+      - SECRET_KEY_BASE=a096698667cffcc404b171c073b14a9e2722cf0163b16de64ddf71e69816235e41c4b58cbcff5d3c1604e67324d95f271fb7363a5404286dbb5225192905c869
     depends_on:
       - "registry"
 volumes:
