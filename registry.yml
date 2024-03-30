@@ -33,7 +33,7 @@ services:
     depends_on:
       - "registry"
 volumes:
-  web_data:
+  registry_data:
 
 networks:
   easy-docker-host:
