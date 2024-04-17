@@ -8,7 +8,7 @@ services:
   ssr:
     image: ${SSR_IMAGE}
     pull_policy: always    
-    container_name: ssr
+    container_name: $COMPOSE_PROJECT_NAME
     restart: unless-stopped
     ports:
       - 8080
