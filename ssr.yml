@@ -14,8 +14,8 @@ services:
       - 8080
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.scheme=https
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`^${COMPOSE_PROJECT_NAME}.{any:.+}`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME.service=$COMPOSE_PROJECT_NAME  
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}.{any:.+}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.service=$COMPOSE_PROJECT_NAME
     networks:
       - easy-docker-host
     env_file:
