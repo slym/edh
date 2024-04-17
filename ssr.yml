@@ -8,13 +8,15 @@ services:
   ssr:
     image: ${SSR_IMAGE}
     pull_policy: always    
-    container_name: ssr
+    container_name: ${COMPOSE_PROJECT_NAME}
     restart: unless-stopped
     ports:
       - 8080
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.scheme=https
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`^${COMPOSE_PROJECT_NAME}.{any:.+}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.service=$COMPOSE_PROJECT_NAME  
     networks:
       - easy-docker-host
     env_file:
-     - stack.env  
+     - stack.env
