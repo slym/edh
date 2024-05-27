@@ -7,6 +7,8 @@ services:
     pull_policy: always  
     networks:
       - msp-portal
+    expose:
+      - 1883
 
   mongodb:
     image: registry.atempo.com/public/msp/mongo:${VERSION:-latest}
@@ -22,7 +24,9 @@ services:
       # - MONGO_INITDB_USER=mongodb
       # - MONGO_INITDB_PWD=mongodb    
     networks:
-      - msp-portal     
+      - msp-portal
+    expose:
+      - 27017
 
   influxdb:
     image: registry.atempo.com/public/msp/influxdb:${VERSION:-latest}
@@ -30,7 +34,7 @@ services:
     restart: always
     pull_policy: always    
     volumes:
-      - influxdb2_data:/var/lib/influxdb2
+      - influxdb_data:/var/lib/influxdb2
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
       DOCKER_INFLUXDB_INIT_USERNAME: admin
@@ -41,7 +45,9 @@ services:
       DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: "testtokenformspusecasewhichwillbeusedfortesting=="
     #command: bash -c "influxd & /scripts/generate_token.sh"    
     networks:
-      - msp-portal      
+      - msp-portal
+    expose:
+      - 8086
 
   lina-aggregator:
     image: registry.atempo.com/public/msp/lina-aggregator:${VERSION:-latest}
@@ -49,7 +55,9 @@ services:
     restart: always
     pull_policy: always     
     networks:
-      - msp-portal        
+      - msp-portal
+    expose:
+      - 3002
 
   lina-backend:
     image: registry.atempo.com/public/msp/lina-backend:${VERSION:-latest}
@@ -68,14 +76,18 @@ services:
       MONGO_STRING: mongodb://mongodb/portal_admin?retryWrites=true&w=majority
       LINA_ENGINE_URL: http://lina-aggregator:3002/v1  
     networks:
-      - msp-portal 
-
+      - msp-portal
+    expose:
+      - 8081
+ 
   tina-aggregator:
     image: registry.atempo.com/public/msp/tina-aggregator:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-tina-aggregator
     restart: always
-    pull_policy: always   
-
+    pull_policy: always
+    expose:
+      - 3005
+   
   tina-backend:
     image: registry.atempo.com/public/msp/tina-backend:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-tina-backend
@@ -88,31 +100,8 @@ services:
       MONGO_STRING : mongodb://mongodb/
       MONGO_DB: portal_admin
       TINA_AGGREGATOR: http://tina-aggregator:3005
-
-  portal-backend:
-    image: registry.atempo.com/public/msp/portal-backend:${VERSION:-latest}
-    container_name: $COMPOSE_PROJECT_NAME-backend
-    restart: always
-    pull_policy: always   
-    depends_on:
-      - "mongodb"
-      - "influxdb"
-      - "lina-backend"
-      - "tina-backend"
-      - "mqtt"
-    environment:
-      LINA_API_URL :  http://lina-backend:8081
-      TINA_API_URL: http://tina-backend:8082
-      PORTAL_ASYNC_PROCESS_API_URL: http://portal-async-process:8009
-      MQTT_SERVER: mqtt
-      MONGO_STRING: mongodb://mongodb/portal_admin?retryWrites=true&w=majority
-      SOCKET_SERVER_URL: http://portal-backend:8008
-      SUPER_ADMIN_USERNAME: ${SUPER_ADMIN_USERNAME:-superadmin@atempo.com}
-      SUPER_ADMIN_PASSWORD: ${SUPER_ADMIN_PASSWORD:-ATempo1992@}
-      MASTER_ORG_NAME: ${MASTER_ORG_NAME:-Atempo}
-      MASTER_ORG_DISPLAY_NAME: ${MASTER_ORG_DISPLAY_NAME:-Atempo Org}
-    networks:
-      - msp-portal 
+    expose:
+      - 8082
 
   portal-async-process:
     image: registry.atempo.com/public/msp/portal-async-process:${VERSION:-latest}
@@ -124,7 +113,36 @@ services:
     environment:
       MONGO_STRING : mongodb://mongodb/
       MONGO_DB: portal_admin
-       
+    expose:
+      - 8009
+
+  portal-backend:
+    image: registry.atempo.com/public/msp/portal-backend:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-portal-backend
+    restart: always
+    pull_policy: always   
+    depends_on:
+      - "mongodb"
+      - "influxdb"
+      - "lina-backend"
+      - "tina-backend"
+      - "portal-async-process"      
+      - "mqtt"
+    environment:
+      LINA_API_URL : http://lina-backend:8081
+      TINA_API_URL: http://tina-backend:8082
+      PORTAL_ASYNC_PROCESS_API_URL: http://portal-async-process:8009
+      MQTT_SERVER: mqtt
+      MONGO_STRING: mongodb://mongodb/portal_admin?retryWrites=true&w=majority
+      SOCKET_SERVER_URL: http://portal-backend:8008
+      SUPER_ADMIN_USERNAME: ${SUPER_ADMIN_USERNAME:-superadmin@atempo.com}
+      SUPER_ADMIN_PASSWORD: ${SUPER_ADMIN_PASSWORD:-ATempo1992@}
+      MASTER_ORG_NAME: ${MASTER_ORG_NAME:-Atempo}
+      MASTER_ORG_DISPLAY_NAME: ${MASTER_ORG_DISPLAY_NAME:-Atempo Org}
+    networks:
+      - msp-portal 
+    expose:
+      - 8008
 
   portal-webui:
     image: registry.atempo.com/public/msp/portal-webui:${VERSION:-latest}
@@ -147,7 +165,7 @@ services:
 
 volumes:
   mongodb_data:
-  influxdb2_data:
+  influxdb_data:
 
 networks:
   msp-portal:
