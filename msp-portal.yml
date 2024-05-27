@@ -94,8 +94,8 @@ services:
     restart: always
     pull_policy: always 
     depends_on:
-      - tina-aggregator
-      - mongodb
+      - "tina-aggregator"
+      - "mongodb"
     environment:
       MONGO_STRING : mongodb://mongodb/
       MONGO_DB: portal_admin
