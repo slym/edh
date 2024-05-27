@@ -18,7 +18,7 @@ services:
     environment:
       # - MONGO_INITDB_ROOT_USERNAME=admin
       # - MONGO_INITDB_ROOT_PASSWORD=admin
-      - MONGO_INITDB_DATABASE=partner_admin
+      - MONGO_INITDB_DATABASE=portal_admin
       # - MONGO_INITDB_USER=mongodb
       # - MONGO_INITDB_PWD=mongodb    
     networks:
@@ -65,7 +65,7 @@ services:
       INFLUX_DB_URL: http://influxdb:8086
       INFLUXDB_TOKEN: "testtokenformspusecasewhichwillbeusedfortesting=="
       MQTT_URL: mqtt
-      MONGO_STRING: mongodb://mongodb/partner_portal?retryWrites=true&w=majority
+      MONGO_STRING: mongodb://mongodb/portal_admin?retryWrites=true&w=majority
       LINA_ENGINE_URL: http://lina-aggregator:3002/v1  
     networks:
       - msp-portal 
@@ -105,7 +105,7 @@ services:
       TINA_API_URL: http://tina-backend:8082
       PORTAL_ASYNC_PROCESS_API_URL: http://portal-async-process:8009
       MQTT_SERVER: mqtt
-      MONGO_STRING: mongodb://mongodb/partner_portal?retryWrites=true&w=majority
+      MONGO_STRING: mongodb://mongodb/portal_admin?retryWrites=true&w=majority
       SOCKET_SERVER_URL: http://portal-backend:8008
       SUPER_ADMIN_USERNAME: ${SUPER_ADMIN_USERNAME:-superadmin@atempo.com}
       SUPER_ADMIN_PASSWORD: ${SUPER_ADMIN_PASSWORD:-ATempo1992@}
