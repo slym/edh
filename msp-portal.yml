@@ -1,0 +1,156 @@
+version: "3.8"
+services:
+  mqtt:
+    image: registry.atempo.com/public/msp/mqtt:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-mqtt    
+    restart: always
+    pull_policy: always  
+    networks:
+      - msp-portal
+
+  mongodb:
+    image: registry.atempo.com/public/msp/mongo:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-mongodb    
+    restart: always
+    pull_policy: always    
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      # - MONGO_INITDB_ROOT_USERNAME=admin
+      # - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_INITDB_DATABASE=partner_admin
+      # - MONGO_INITDB_USER=mongodb
+      # - MONGO_INITDB_PWD=mongodb    
+    networks:
+      - msp-portal     
+
+  influxdb:
+    image: registry.atempo.com/public/msp/influxdb:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-influxdb        
+    restart: always
+    pull_policy: always    
+    volumes:
+      - influxdb2_data:/var/lib/influxdb2
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: adminpassword
+      DOCKER_INFLUXDB_INIT_ORG: atempo
+      DOCKER_INFLUXDB_INIT_BUCKET: analytics
+      DOCKER_INFLUXDB_INIT_RETENTION: 0
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: "testtokenformspusecasewhichwillbeusedfortesting=="
+    #command: bash -c "influxd & /scripts/generate_token.sh"    
+    networks:
+      - msp-portal      
+
+  lina-aggregator:
+    image: registry.atempo.com/public/msp/lina-aggregator:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-lina-aggregator
+    restart: always
+    pull_policy: always     
+    networks:
+      - msp-portal        
+
+  lina-backend:
+    image: registry.atempo.com/public/msp/lina-backend:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-lina-backend
+    restart: always
+    pull_policy: always     
+    depends_on:
+      - "lina-aggregator"
+      - "mongodb"
+      - "influxdb"
+      - "mqtt"
+    environment:
+      INFLUX_DB_URL: http://influxdb:8086
+      INFLUXDB_TOKEN: "testtokenformspusecasewhichwillbeusedfortesting=="
+      MQTT_URL: mqtt
+      MONGO_STRING: mongodb://mongodb/partner_portal?retryWrites=true&w=majority
+      LINA_ENGINE_URL: http://lina-aggregator:3002/v1  
+    networks:
+      - msp-portal 
+
+  tina-aggregator:
+    image: registry.atempo.com/public/msp/tina-aggregator:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-tina-aggregator
+    restart: always
+    pull_policy: always   
+
+  tina-backend:
+    image: registry.atempo.com/public/msp/tina-backend:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-tina-backend
+    restart: always
+    pull_policy: always 
+    depends_on:
+      - tina-aggregator
+      - mongodb
+    environment:
+      MONGO_STRING : mongodb://mongodb/
+      MONGO_DB: portal_admin
+      TINA_AGGREGATOR: http://tina-aggregator:3005
+
+  portal-backend:
+    image: registry.atempo.com/public/msp/portal-backend:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-backend
+    restart: always
+    pull_policy: always   
+    depends_on:
+      - "mongodb"
+      - "influxdb"
+      - "lina-backend"
+      - "tina-backend"
+      - "mqtt"
+    environment:
+      LINA_API_URL :  http://lina-backend:8081
+      TINA_API_URL: http://tina-backend:8082
+      PORTAL_ASYNC_PROCESS_API_URL: http://portal-async-process:8009
+      MQTT_SERVER: mqtt
+      MONGO_STRING: mongodb://mongodb/partner_portal?retryWrites=true&w=majority
+      SOCKET_SERVER_URL: http://portal-backend:8008
+      SUPER_ADMIN_USERNAME: ${SUPER_ADMIN_USERNAME:-superadmin@atempo.com}
+      SUPER_ADMIN_PASSWORD: ${SUPER_ADMIN_PASSWORD:-ATempo1992@}
+      MASTER_ORG_NAME: ${MASTER_ORG_NAME:-Atempo}
+      MASTER_ORG_DISPLAY_NAME: ${MASTER_ORG_DISPLAY_NAME:-Atempo Org}
+    networks:
+      - msp-portal 
+
+  portal-async-process:
+    image: registry.atempo.com/public/msp/portal-async-process:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-portal-async-process
+    restart: always
+    pull_policy: always    
+    depends_on:
+      - mongodb
+    environment:
+      MONGO_STRING : mongodb://mongodb/
+      MONGO_DB: portal_admin
+       
+
+  portal-webui:
+    image: registry.atempo.com/public/msp/portal-webui:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-webui     
+    restart: always
+    pull_policy: always     
+    depends_on:
+      - "portal-backend"
+    environment:
+      VITE_APP_API_ROOT: /api/v2
+      VITE_APP_SOCKET_ENABLE: true
+      VITE_APP_SOCKET_HOST:
+    expose:
+      - 80
+    labels:
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}.*}`)      
+    networks:
+      - msp-portal
+      - easy-docker-host
+
+volumes:
+  mongodb_data:
+  influxdb2_data:
+
+networks:
+  msp-portal:
+    external: false
+  easy-docker-host:
+    external: true   
