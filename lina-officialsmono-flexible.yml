@@ -1,0 +1,115 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  linaflex-server:
+    image: registry.atempo.com/public/lina:$VERSION$FULL_OR_LIGHT
+    pull_policy: always
+    container_name: $COMPOSE_PROJECT_NAME-server
+    hostname: $COMPOSE_PROJECT_NAME-server 
+    restart: unless-stopped
+    ports:
+      - 8181 # Data port
+      - 8182 # Admin port
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-admin.loadbalancer.server.port=8182
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-admin.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-admin.service=$COMPOSE_PROJECT_NAME-admin
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-data.loadbalancer.server.port=8181
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-data.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-data.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-data.service=$COMPOSE_PROJECT_NAME-data                
+    env_file:
+     - stack.env
+    networks:
+      - easy-docker-host
+  linaflex-agent01:
+    image: registry.atempo.com/public/lina-agentsimulator:latest
+    pull_policy: always    
+    container_name: $COMPOSE_PROJECT_NAME-agent01
+    hostname: $COMPOSE_PROJECT_NAME-agent01
+    restart: unless-stopped
+    environment:
+      - LINA_CONNECTION_STRING=$COMPOSE_PROJECT_NAME-agent01@$COMPOSE_PROJECT_NAME-server
+      - LINA_EMAIL=user-of-agent01@protectedcorp.com
+      - LINA_PROTECTEDPATH=/data
+    env_file:
+     - stack.env         
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent01.loadbalancer.server.port=27261
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent01.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-agent01.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent01.service=$COMPOSE_PROJECT_NAME-agent01 
+    depends_on:
+      - "linaflex-server"
+  linaflex-agent02:
+    image: registry.atempo.com/public/lina-agentsimulator:latest
+    pull_policy: always    
+    container_name: $COMPOSE_PROJECT_NAME-agent02
+    hostname: $COMPOSE_PROJECT_NAME-agent02
+    restart: unless-stopped
+    environment:
+      - LINA_CONNECTION_STRING=$COMPOSE_PROJECT_NAME-agent02@$COMPOSE_PROJECT_NAME-server
+      - LINA_EMAIL=user-of-agent02@protectedcorp.com
+      - LINA_PROTECTEDPATH=/data
+    env_file:
+     - stack.env         
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent02.loadbalancer.server.port=27261
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent02.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-agent02.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent02.service=$COMPOSE_PROJECT_NAME-agent02 
+    depends_on:
+      - "linaflex-server"
+  linaflex-agent03:
+    image: registry.atempo.com/public/lina-agentsimulator:latest
+    pull_policy: always    
+    container_name: $COMPOSE_PROJECT_NAME-agent03
+    hostname: $COMPOSE_PROJECT_NAME-agent03
+    restart: unless-stopped
+    environment:
+      - LINA_CONNECTION_STRING=$COMPOSE_PROJECT_NAME-agent03@$COMPOSE_PROJECT_NAME-server
+      - LINA_EMAIL=user-of-agent03@protectedcorp.com
+      - LINA_PROTECTEDPATH=/data
+    env_file:
+     - stack.env         
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent03.loadbalancer.server.port=27261
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent03.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-agent03.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent03.service=$COMPOSE_PROJECT_NAME-agent03
+    depends_on:
+      - "linaflex-server" 
+  linaflex-agent04:
+    image: registry.atempo.com/public/lina-agentsimulator:latest
+    pull_policy: always    
+    container_name: $COMPOSE_PROJECT_NAME-agent04
+    hostname: $COMPOSE_PROJECT_NAME-agent04
+    restart: unless-stopped
+    environment:
+      - LINA_CONNECTION_STRING=$COMPOSE_PROJECT_NAME-agent04@$COMPOSE_PROJECT_NAME-server
+      - LINA_EMAIL=user-of-agent04@protectedcorp.com
+      - LINA_PROTECTEDPATH=/data
+    env_file:
+     - stack.env
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent04.loadbalancer.server.port=27261
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent04.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-agent04.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent04.service=$COMPOSE_PROJECT_NAME-agent04
+    depends_on:
+      - "linaflex-server"               

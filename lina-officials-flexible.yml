@@ -1,0 +1,174 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  linaflex-master:
+    image: hub.atempo.cloud/$VERSION_TYPE/lina:$VERSION$FULL_OR_LIGHT
+    pull_policy: always    
+    container_name: $COMPOSE_PROJECT_NAME-master
+    hostname: $COMPOSE_PROJECT_NAME-master
+    restart: unless-stopped
+    ports:
+      - 443 # Used for both webUI only
+      - 8181 # Used for data (to nodes and from agents) 
+    environment:
+      - INSTALL_ADE_DATABASE=1
+      - ADE_PRODUCT=ALN
+      - USE_HTTP=1
+      # ADE_UPDATEURL:
+      # ADE_SERVERNAME:
+      # ADE_WEBRESTOREURL:
+      - ADE_IS_MASTER=1
+      - MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-master.loadbalancer.server.port=443
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-master.rule=HostRegexp(`{subdomain:^$COMPOSE_PROJECT_NAME-master.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-master.service=$COMPOSE_PROJECT_NAME-master
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-master-data.loadbalancer.server.port=8181
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-master-data.rule=HostRegexp(`{subdomain:^$COMPOSE_PROJECT_NAME-master-data.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-master-data.service=$COMPOSE_PROJECT_NAME-master-data
+    env_file:
+     - stack.env      
+    networks:
+      - easy-docker-host
+  linaflex-node1:
+    image: hub.atempo.cloud/$VERSION_TYPE/lina:$VERSION$FULL_OR_LIGHT
+    pull_policy: always
+    container_name: $COMPOSE_PROJECT_NAME-node1
+    hostname: $COMPOSE_PROJECT_NAME-node1 
+    restart: unless-stopped
+    ports:
+      - 8181 # Used for both data and webUI
+    environment:
+      - LINA_MASTER=$COMPOSE_PROJECT_NAME-master
+      - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-node1.loadbalancer.server.port=8181
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-node1.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-node1.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-node1.service=$COMPOSE_PROJECT_NAME-node1              
+    env_file:
+     - stack.env      
+    networks:
+      - easy-docker-host
+    depends_on:
+      - "linaflex-master"
+  linaflex-node2:
+    image: hub.atempo.cloud/$VERSION_TYPE/lina:$VERSION$FULL_OR_LIGHT
+    pull_policy: always    
+    container_name: $COMPOSE_PROJECT_NAME-node2
+    hostname: $COMPOSE_PROJECT_NAME-node2    
+    restart: unless-stopped
+    ports:
+      - 8181 # Used for both data and webUI
+    environment:
+      - LINA_MASTER=$COMPOSE_PROJECT_NAME-master
+      - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-node2.loadbalancer.server.port=8181
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-node2.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-node2.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-node2.service=$COMPOSE_PROJECT_NAME-node2               
+    env_file:
+     - stack.env              
+    networks:
+      - easy-docker-host
+    depends_on:
+      - "linaflex-master"    
+  linaflex-agent1:
+    image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
+    pull_policy: always    
+    container_name: $COMPOSE_PROJECT_NAME-agent1
+    hostname: $COMPOSE_PROJECT_NAME-agent1
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=$COMPOSE_PROJECT_NAME-master
+      - LINA_AGENTNAME=$COMPOSE_PROJECT_NAME-agent1
+#      - ROOT_PASSWORD=Atempo1992$$
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true        
+#      - LINA_DEBUGMODE=VOLS:5;
+    env_file:
+     - stack.env         
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent1.loadbalancer.server.port=27261
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent1.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-agent1.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent1.service=$COMPOSE_PROJECT_NAME-agent1 
+    depends_on:
+      - "linaflex-master"
+  linaflex-agent2:
+    image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
+    pull_policy: always    
+    container_name: $COMPOSE_PROJECT_NAME-agent2
+    hostname: $COMPOSE_PROJECT_NAME-agent2    
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=$COMPOSE_PROJECT_NAME-master
+      - LINA_AGENTNAME=$COMPOSE_PROJECT_NAME-agent2
+#      - ROOT_PASSWORD=Atempo1992$$
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
+#      - LINA_DEBUGMODE=VOLS:5;
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent2.loadbalancer.server.port=27261
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent2.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-agent2.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent2.service=$COMPOSE_PROJECT_NAME-agent2 
+    env_file:
+     - stack.env         
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "linaflex-master"
+  linaflex-agent3:
+    image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
+    pull_policy: always    
+    container_name: $COMPOSE_PROJECT_NAME-agent3
+    hostname: $COMPOSE_PROJECT_NAME-agent3   
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=$COMPOSE_PROJECT_NAME-master
+      - LINA_AGENTNAME=$COMPOSE_PROJECT_NAME-agent3
+#      - ROOT_PASSWORD=Atempo1992$$
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
+#      - LINA_DEBUGMODE=VOLS:5;
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent3.loadbalancer.server.port=27261
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent3.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-agent3.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent3.service=$COMPOSE_PROJECT_NAME-agent3 
+    env_file:
+     - stack.env        
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "linaflex-master"
+  linaflex-agent4:
+    image: hub.atempo.cloud/$VERSION_TYPE/lina-agent:$VERSION
+    pull_policy: always    
+    container_name: $COMPOSE_PROJECT_NAME-agent4
+    hostname: $COMPOSE_PROJECT_NAME-agent4   
+    restart: unless-stopped
+    environment:
+      - LINA_SERVERNAME=$COMPOSE_PROJECT_NAME-master
+      - LINA_AGENTNAME=$COMPOSE_PROJECT_NAME-agent4
+#      - ROOT_PASSWORD=Atempo1992$$
+      - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true  
+#      - LINA_DEBUGMODE=VOLS:5;
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent4.loadbalancer.server.port=27261
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent4.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-agent4.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent4.service=$COMPOSE_PROJECT_NAME-agent4 
+    env_file:
+     - stack.env           
+    networks:
+      - easy-docker-host
+    ports:
+      - 27261
+    depends_on:
+      - "linaflex-master"      
