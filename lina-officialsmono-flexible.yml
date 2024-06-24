@@ -16,7 +16,7 @@ services:
       - 8182 # Admin port
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-admin.loadbalancer.server.port=8182
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-admin.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-admin.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-admin.*}`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-admin.service=$COMPOSE_PROJECT_NAME-admin
       - traefik.http.services.$COMPOSE_PROJECT_NAME-data.loadbalancer.server.port=8181
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-data.rule=HostRegexp(`{subdomaindata:^${COMPOSE_PROJECT_NAME}-data.*}`)
