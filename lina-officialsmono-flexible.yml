@@ -19,7 +19,7 @@ services:
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-admin.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}.*}`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-admin.service=$COMPOSE_PROJECT_NAME-admin
       - traefik.http.services.$COMPOSE_PROJECT_NAME-data.loadbalancer.server.port=8181
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-data.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-data.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-data.rule=HostRegexp(`{subdomaindata:^${COMPOSE_PROJECT_NAME}-data.*}`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-data.service=$COMPOSE_PROJECT_NAME-data                
     env_file:
      - stack.env
