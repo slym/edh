@@ -66,6 +66,7 @@ services:
 
   mailer:
     image: registry.atempo.com/public/msp/mailer:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-mailer 
     restart: always
     pull_policy: always  
     expose:
@@ -139,8 +140,9 @@ services:
     restart: always
     pull_policy: always    
     depends_on:
-      - mongodb
-      - mailer
+      - "mongodb"
+      - "mailer"
+      - "minio"
     environment:
       MONGO_STRING : mongodb://mongodb/
       MONGO_DB: portal_admin
