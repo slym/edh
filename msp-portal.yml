@@ -99,7 +99,7 @@ services:
       INFLUXDB_TOKEN: "testtokenformspusecasewhichwillbeusedfortesting=="
       MQTT_SERVER: mqtt
       MONGO_STRING: mongodb://mongodb/portal_admin?retryWrites=true&w=majority
-      LINA_ENGINE_URL: http://lina-aggregator:3002/v1  
+      LINA_AGGREGATOR_API_URL: http://lina-aggregator:3002/v1
     networks:
       - easy-docker-host
     expose:
@@ -128,7 +128,7 @@ services:
       NODE_ENV: development
       MONGO_STRING : mongodb://mongodb/
       MONGO_DB: portal_admin
-      TINA_AGGREGATOR: http://tina-aggregator:3005
+      TINA_AGGREGATOR_API_URL: http://tina-aggregator:3005
     networks:
       - easy-docker-host
     expose:
