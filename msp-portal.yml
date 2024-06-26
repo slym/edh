@@ -136,7 +136,7 @@ services:
 
   portal-async-process:
     image: registry.atempo.com/public/msp/portal-async-process:${VERSION:-latest}
-    container_name: $COMPOSE_PROJECT_NAME-portal-async-process
+    container_name: $COMPOSE_PROJECT_NAME-async-process
     restart: always
     pull_policy: always    
     depends_on:
@@ -158,7 +158,7 @@ services:
 
   portal-backend:
     image: registry.atempo.com/public/msp/portal-backend:${VERSION:-latest}
-    container_name: $COMPOSE_PROJECT_NAME-portal-backend
+    container_name: $COMPOSE_PROJECT_NAME-backend
     restart: always
     pull_policy: always   
     depends_on:
