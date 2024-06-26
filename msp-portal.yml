@@ -1,4 +1,5 @@
 version: "3.8"
+
 services:
   mqtt:
     image: registry.atempo.com/public/msp/mqtt:${VERSION:-latest}
@@ -6,9 +7,27 @@ services:
     restart: always
     pull_policy: always  
     networks:
-      - msp-portal
+      - easy-docker-host
     expose:
       - 1883
+
+  minio:
+    image: registry.atempo.com/public/msp/minio:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-minio    
+    restart: always
+    pull_policy: always
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: adminpassword
+      MINIO_API_BUCKET_NAME: mspportal
+    volumes:
+      - msp_portal_minio:/data           
+    networks:
+      - easy-docker-host
+    command: server /data --console-address ":9001" --address ":9000"   
+    expose:
+      - 9000
+      - 9001
 
   mongodb:
     image: registry.atempo.com/public/msp/mongo:${VERSION:-latest}
@@ -16,15 +35,11 @@ services:
     restart: always
     pull_policy: always    
     volumes:
-      - mongodb_data:/data/db
+      - msp_portal_mongodb:/data/db
     environment:
-      # - MONGO_INITDB_ROOT_USERNAME=admin
-      # - MONGO_INITDB_ROOT_PASSWORD=admin
       - MONGO_INITDB_DATABASE=portal_admin
-      # - MONGO_INITDB_USER=mongodb
-      # - MONGO_INITDB_PWD=mongodb    
     networks:
-      - msp-portal
+      - easy-docker-host
     expose:
       - 27017
 
@@ -34,7 +49,7 @@ services:
     restart: always
     pull_policy: always    
     volumes:
-      - influxdb_data:/var/lib/influxdb2
+      - msp_portal_influxdb:/var/lib/influxdb2
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
       DOCKER_INFLUXDB_INIT_USERNAME: admin
@@ -45,9 +60,16 @@ services:
       DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: "testtokenformspusecasewhichwillbeusedfortesting=="
     #command: bash -c "influxd & /scripts/generate_token.sh"    
     networks:
-      - msp-portal
+      - easy-docker-host
     expose:
       - 8086
+
+  mailer:
+    image: registry.atempo.com/public/msp/mailer:${VERSION:-latest}
+    restart: always
+    pull_policy: always  
+    expose:
+      - 8010
 
   lina-aggregator:
     image: registry.atempo.com/public/msp/lina-aggregator:${VERSION:-latest}
@@ -55,7 +77,7 @@ services:
     restart: always
     pull_policy: always     
     networks:
-      - msp-portal
+      - easy-docker-host
     expose:
       - 3002
 
@@ -70,13 +92,15 @@ services:
       - "influxdb"
       - "mqtt"
     environment:
+      DEBUG: '*'
+      NODE_ENV: development    
       INFLUX_DB_URL: http://influxdb:8086
       INFLUXDB_TOKEN: "testtokenformspusecasewhichwillbeusedfortesting=="
-      MQTT_URL: mqtt
+      MQTT_SERVER: mqtt
       MONGO_STRING: mongodb://mongodb/portal_admin?retryWrites=true&w=majority
       LINA_ENGINE_URL: http://lina-aggregator:3002/v1  
     networks:
-      - msp-portal
+      - easy-docker-host
     expose:
       - 8081
  
@@ -86,7 +110,7 @@ services:
     restart: always
     pull_policy: always
     networks:
-      - msp-portal    
+      - easy-docker-host    
     expose:
       - 3005
    
@@ -99,11 +123,13 @@ services:
       - "tina-aggregator"
       - "mongodb"
     environment:
+      DEBUG: '*'
+      NODE_ENV: development
       MONGO_STRING : mongodb://mongodb/
       MONGO_DB: portal_admin
       TINA_AGGREGATOR: http://tina-aggregator:3005
     networks:
-      - msp-portal
+      - easy-docker-host
     expose:
       - 8082
 
@@ -114,11 +140,17 @@ services:
     pull_policy: always    
     depends_on:
       - mongodb
+      - mailer
     environment:
       MONGO_STRING : mongodb://mongodb/
       MONGO_DB: portal_admin
+      MINIO_API_URL: http://minio:9000
+      MINIO_API_USER: admin
+      MINIO_API_PASSWORD: adminpassword
+      MINIO_API_BUCKET_NAME: mspportal
+      MAILER_API_URL: http://mailer:8010      
     networks:
-      - msp-portal
+      - easy-docker-host
     expose:
       - 8009
 
@@ -130,23 +162,32 @@ services:
     depends_on:
       - "mongodb"
       - "influxdb"
+      - "mailer"
+      - "mqtt"
+      - "minio"
       - "lina-backend"
       - "tina-backend"
-      - "portal-async-process"      
-      - "mqtt"
+      - "portal-async-process"
     environment:
-      LINA_API_URL : http://lina-backend:8081
-      TINA_API_URL: http://tina-backend:8082
+      DEBUG: '*'
+      NODE_ENV: development
+      LINA_BACKEND_API_URL: http://lina-backend:8081
+      TINA_BACKEND_API_URL: http://tina-backend:8082
       PORTAL_ASYNC_PROCESS_API_URL: http://portal-async-process:8009
       MQTT_SERVER: mqtt
       MONGO_STRING: mongodb://mongodb/portal_admin?retryWrites=true&w=majority
+      MAILER_API_URL: http://mailer:8010
+      MINIO_API_URL: http://minio:9000
+      MINIO_API_USER: admin
+      MINIO_API_PASSWORD: adminpassword
+      MINIO_API_BUCKET_NAME: mspportal
       SOCKET_SERVER_URL: http://portal-backend:8008
       SUPER_ADMIN_USERNAME: ${SUPER_ADMIN_USERNAME:-superadmin@atempo.com}
       SUPER_ADMIN_PASSWORD: ${SUPER_ADMIN_PASSWORD:-ATempo1992@}
       MASTER_ORG_NAME: ${MASTER_ORG_NAME:-Atempo}
       MASTER_ORG_DISPLAY_NAME: ${MASTER_ORG_DISPLAY_NAME:-Atempo Org}
     networks:
-      - msp-portal 
+      - easy-docker-host 
     expose:
       - 8008
 
@@ -166,15 +207,14 @@ services:
     labels:
       - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}.*}`)      
     networks:
-      - msp-portal
       - easy-docker-host
 
+
 volumes:
-  mongodb_data:
-  influxdb_data:
+  msp_portal_mongodb:
+  msp_portal_influxdb:
+  msp_portal_minio:
 
 networks:
-  msp-portal:
-    external: false
   easy-docker-host:
     external: true   
