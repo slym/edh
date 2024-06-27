@@ -38,7 +38,7 @@ services:
       - 8181 # Data port
       - 8182 # Admin port
     environment:
-      - ADE_MASTER_NAME=$COMPOSE_PROJECT_NAME-master
+      - ADE_MASTER_NAME=$COMPOSE_PROJECT_NAME-master:8181:8182
       - ADE_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-node1.loadbalancer.server.port=8182
@@ -63,7 +63,7 @@ services:
       - 8181 # Data port
       - 8182 # Admin port
     environment:
-      - ADE_MASTER_NAME=$COMPOSE_PROJECT_NAME-master
+      - ADE_MASTER_NAME=$COMPOSE_PROJECT_NAME-master:8181:8182
       - ADE_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-node2.loadbalancer.server.port=8182
