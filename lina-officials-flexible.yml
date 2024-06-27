@@ -18,6 +18,8 @@ services:
       - ADE_IS_MASTER=1
       - ADE_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
       - ADE_UPDATEURL=https://${COMPOSE_PROJECT_NAME}-master-data.${EXTERNAL_DOMAIN}/Agents
+      - ADE_WEBRESTOREURL=https://${COMPOSE_PROJECT_NAME}-master-data.${EXTERNAL_DOMAIN}/AAgent
+      - ADE_SERVERNAME=${COMPOSE_PROJECT_NAME}-master-data.${EXTERNAL_DOMAIN}:443
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-master.loadbalancer.server.port=8182
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-master.rule=HostRegexp(`{subdomain:^$COMPOSE_PROJECT_NAME-master.*}`)
@@ -41,6 +43,8 @@ services:
     environment:
       - ADE_MASTER_NAME=$COMPOSE_PROJECT_NAME-master:8181:8182
       - ADE_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
+      - ADE_SERVERNAME=${COMPOSE_PROJECT_NAME}-node1-data.${EXTERNAL_DOMAIN}:443
+      - ADE_WEBRESTOREURL=https://${COMPOSE_PROJECT_NAME}-node1-data.${EXTERNAL_DOMAIN}/AAgent      
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-node1.loadbalancer.server.port=8182
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-node1.rule=HostRegexp(`{subdomain:^$COMPOSE_PROJECT_NAME-node1.*}`)
@@ -66,6 +70,8 @@ services:
     environment:
       - ADE_MASTER_NAME=$COMPOSE_PROJECT_NAME-master:8181:8182
       - ADE_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
+      - ADE_SERVERNAME=${COMPOSE_PROJECT_NAME}-node2-data.${EXTERNAL_DOMAIN}:443
+      - ADE_WEBRESTOREURL=https://${COMPOSE_PROJECT_NAME}-node2-data.${EXTERNAL_DOMAIN}/AAgent           
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-node2.loadbalancer.server.port=8182
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-node2.rule=HostRegexp(`{subdomain:^$COMPOSE_PROJECT_NAME-node2.*}`)
