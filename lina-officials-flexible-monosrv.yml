@@ -20,7 +20,11 @@ services:
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-admin.service=$COMPOSE_PROJECT_NAME-admin
       - traefik.http.services.$COMPOSE_PROJECT_NAME-data.loadbalancer.server.port=8181
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-data.rule=HostRegexp(`{subdomaindata:^${COMPOSE_PROJECT_NAME}-data.*}`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-data.service=$COMPOSE_PROJECT_NAME-data                
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-data.service=$COMPOSE_PROJECT_NAME-data
+    environment:
+      - ADE_UPDATEURL=https://${COMPOSE_PROJECT_NAME}-server-data.${EXTERNAL_DOMAIN}/Agents
+      - ADE_WEBRESTOREURL=https://${COMPOSE_PROJECT_NAME}-server-data.${EXTERNAL_DOMAIN}/AAgent
+      - ADE_SERVERNAME=${COMPOSE_PROJECT_NAME}-server-data.${EXTERNAL_DOMAIN}:443                     
     env_file:
      - stack.env
     networks:
