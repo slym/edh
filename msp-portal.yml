@@ -68,7 +68,9 @@ services:
     image: registry.atempo.com/public/msp/mailer:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-mailer 
     restart: always
-    pull_policy: always  
+    pull_policy: always
+    networks:
+      - easy-docker-host     
     expose:
       - 8010
 
