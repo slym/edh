@@ -17,6 +17,7 @@ services:
     environment:
       - ADE_IS_MASTER=1
       - ADE_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
+      - ADE_UPDATEURL=https://${COMPOSE_PROJECT_NAME}-master-data.${EXTERNAL_DOMAIN}/Agents
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-master.loadbalancer.server.port=8182
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-master.rule=HostRegexp(`{subdomain:^$COMPOSE_PROJECT_NAME-master.*}`)
