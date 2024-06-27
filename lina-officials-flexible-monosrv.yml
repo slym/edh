@@ -6,7 +6,7 @@ networks:
 
 services:
   linaflex-server:
-    image: registry.atempo.com/public/lina:$VERSION$FULL_OR_LIGHT
+    image: registry.atempo.com/public/lina:$VERSION
     pull_policy: always
     container_name: $COMPOSE_PROJECT_NAME-server
     hostname: $COMPOSE_PROJECT_NAME-server 
