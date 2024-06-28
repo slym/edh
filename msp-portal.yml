@@ -42,10 +42,9 @@ services:
       - easy-docker-host
     expose:
       - 27017
-    
-  # Influxdb may be removed is not tagged anymore
+
   influxdb:
-    image: registry.atempo.com/public/msp/influxdb:latest
+    image: registry.atempo.com/public/msp/influxdb:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-influxdb        
     restart: always
     pull_policy: always    
