@@ -15,6 +15,7 @@ services:
       - 8181 # Data port
       - 8182 # Admin port
     environment:
+      - ADE_SUPERADMIN_PASSWORD=${DEFAULT_PASSWORD:-ATempo1992@@}
       - ADE_IS_MASTER=1
       - ADE_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
       - ADE_UPDATEURL=https://${COMPOSE_PROJECT_NAME}-master-data.${EXTERNAL_DOMAIN}/Agents
@@ -41,6 +42,7 @@ services:
       - 8181 # Data port
       - 8182 # Admin port
     environment:
+      - ADE_SUPERADMIN_PASSWORD=${DEFAULT_PASSWORD:-ATempo1992@@}    
       - ADE_MASTER_NAME=$COMPOSE_PROJECT_NAME-master:8181:8182
       - ADE_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
       - ADE_SERVERNAME=${COMPOSE_PROJECT_NAME}-node1-data.${EXTERNAL_DOMAIN}:443
@@ -68,6 +70,8 @@ services:
       - 8181 # Data port
       - 8182 # Admin port
     environment:
+      - ADE_SUPERADMIN_PASSWORD=${DEFAULT_PASSWORD:-ATempo1992@@}
+      - ROOT_PASSWORD=${DEFAULT_PASSWORD:-ATempo1992@@}
       - ADE_MASTER_NAME=$COMPOSE_PROJECT_NAME-master:8181:8182
       - ADE_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
       - ADE_SERVERNAME=${COMPOSE_PROJECT_NAME}-node2-data.${EXTERNAL_DOMAIN}:443
@@ -92,6 +96,7 @@ services:
     hostname: $COMPOSE_PROJECT_NAME-agent1
     restart: unless-stopped
     environment:
+      - ROOT_PASSWORD=${DEFAULT_PASSWORD:-ATempo1992@@}
       - LINA_CONNECTION_STRING=$COMPOSE_PROJECT_NAME-agent1@$COMPOSE_PROJECT_NAME-master
       - LINA_EMAIL=user-of-agent1@protectedcorp.com
       - LINA_PROTECTEDPATH=/data
@@ -116,6 +121,7 @@ services:
     hostname: $COMPOSE_PROJECT_NAME-agent2
     restart: unless-stopped
     environment:
+      - ROOT_PASSWORD=${DEFAULT_PASSWORD:-ATempo1992@@}
       - LINA_CONNECTION_STRING=$COMPOSE_PROJECT_NAME-agent2@$COMPOSE_PROJECT_NAME-master
       - LINA_EMAIL=user-of-agent2@protectedcorp.com
       - LINA_PROTECTEDPATH=/data
@@ -140,6 +146,7 @@ services:
     hostname: $COMPOSE_PROJECT_NAME-agent3
     restart: unless-stopped
     environment:
+      - ROOT_PASSWORD=${DEFAULT_PASSWORD:-ATempo1992@@} 
       - LINA_CONNECTION_STRING=$COMPOSE_PROJECT_NAME-agent3@$COMPOSE_PROJECT_NAME-master
       - LINA_EMAIL=user-of-agent3@protectedcorp.com
       - LINA_PROTECTEDPATH=/data
@@ -164,6 +171,7 @@ services:
     hostname: $COMPOSE_PROJECT_NAME-agent4
     restart: unless-stopped
     environment:
+      - ROOT_PASSWORD=${DEFAULT_PASSWORD:-ATempo1992@@}  
       - LINA_CONNECTION_STRING=$COMPOSE_PROJECT_NAME-agent4@$COMPOSE_PROJECT_NAME-master
       - LINA_EMAIL=user-of-agent4@protectedcorp.com
       - LINA_PROTECTEDPATH=/data

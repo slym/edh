@@ -22,6 +22,8 @@ services:
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-data.rule=HostRegexp(`{subdomaindata:^${COMPOSE_PROJECT_NAME}-server-data.*}`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-data.service=$COMPOSE_PROJECT_NAME-data
     environment:
+      - ADE_SUPERADMIN_PASSWORD=${DEFAULT_PASSWORD:-ATempo1992@@}
+      - ROOT_PASSWORD=${DEFAULT_PASSWORD:-ATempo1992@@}             
       - ADE_UPDATEURL=https://${COMPOSE_PROJECT_NAME}-server-data.${EXTERNAL_DOMAIN}/Agents
       - ADE_WEBRESTOREURL=https://${COMPOSE_PROJECT_NAME}-server-data.${EXTERNAL_DOMAIN}/AAgent
       - ADE_SERVERNAME=${COMPOSE_PROJECT_NAME}-server-data.${EXTERNAL_DOMAIN}:443                   
@@ -36,6 +38,7 @@ services:
     hostname: $COMPOSE_PROJECT_NAME-agent01
     restart: unless-stopped
     environment:
+      - ROOT_PASSWORD=${DEFAULT_PASSWORD:-ATempo1992@@}       
       - LINA_CONNECTION_STRING=$COMPOSE_PROJECT_NAME-agent01@$COMPOSE_PROJECT_NAME-server
       - LINA_EMAIL=user-of-agent01@protectedcorp.com
       - LINA_PROTECTEDPATH=/data
@@ -58,6 +61,7 @@ services:
     hostname: $COMPOSE_PROJECT_NAME-agent02
     restart: unless-stopped
     environment:
+      - ROOT_PASSWORD=${DEFAULT_PASSWORD:-ATempo1992@@}       
       - LINA_CONNECTION_STRING=$COMPOSE_PROJECT_NAME-agent02@$COMPOSE_PROJECT_NAME-server
       - LINA_EMAIL=user-of-agent02@protectedcorp.com
       - LINA_PROTECTEDPATH=/data
@@ -80,6 +84,7 @@ services:
     hostname: $COMPOSE_PROJECT_NAME-agent03
     restart: unless-stopped
     environment:
+      - ROOT_PASSWORD=${DEFAULT_PASSWORD:-ATempo1992@@}       
       - LINA_CONNECTION_STRING=$COMPOSE_PROJECT_NAME-agent03@$COMPOSE_PROJECT_NAME-server
       - LINA_EMAIL=user-of-agent03@protectedcorp.com
       - LINA_PROTECTEDPATH=/data
@@ -102,6 +107,7 @@ services:
     hostname: $COMPOSE_PROJECT_NAME-agent04
     restart: unless-stopped
     environment:
+      - ROOT_PASSWORD=${DEFAULT_PASSWORD:-ATempo1992@@}       
       - LINA_CONNECTION_STRING=$COMPOSE_PROJECT_NAME-agent04@$COMPOSE_PROJECT_NAME-server
       - LINA_EMAIL=user-of-agent04@protectedcorp.com
       - LINA_PROTECTEDPATH=/data
