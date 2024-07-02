@@ -203,7 +203,7 @@ services:
     depends_on:
       - "portal-backend"
     environment:
-      VITE_APP_API_ROOT: /api/v2
+      VITE_APP_API_ROOT: /api/v1
       VITE_APP_SOCKET_ENABLE: true
       VITE_APP_SOCKET_HOST:
     expose:
