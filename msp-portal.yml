@@ -21,7 +21,14 @@ services:
       MINIO_ROOT_PASSWORD: adminpassword
       MINIO_API_BUCKET_NAME: mspportal
     volumes:
-      - msp_portal_minio:/data           
+      - msp_portal_minio:/data
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-minio-s3.loadbalancer.server.port=9000
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-minio-s3.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-minio-s3.{any:.+}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-minio-s3.service=$COMPOSE_PROJECT_NAME-minio-s3
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-minio-console.loadbalancer.server.port=9001
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-minio-console.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-minio-console.{any:.+}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-minio-console.service=$COMPOSE_PROJECT_NAME-minio-console                     
     networks:
       - easy-docker-host
     command: server /data --console-address ":9001" --address ":9000"   
@@ -30,7 +37,7 @@ services:
       - 9001
 
   mongodb:
-    image: registry.atempo.com/public/msp/mongo:${VERSION:-latest}
+    image: registry.atempo.com/public/msp/mongodb:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-mongodb    
     restart: always
     pull_policy: always    
@@ -38,6 +45,8 @@ services:
       - msp_portal_mongodb:/data/db
     environment:
       - MONGO_INITDB_DATABASE=portal_admin
+    labels:
+      - traefik.enable=false      
     networks:
       - easy-docker-host
     expose:
@@ -58,7 +67,9 @@ services:
       DOCKER_INFLUXDB_INIT_BUCKET: analytics
       DOCKER_INFLUXDB_INIT_RETENTION: 0
       DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: "testtokenformspusecasewhichwillbeusedfortesting=="
-    #command: bash -c "influxd & /scripts/generate_token.sh"    
+    #command: bash -c "influxd & /scripts/generate_token.sh"
+    labels:
+      - traefik.enable=false    
     networks:
       - easy-docker-host
     expose:
@@ -69,6 +80,8 @@ services:
     container_name: $COMPOSE_PROJECT_NAME-mailer 
     restart: always
     pull_policy: always
+    labels:
+      - traefik.enable=false    
     networks:
       - easy-docker-host     
     expose:
@@ -78,7 +91,9 @@ services:
     image: registry.atempo.com/public/msp/lina-aggregator:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-lina-aggregator
     restart: always
-    pull_policy: always     
+    pull_policy: always 
+    labels:
+      - traefik.enable=false        
     networks:
       - easy-docker-host
     expose:
@@ -102,6 +117,8 @@ services:
       MQTT_SERVER: mqtt
       MONGO_STRING: mongodb://mongodb/portal_admin?retryWrites=true&w=majority
       LINA_AGGREGATOR_API_URL: http://lina-aggregator:3002/v1
+    labels:
+      - traefik.enable=false      
     networks:
       - easy-docker-host
     expose:
@@ -112,6 +129,8 @@ services:
     container_name: $COMPOSE_PROJECT_NAME-tina-aggregator
     restart: always
     pull_policy: always
+    labels:
+      - traefik.enable=false    
     networks:
       - easy-docker-host    
     expose:
@@ -131,6 +150,8 @@ services:
       MONGO_STRING : mongodb://mongodb/
       MONGO_DB: portal_admin
       TINA_AGGREGATOR_API_URL: http://tina-aggregator:3005
+    labels:
+      - traefik.enable=false      
     networks:
       - easy-docker-host
     expose:
@@ -152,7 +173,9 @@ services:
       MINIO_API_USER: admin
       MINIO_API_PASSWORD: adminpassword
       MINIO_API_BUCKET_NAME: mspportal
-      MAILER_API_URL: http://mailer:8010      
+      MAILER_API_URL: http://mailer:8010
+    labels:
+      - traefik.enable=false           
     networks:
       - easy-docker-host
     expose:
@@ -190,6 +213,8 @@ services:
       SUPER_ADMIN_PASSWORD: ${SUPER_ADMIN_PASSWORD:-ATempo1992@}
       MASTER_ORG_NAME: ${MASTER_ORG_NAME:-Atempo}
       MASTER_ORG_DISPLAY_NAME: ${MASTER_ORG_DISPLAY_NAME:-Atempo Org}
+    labels:
+      - traefik.enable=false      
     networks:
       - easy-docker-host 
     expose:
@@ -209,7 +234,7 @@ services:
     expose:
       - 80
     labels:
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}.*}`)      
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-webui.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}.{any:.+}`)     
     networks:
       - easy-docker-host
 
