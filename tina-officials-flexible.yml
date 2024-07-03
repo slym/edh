@@ -29,6 +29,7 @@ services:
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-ade.service=$COMPOSE_PROJECT_NAME-ade        
     environment:
       USE_HTTP: "1"
+      TINA_APPLIANCE_RESTORE_PATH: "/persistent_public"
       ADE_ADMIN_PORT: "9182"
       TINA_M365_USER: "m365user"
       TINA_CREATE_M365_BACKUP: "1"
