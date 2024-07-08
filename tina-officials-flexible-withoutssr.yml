@@ -1,0 +1,44 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  tinaflex:
+    image: registry.atempo.com/$VERSION_TYPE/tina:$VERSION
+    pull_policy: always   
+    container_name: $COMPOSE_PROJECT_NAME
+    restart: unless-stopped
+    networks:
+      - easy-docker-host
+    ports:
+      - 25088
+      - 9182
+      - 2525
+    hostname: $COMPOSE_PROJECT_NAME
+    env_file:
+     - stack.env 
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.port=25088
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.service=$COMPOSE_PROJECT_NAME
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-ade.loadbalancer.server.port=9182
+      # Will match all URL containing minio-console.* => forwarding to admin console port
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-ade.rule=HostRegexp(`{adesubdomains:^${COMPOSE_PROJECT_NAME}-ade.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-ade.service=$COMPOSE_PROJECT_NAME-ade        
+    environment:
+      USE_HTTP: "1"
+      TINA_APPLIANCE_RESTORE_PATH: "/persistent_public"
+      ADE_ADMIN_PORT: "9182"
+      TINA_M365_USER: "m365user"
+      TINA_CREATE_M365_BACKUP: "1"
+      # This parameter is only used when the M365 backup is created the first time.
+      TINA_M365_BACKUP_PARALLELISM: "15"
+      # Exluded Apps can contain Outlook|Contacts|OneDrive|Calendar|OneNote|SharePoint|Teams|Users
+      TINA_M365_DEFAULT_EXCLUDED_OFFICE_APPS: "Teams|OneNote"
+      TINA_CREATE_CATALOG_BACKUP: "1"
+      TINA_IDENTITY: "$DEFAULT_USER:$DEFAULT_PASSWORD"
+      ADE_SUPERADMIN_PASSWORD: "$DEFAULT_PASSWORD"
+      ROOT_PASSWORD: "$DEFAULT_PASSWORD"
+

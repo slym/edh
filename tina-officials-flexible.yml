@@ -20,13 +20,13 @@ services:
     env_file:
      - stack.env 
     labels:
-      - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.port=25088
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}.*}`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME.service=$COMPOSE_PROJECT_NAME
-      - traefik.http.services.$COMPOSE_PROJECT_NAME-ade.loadbalancer.server.port=9182
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-official.loadbalancer.server.port=25088
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-official.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}.{any:.+}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-official.service=$COMPOSE_PROJECT_NAME-official
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-official-ade.loadbalancer.server.port=9182
       # Will match all URL containing minio-console.* => forwarding to admin console port
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-ade.rule=HostRegexp(`{adesubdomains:^${COMPOSE_PROJECT_NAME}-ade.*}`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-ade.service=$COMPOSE_PROJECT_NAME-ade        
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-official-ade.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-ade.{any:.+}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-official-ade.service=$COMPOSE_PROJECT_NAME-official-ade     
     environment:
       USE_HTTP: "1"
       TINA_APPLIANCE_RESTORE_PATH: "/persistent_public"
@@ -41,4 +41,31 @@ services:
       TINA_IDENTITY: "$DEFAULT_USER:$DEFAULT_PASSWORD"
       ADE_SUPERADMIN_PASSWORD: "$DEFAULT_PASSWORD"
       ROOT_PASSWORD: "$DEFAULT_PASSWORD"
+      TINA_SSR_USER: "SSR_user"
+      TINA_SSR_PASSWORD: "mgbWf6k6R7b@yfJEAafi8Owo"
+      TINA_REST_API_URL: "http://$COMPOSE_PROJECT_NAME:25088/Tina/api"  
+      TINA_M365_SSR_APPLICATION_URL: "https://$COMPOSE_PROJECT_NAME-tina-m365-ssr.$EXTERNAL_DOMAIN"      
+      TINA_CATALOG: "TINA_CATALOG"
+
+  tina-ssr-flex:
+    image: registry.atempo.com/unstable_public/self-service-restore:$SSR_VERSION
+    pull_policy: always    
+    container_name: ${COMPOSE_PROJECT_NAME}-ssr
+    restart: unless-stopped
+    ports:
+      - 8080
+    labels:
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-official-ssr.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-ssr.{any:.+}`)
+    env_file:
+     - stack.env      
+    environment:
+      USE_HTTP: "1"
+      TINA_CATALOG: "$TINA_CATALOG"
+      TINA_REST_API_URL: "http://$COMPOSE_PROJECT_NAME:25088/Tina/api" 
+      TINA_M365_SSR_APPLICATION_URL: "https://$COMPOSE_PROJECT_NAME-ssr.$EXTERNAL_DOMAIN"
+      TINA_M365_APPLICATION_NAME: "M365"
+      TINA_SSR_USER: "SSR_user"
+      TINA_SSR_PASSWORD: "mgbWf6k6R7b@yfJEAafi8Owo"       
+    networks:
+      - easy-docker-host 
 
