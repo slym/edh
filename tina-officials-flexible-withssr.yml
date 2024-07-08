@@ -41,6 +41,11 @@ services:
       TINA_IDENTITY: "$DEFAULT_USER:$DEFAULT_PASSWORD"
       ADE_SUPERADMIN_PASSWORD: "$DEFAULT_PASSWORD"
       ROOT_PASSWORD: "$DEFAULT_PASSWORD"
+      TINA_SSR_USER: "SSR_user"
+      TINA_SSR_PASSWORD: "mgbWf6k6R7b@yfJEAafi8Owo"
+      TINA_REST_API_URL: "http://$COMPOSE_PROJECT_NAME:25088/Tina/api"  
+      TINA_M365_SSR_APPLICATION_URL: "https://$COMPOSE_PROJECT_NAME-tina-m365-ssr.$EXTERNAL_DOMAIN"      
+      TINA_CATALOG: "catalog"
 
   tina-ssr-flex:
     image: registry.atempo.com/$SSR_REGISTRY_PROJECT/self-service-restore:$SSR_VERSION
@@ -51,15 +56,16 @@ services:
       - 8080
     labels:
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-official-ssr.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-ssr.{any:.+}`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-official-ssr.service=$COMPOSE_PROJECT_NAME-ssr
     env_file:
      - stack.env      
     environment:
-      CONFIGURATION: null
       USE_HTTP: "1"
-      TINA_REST_API_URL: "http://$COMPOSE_PROJECT_NAME-tina-m365:25088/Tina/api"   
-      TINA_M365_SSR_APPLICATION_URL: "https://$COMPOSE_PROJECT_NAME-tina-m365-ssr.$EXTERNAL_DOMAIN"
-      APPLICATION_NAME: "M365"  
+      TINA_CATALOG: "catalog"
+      TINA_REST_API_URL: "http://$COMPOSE_PROJECT_NAME:25088/Tina/api" 
+      TINA_M365_SSR_APPLICATION_URL: "https://$COMPOSE_PROJECT_NAME-ssr.$EXTERNAL_DOMAIN"
+      TINA_M365_APPLICATION_NAME: "M365"
+      TINA_SSR_USER: "SSR_user"
+      TINA_SSR_PASSWORD: "mgbWf6k6R7b@yfJEAafi8Owo"       
     networks:
-      - easy-docker-host      
+      - easy-docker-host 
 
