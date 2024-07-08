@@ -45,7 +45,7 @@ services:
       TINA_SSR_PASSWORD: "mgbWf6k6R7b@yfJEAafi8Owo"
       TINA_REST_API_URL: "http://$COMPOSE_PROJECT_NAME:25088/Tina/api"  
       TINA_M365_SSR_APPLICATION_URL: "https://$COMPOSE_PROJECT_NAME-tina-m365-ssr.$EXTERNAL_DOMAIN"      
-      TINA_CATALOG: "TINA_CATALOG"
+      TINA_CATALOG: "catalog"
 
   tina-ssr-flex:
     image: registry.atempo.com/unstable_public/self-service-restore:$SSR_VERSION
@@ -60,7 +60,7 @@ services:
      - stack.env      
     environment:
       USE_HTTP: "1"
-      TINA_CATALOG: "$TINA_CATALOG"
+      TINA_CATALOG: "catalog"
       TINA_REST_API_URL: "http://$COMPOSE_PROJECT_NAME:25088/Tina/api" 
       TINA_M365_SSR_APPLICATION_URL: "https://$COMPOSE_PROJECT_NAME-ssr.$EXTERNAL_DOMAIN"
       TINA_M365_APPLICATION_NAME: "M365"
