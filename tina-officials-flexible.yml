@@ -31,7 +31,6 @@ services:
       USE_HTTP: "1"
       TINA_APPLIANCE_RESTORE_PATH: "/persistent_public"
       ADE_ADMIN_PORT: "9182"
-      TINA_M365_USER: "m365user"
       TINA_CREATE_M365_BACKUP: "1"
       TINA_DISKDRIVE_NB: "0" # No need when ADE is enabled
       # This parameter is only used when the M365 backup is created the first time.
