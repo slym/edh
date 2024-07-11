@@ -15,7 +15,7 @@ services:
       - 8181 # Used for both data and webUI
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-server.loadbalancer.server.port=8181
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-server.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-server.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-server.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-server.{any:.+}`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-server.service=$COMPOSE_PROJECT_NAME-server             
     env_file:
      - stack.env      
@@ -41,7 +41,7 @@ services:
       - 27261
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent01.loadbalancer.server.port=27261
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent01.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-agent01.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent01.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-agent01.{any:.+}`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent01.service=$COMPOSE_PROJECT_NAME-agent01 
     depends_on:
       - "linaflex-server"
@@ -65,7 +65,7 @@ services:
       - 27261
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent02.loadbalancer.server.port=27261
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent02.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-agent02.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent02.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-agent02.{any:.+}`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent02.service=$COMPOSE_PROJECT_NAME-agent02 
     depends_on:
       - "linaflex-server"
@@ -89,7 +89,7 @@ services:
       - 27261
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent03.loadbalancer.server.port=27261
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent03.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-agent03.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent03.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-agent03.{any:.+}`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent03.service=$COMPOSE_PROJECT_NAME-agent03 
     depends_on:
       - "linaflex-server"
@@ -113,7 +113,7 @@ services:
       - 27261
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent04.loadbalancer.server.port=27261
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent04.rule=HostRegexp(`{subdomain:^${COMPOSE_PROJECT_NAME}-agent04.*}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent04.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-agent04.{any:.+}`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent04.service=$COMPOSE_PROJECT_NAME-agent04 
     depends_on:
       - "linaflex-server"
