@@ -19,11 +19,11 @@ services:
     labels:
       - traefik.http.services.minio-s3.loadbalancer.server.port=443
       # Will match all URL containing minio-s3.* => forwarding to s3 data port
-      - traefik.http.routers.minio-s3.rule=HostRegexp(`{miniosubdomains:^minio-s3.*}`)
+      - traefik.http.routers.minio-s3.rule=HostRegexp(`minio-s3.{any:.+}`)
       - traefik.http.routers.minio-s3.service=minio-s3
       - traefik.http.services.minio-console.loadbalancer.server.port=9001
       # Will match all URL containing minio-console.* => forwarding to admin console port
-      - traefik.http.routers.minio-console.rule=HostRegexp(`{minioconsolesubdomains:^minio-console.*}`)
+      - traefik.http.routers.minio-console.rule=HostRegexp(`minio-console.{any:.+}`)
       - traefik.http.routers.minio-console.service=minio-console    
     networks:
       - easy-docker-host

@@ -1,0 +1,50 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  miria2021r2:
+    image: hub.atempo.cloud/releases/miria:3.14.0.13
+    pull_policy: always    
+    container_name: miria2021r2
+    restart: unless-stopped
+    networks:
+      - easy-docker-host
+    ports:
+      - 80
+      - 443
+      - 9111
+      - 2524
+      - 5432
+    hostname: miria2021r2
+    environment:
+      - MM_AGENT=1
+      - MM_SERVER=1
+#      - INITIAL_PASSWORD=ATempo1992#
+#      - DEMO_LICENSE=1 (requires INITIAL_PASSWORD)
+  miria2021r2-agent1:
+    image:  hub.atempo.cloud/releases/miria-agent:3.14.0.13
+    pull_policy: always    
+    container_name: miria2021r2-agent1
+    restart: unless-stopped
+    networks:
+      - easy-docker-host
+    ports:
+      - 2524
+    hostname: miria2021r2-agent1
+    environment:
+      - MIRIA_SERVER=miria2021r2
+  miria2021r2-agent2:
+    image:  hub.atempo.cloud/releases/miria-agent:3.14.0.13
+    pull_policy: always
+    container_name: miria2021r2-agent2
+    restart: unless-stopped
+    networks:
+      - easy-docker-host
+    ports:
+      - 2524
+    hostname: miria2021r2-agent2
+    environment:
+      - MIRIA_SERVER=miria2021r2

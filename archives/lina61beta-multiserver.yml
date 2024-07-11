@@ -19,10 +19,10 @@ services:
       - LINA_MASTER_ACCESSKEY=1b2bc736-5563-44cf-944c-b17c7beefdef
     labels:
       - traefik.http.services.lina61beta-master.loadbalancer.server.port=443
-      - traefik.http.routers.lina61beta-master.rule=HostRegexp(`{lina61betasubdomains:^lina61beta-master.*}`)
+      - traefik.http.routers.lina61beta-master.rule=HostRegexp(`lina61beta-master.{any:.+}`)
       - traefik.http.routers.lina61beta-master.service=lina61beta-master
       - traefik.http.services.lina61beta-master-data.loadbalancer.server.port=8181
-      - traefik.http.routers.lina61beta-master-data.rule=HostRegexp(`{lina61betadatasubdomains:^lina61beta-master-data.*}`)
+      - traefik.http.routers.lina61beta-master-data.rule=HostRegexp(`lina61beta-master-data.{any:.+}`)
       - traefik.http.routers.lina61beta-master-data.service=lina61beta-master-data
     env_file:
      - stack.env      

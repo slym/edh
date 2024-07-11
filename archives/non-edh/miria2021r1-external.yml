@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  miria-db:
+    image: postgres:latest
+    container_name: miria-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=rzKX2C5%bVY
+  miria-server:
+    image: atempo/miria:2021r1
+    container_name: miria-server
+    restart: unless-stopped
+    ports:
+      - 80
+      - 443
+      - 9111
+      - 2524
+      - 5432
+    hostname: miria-server
+    depends_on:
+      - "miria-db"
+    environment:
+      - MM_AGENT=1
+      - MM_SERVER=1
+      - POSTGRES_SERVER=miria-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=rzKX2C5%bVY
+      - POSTGRES_PORT=5432
+      - DB_NAME=MIRIA
+  miria-agent1:
+    image:  atempo/miria-agent:2021r1
+    container_name: miria-agent1
+    restart: unless-stopped
+    ports:
+      - 2524
+    hostname: miria-agent1
+    environment:
+      - MIRIA_SERVER=miria-server
+  miria-agent2:
+    image:  atempo/miria-agent:2021r1
+    container_name: miria-agent2
+    restart: unless-stopped
+    ports:
+      - 2524
+    hostname: miria-agent2
+    environment:
+      - MIRIA_SERVER=miria-server
