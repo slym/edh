@@ -13,7 +13,8 @@ services:
       - 9000
     environment:
       - KAFKA_BROKERCONNECT=kafka:9093
-      - JVM_OPTS=-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify
+      - JVM_OPTS="-Xms32M -Xmx64M"
+      - SERVER_SERVLET_CONTEXTPATH="/"
     networks:
       - easy-docker-host
     depends_on:
