@@ -45,44 +45,14 @@ services:
     networks:
       - easy-docker-host
 
-  conduktor:
-    image: conduktor/conduktor-platform:latest
-    container_name: conduktor
+  redpanda:
+    image: docker.redpanda.com/redpandadata/console:latest
+    container_name: redpanda
     ports:
       - 8080
     networks:
       - easy-docker-host
-# default config with persistence
-#    volumes:
-#      - conduktor_data:/var/conduktor
-#      - type: bind
-#        source: "./${CONF_NAME:-platform-config}.yaml"
-#        target: /opt/conduktor/platform-config.yaml
-#        read_only: true
     depends_on:
       - kafka
-# My touch to use an empty config file the  use only env variables
-    command: sh -c "touch /opt/conduktor/platform-config.yaml && /opt/conduktor/scripts/run.sh"
     environment:
-      CDK_IN_CONF_FILE: /opt/conduktor/platform-config.yaml
-      CDK_ORGANIZATION_NAME: "atempo"
-      CDK_CLUSTERS_0_ID: "local"
-      CDK_CLUSTERS_0_NAME: "${EXTERNAL_HOST}"
-      CDK_CLUSTERS_0_IGNOREUNTRUSTEDCERTIFICATE: "true"
-      CDK_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:9092"
-      CDK_CLUSTERS_0_ZOOKEEPERSERVER: "zookeeper:2181"
-      CDK_AUTH_LOCALUSERS_0_EMAIL: "admin"
-      CDK_AUTH_LOCALUSERS_0_PASSWORD: "${ADMIN_PASSWORD}"
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "curl --fail http://localhost:${CDK_LISTENING_PORT:-8080}/platform/api/modules/health/live"
-        ]
-      interval: 30s
-      start_period: 120s # Leave time for the psql init scripts to run
-      timeout: 5s
-      retries: 3
-
-#volumes:
-#  conduktor_data: {}
+      KAFKA_BROKERS: kafka:9093
