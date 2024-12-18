@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   mqtt:
-    image: registry.atempo.com/public/msp/mqtt:${VERSION:-latest}
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/mqtt:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-mqtt    
     restart: always
     pull_policy: always  
@@ -12,7 +12,7 @@ services:
       - 1883
 
   minio:
-    image: registry.atempo.com/public/msp/minio:${VERSION:-latest}
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/minio:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-minio    
     restart: always
     pull_policy: always
@@ -37,7 +37,7 @@ services:
       - 9001
 
   mongodb:
-    image: registry.atempo.com/public/msp/mongodb:${VERSION:-latest}
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/mongodb:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-mongodb    
     restart: always
     pull_policy: always    
@@ -53,7 +53,7 @@ services:
       - 27017
 
   influxdb:
-    image: registry.atempo.com/public/msp/influxdb:${VERSION:-latest}
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/influxdb:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-influxdb        
     restart: always
     pull_policy: always    
@@ -76,7 +76,7 @@ services:
       - 8086
 
   mailer:
-    image: registry.atempo.com/public/msp/mailer:${VERSION:-latest}
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/mailer:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-mailer 
     restart: always
     pull_policy: always
@@ -88,7 +88,7 @@ services:
       - 8010
 
   lina-aggregator:
-    image: registry.atempo.com/public/msp/lina-aggregator:${VERSION:-latest}
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/lina-aggregator:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-lina-aggregator
     restart: always
     pull_policy: always 
@@ -100,7 +100,7 @@ services:
       - 3002
 
   lina-backend:
-    image: registry.atempo.com/public/msp/lina-backend:${VERSION:-latest}
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/lina-backend:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-lina-backend
     restart: always
     pull_policy: always     
@@ -125,7 +125,7 @@ services:
       - 8081
  
   tina-aggregator:
-    image: registry.atempo.com/public/msp/tina-aggregator:${VERSION:-latest}
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/tina-aggregator:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-tina-aggregator
     restart: always
     pull_policy: always
@@ -137,7 +137,7 @@ services:
       - 3005
    
   tina-backend:
-    image: registry.atempo.com/public/msp/tina-backend:${VERSION:-latest}
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/tina-backend:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-tina-backend
     restart: always
     pull_policy: always 
@@ -158,7 +158,7 @@ services:
       - 8082
 
   portal-async-process:
-    image: registry.atempo.com/public/msp/portal-async-process:${VERSION:-latest}
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/portal-async-process:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-async-process
     restart: always
     pull_policy: always    
@@ -182,7 +182,7 @@ services:
       - 8009
 
   portal-backend:
-    image: registry.atempo.com/public/msp/portal-backend:${VERSION:-latest}
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/portal-backend:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-backend
     restart: always
     pull_policy: always   
@@ -221,7 +221,7 @@ services:
       - 8008
 
   portal-webui:
-    image: registry.atempo.com/public/msp/portal-webui:${VERSION:-latest}
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/portal-webui:${VERSION:-latest}
     container_name: $COMPOSE_PROJECT_NAME-webui     
     restart: always
     pull_policy: always     
