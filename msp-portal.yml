@@ -1,5 +1,5 @@
 x-function: &mongo_url
-    MONGODB_URL: mongodb://${MONGO_PORTAL_USERNAME:-msp}:${INTERNAL_PASSWORD:-hlXyij6fK@FxiWefhP}@mongodb/portal_admin?retryWrites=true&w=majority
+    MONGODB_URL: mongodb://${MONGO_PORTAL_USERNAME:-msp}:${INTERNAL_PASSWORD:-hlXyij6fK#FxiWefhP}@mongodb/portal_admin?retryWrites=true&w=majority
 
 services:
   mqtt:
@@ -19,7 +19,7 @@ services:
     pull_policy: always
     environment:
       MINIO_ROOT_USER: ${MINIO_PORTAL_USER:-admin}
-      MINIO_ROOT_PASSWORD: ${INTERNAL_PASSWORD:-hlXyij6fK@FxiWefhP}
+      MINIO_ROOT_PASSWORD: ${INTERNAL_PASSWORD:-hlXyij6fK#FxiWefhP}
       MINIO_API_BUCKET_NAME: mspportal
     volumes:
       - msp_portal_minio:/data
@@ -49,10 +49,10 @@ services:
       MONGO_INITDB_DATABASE: portal_admin
       # Post v1.2
       MONGO_INITDB_ROOT_USERNAME : ${MONGO_ROOT_USERNAME:-root}
-      MONGO_INITDB_ROOT_PASSWORD : ${INTERNAL_PASSWORD:-hlXyij6fK@FxiWefhP}
+      MONGO_INITDB_ROOT_PASSWORD : ${INTERNAL_PASSWORD:-hlXyij6fK#FxiWefhP}
       MONGO_PORTAL_DATABASE:  portal_admin
       MONGO_PORTAL_USERNAME : ${MONGO_PORTAL_USERNAME:-msp}
-      MONGO_PORTAL_PASSWORD : ${INTERNAL_PASSWORD:-hlXyij6fK@FxiWefhP}
+      MONGO_PORTAL_PASSWORD : ${INTERNAL_PASSWORD:-hlXyij6fK#FxiWefhP}
     labels:
       - traefik.enable=false      
     networks:
@@ -183,7 +183,7 @@ services:
     environment:
       MINIO_API_URL: http://minio:9000
       MINIO_API_USER: ${MINIO_PORTAL_USER:-admin}
-      MINIO_API_PASSWORD: ${INTERNAL_PASSWORD:-hlXyij6fK@FxiWefhP}
+      MINIO_API_PASSWORD: ${INTERNAL_PASSWORD:-hlXyij6fK#FxiWefhP}
       MINIO_API_BUCKET_NAME: mspportal
       MAILER_API_URL: http://mailer:8010
       # Pre 1.2
@@ -222,7 +222,7 @@ services:
       MAILER_API_URL: http://mailer:8010
       MINIO_API_URL: http://minio:9000
       MINIO_API_USER: ${MINIO_PORTAL_USER:-admin}
-      MINIO_API_PASSWORD: ${INTERNAL_PASSWORD:-hlXyij6fK@FxiWefhP}
+      MINIO_API_PASSWORD: ${INTERNAL_PASSWORD:-hlXyij6fK#FxiWefhP}
       MINIO_API_BUCKET_NAME: mspportal
       SOCKET_SERVER_URL: http://portal-backend:8008
       SUPER_ADMIN_USERNAME: ${SUPER_ADMIN_USERNAME:-superadmin@atempo.com}
