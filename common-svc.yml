@@ -64,7 +64,7 @@ services:
 # Env variables are provided by stack, below the list to use them manually if needed :
 #    environment:
 #      - MINIO_ROOT_USER=root
-#      - MINIO_ROOT_PASSWORD=ATempo1992$$
+#      - MINIO_ROOT_PASSWORD=YOUR-PASSWORD
   nfs-nas:
     image: itsthenetwork/nfs-server-alpine:12
     container_name: nfs-nas

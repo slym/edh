@@ -30,7 +30,7 @@ services:
     environment:
       - LINA_SERVERNAME=$COMPOSE_PROJECT_NAME-server
       - LINA_AGENTNAME=$COMPOSE_PROJECT_NAME-agent01
-#      - ROOT_PASSWORD=Atempo1992$$
+#      - ROOT_PASSWORD=YOUR-PASSWORD
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true        
 #      - LINA_DEBUGMODE=VOLS:5;
     env_file:
@@ -54,7 +54,7 @@ services:
     environment:
       - LINA_SERVERNAME=$COMPOSE_PROJECT_NAME-server
       - LINA_AGENTNAME=$COMPOSE_PROJECT_NAME-agent02
-#      - ROOT_PASSWORD=Atempo1992$$
+#      - ROOT_PASSWORD=YOUR-PASSWORD
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true        
 #      - LINA_DEBUGMODE=VOLS:5;
     env_file:
@@ -78,7 +78,7 @@ services:
     environment:
       - LINA_SERVERNAME=$COMPOSE_PROJECT_NAME-server
       - LINA_AGENTNAME=$COMPOSE_PROJECT_NAME-agent03
-#      - ROOT_PASSWORD=Atempo1992$$
+#      - ROOT_PASSWORD=YOUR-PASSWORD
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true        
 #      - LINA_DEBUGMODE=VOLS:5;
     env_file:
@@ -102,7 +102,7 @@ services:
     environment:
       - LINA_SERVERNAME=$COMPOSE_PROJECT_NAME-server
       - LINA_AGENTNAME=$COMPOSE_PROJECT_NAME-agent04
-#      - ROOT_PASSWORD=Atempo1992$$
+#      - ROOT_PASSWORD=YOUR-PASSWORD
       - LINA_ADVSETTINGS=HN_AGENT_NOVOLUME_MGMT=true        
 #      - LINA_DEBUGMODE=VOLS:5;
     env_file:

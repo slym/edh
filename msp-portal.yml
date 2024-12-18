@@ -1,4 +1,5 @@
-version: "3.8"
+x-function: &mongo_url
+    MONGODB_URL: mongodb://${MONGO_PORTAL_USERNAME:-msp}:${INTERNAL_PASSWORD:-hlXyij6fK@FxiWefhP}@mongodb/portal_admin?retryWrites=true&w=majority
 
 services:
   mqtt:
@@ -17,8 +18,8 @@ services:
     restart: always
     pull_policy: always
     environment:
-      MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: adminpassword
+      MINIO_ROOT_USER: ${MINIO_PORTAL_USER:-admin}
+      MINIO_ROOT_PASSWORD: ${INTERNAL_PASSWORD:-hlXyij6fK@FxiWefhP}
       MINIO_API_BUCKET_NAME: mspportal
     volumes:
       - msp_portal_minio:/data
@@ -44,7 +45,14 @@ services:
     volumes:
       - msp_portal_mongodb:/data/db
     environment:
-      - MONGO_INITDB_DATABASE=portal_admin
+      # Pre v1.2
+      MONGO_INITDB_DATABASE: portal_admin
+      # Post v1.2
+      MONGO_INITDB_ROOT_USERNAME : ${MONGO_ROOT_USERNAME:-root}
+      MONGO_INITDB_ROOT_PASSWORD : ${INTERNAL_PASSWORD:-hlXyij6fK@FxiWefhP}
+      MONGO_PORTAL_DATABASE:  portal_admin
+      MONGO_PORTAL_USERNAME : ${MONGO_PORTAL_USERNAME:-msp}
+      MONGO_PORTAL_PASSWORD : ${INTERNAL_PASSWORD:-hlXyij6fK@FxiWefhP}
     labels:
       - traefik.enable=false      
     networks:
@@ -115,8 +123,11 @@ services:
       INFLUX_DB_URL: http://influxdb:8086
       INFLUXDB_TOKEN: "testtokenformspusecasewhichwillbeusedfortesting=="
       MQTT_SERVER: mqtt
-      MONGO_STRING: mongodb://mongodb/portal_admin?retryWrites=true&w=majority
       LINA_AGGREGATOR_API_URL: http://lina-aggregator:3002/v1
+      # Pre v1.2
+      MONGO_STRING: mongodb://mongodb/portal_admin?retryWrites=true&w=majority
+      # Post v1.2
+      <<: *mongo_url
     labels:
       - traefik.enable=false      
     networks:
@@ -147,9 +158,12 @@ services:
     environment:
       DEBUG: '*'
       NODE_ENV: development
+      TINA_AGGREGATOR_API_URL: http://tina-aggregator:3005
+      # Pre v1.2
       MONGO_STRING : mongodb://mongodb/
       MONGO_DB: portal_admin
-      TINA_AGGREGATOR_API_URL: http://tina-aggregator:3005
+      # Post v1.2
+      <<: *mongo_url
     labels:
       - traefik.enable=false      
     networks:
@@ -167,13 +181,16 @@ services:
       - "mailer"
       - "minio"
     environment:
-      MONGO_STRING : mongodb://mongodb/
-      MONGO_DB: portal_admin
       MINIO_API_URL: http://minio:9000
-      MINIO_API_USER: admin
-      MINIO_API_PASSWORD: adminpassword
+      MINIO_API_USER: ${MINIO_PORTAL_USER:-admin}
+      MINIO_API_PASSWORD: ${INTERNAL_PASSWORD:-hlXyij6fK@FxiWefhP}
       MINIO_API_BUCKET_NAME: mspportal
       MAILER_API_URL: http://mailer:8010
+      # Pre 1.2
+      MONGO_STRING : mongodb://mongodb/
+      MONGO_DB: portal_admin
+      # Post v1.2
+      <<: *mongo_url
     labels:
       - traefik.enable=false           
     networks:
@@ -202,17 +219,20 @@ services:
       TINA_BACKEND_API_URL: http://tina-backend:8082
       PORTAL_ASYNC_PROCESS_API_URL: http://portal-async-process:8009
       MQTT_SERVER: mqtt
-      MONGO_STRING: mongodb://mongodb/portal_admin?retryWrites=true&w=majority
       MAILER_API_URL: http://mailer:8010
       MINIO_API_URL: http://minio:9000
-      MINIO_API_USER: admin
-      MINIO_API_PASSWORD: adminpassword
+      MINIO_API_USER: ${MINIO_PORTAL_USER:-admin}
+      MINIO_API_PASSWORD: ${INTERNAL_PASSWORD:-hlXyij6fK@FxiWefhP}
       MINIO_API_BUCKET_NAME: mspportal
       SOCKET_SERVER_URL: http://portal-backend:8008
       SUPER_ADMIN_USERNAME: ${SUPER_ADMIN_USERNAME:-superadmin@atempo.com}
-      SUPER_ADMIN_PASSWORD: ${SUPER_ADMIN_PASSWORD:-ATempo1992@}
+      SUPER_ADMIN_PASSWORD: ${SUPER_ADMIN_PASSWORD:-lwj2UnWq@B6d}
       MASTER_ORG_NAME: ${MASTER_ORG_NAME:-Atempo}
       MASTER_ORG_DISPLAY_NAME: ${MASTER_ORG_DISPLAY_NAME:-Atempo Org}
+      # Pre 1.2
+      MONGO_STRING: mongodb://mongodb/portal_admin?retryWrites=true&w=majority
+      # Post v1.2
+      <<: *mongo_url
     labels:
       - traefik.enable=false      
     networks:
