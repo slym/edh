@@ -1,14 +1,14 @@
 x-mongoconfig: &mongo_config
   # Pre v1.2
-  MONGO_STRING: mongodb://${MONGO_PORTAL_USERNAME:-msp}:${INTERNAL_PASSWORD:-hlXyij6fK#FxiWefhP}@mongodb/portal_admin?retryWrites=true&w=majority
+  MONGO_STRING: mongodb://${MONGO_PORTAL_USERNAME:-msp}:${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}@mongodb/portal_admin?retryWrites=true&w=majority
   MONGO_DB: portal_admin
   # Post v1.2
-  MONGODB_URL: mongodb://${MONGO_PORTAL_USERNAME:-msp}:${INTERNAL_PASSWORD:-hlXyij6fK#FxiWefhP}@mongodb/portal_admin?retryWrites=true&w=majority
+  MONGODB_URL: mongodb://${MONGO_PORTAL_USERNAME:-msp}:${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}@mongodb/portal_admin?retryWrites=true&w=majority
 
 x-minioconfig: &minio_config
   MINIO_API_URL: http://minio:9000
   MINIO_API_USER: ${MINIO_PORTAL_USER:-admin}
-  MINIO_API_PASSWORD: ${INTERNAL_PASSWORD:-hlXyij6fK#FxiWefhP}
+  MINIO_API_PASSWORD: ${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}
   MINIO_API_BUCKET_NAME: mspportal
 
 services:
@@ -29,7 +29,7 @@ services:
     pull_policy: always
     environment:
       MINIO_ROOT_USER: ${MINIO_PORTAL_USER:-admin}
-      MINIO_ROOT_PASSWORD: ${INTERNAL_PASSWORD:-hlXyij6fK#FxiWefhP}
+      MINIO_ROOT_PASSWORD: ${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}
       MINIO_API_BUCKET_NAME: mspportal
     volumes:
       - msp_portal_minio:/data
@@ -59,10 +59,10 @@ services:
       MONGO_INITDB_DATABASE: portal_admin
       # Post v1.2
       MONGO_INITDB_ROOT_USERNAME : ${MONGO_ROOT_USERNAME:-root}
-      MONGO_INITDB_ROOT_PASSWORD : ${INTERNAL_PASSWORD:-hlXyij6fK#FxiWefhP}
+      MONGO_INITDB_ROOT_PASSWORD : ${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}
       MONGO_PORTAL_DATABASE:  portal_admin
       MONGO_PORTAL_USERNAME : ${MONGO_PORTAL_USERNAME:-msp}
-      MONGO_PORTAL_PASSWORD : ${INTERNAL_PASSWORD:-hlXyij6fK#FxiWefhP}
+      MONGO_PORTAL_PASSWORD : ${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}
     labels:
       - traefik.enable=false      
     networks:
