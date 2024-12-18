@@ -161,7 +161,7 @@ services:
       NODE_ENV: development
       TINA_AGGREGATOR_API_URL: http://tina-aggregator:3005
       # Pre v1.2 : this container does not use the same syntax for MONGO_STRING ...
-      MONGO_STRING : mongodb://${MONGO_PORTAL_USERNAME:-msp}:${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}@mongodb/
+      MONGO_STRING: mongodb://${MONGO_PORTAL_USERNAME:-msp}:${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}@mongodb/
       MONGO_DB: ${MONGO_PORTAL_DATABASE:-portal_admin}
     labels:
       - traefik.enable=false      
@@ -183,7 +183,7 @@ services:
       MAILER_API_URL: http://mailer:8010
       <<: *minio_config
       # Pre v1.2 : this container does not use the same syntax for MONGO_STRING ...
-      MONGO_STRING : mongodb://${MONGO_PORTAL_USERNAME:-msp}:${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}@mongodb/
+      MONGO_STRING: mongodb://${MONGO_PORTAL_USERNAME:-msp}:${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}@mongodb/
       MONGO_DB: ${MONGO_PORTAL_DATABASE:-portal_admin}
     labels:
       - traefik.enable=false           
