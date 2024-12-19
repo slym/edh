@@ -1,0 +1,248 @@
+# Pre 1.2 : No auth for mongodb
+services:
+  mqtt:
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/mqtt:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-mqtt    
+    restart: always
+    pull_policy: always  
+    networks:
+      - easy-docker-host
+    expose:
+      - 1883
+
+  minio:
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/minio:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-minio    
+    restart: always
+    pull_policy: always
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: adminpassword
+      MINIO_API_BUCKET_NAME: mspportal
+    volumes:
+      - msp_portal_minio:/data
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-minio-s3.loadbalancer.server.port=9000
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-minio-s3.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-minio-s3.{any:.+}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-minio-s3.service=$COMPOSE_PROJECT_NAME-minio-s3
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-minio-console.loadbalancer.server.port=9001
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-minio-console.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-minio-console.{any:.+}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-minio-console.service=$COMPOSE_PROJECT_NAME-minio-console                     
+    networks:
+      - easy-docker-host
+    command: server /data --console-address ":9001" --address ":9000"   
+    expose:
+      - 9000
+      - 9001
+
+  mongodb:
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/mongodb:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-mongodb    
+    restart: always
+    pull_policy: always    
+    volumes:
+      - msp_portal_mongodb:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=portal_admin
+    labels:
+      - traefik.enable=false      
+    networks:
+      - easy-docker-host
+    expose:
+      - 27017
+
+  influxdb:
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/influxdb:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-influxdb        
+    restart: always
+    pull_policy: always    
+    volumes:
+      - msp_portal_influxdb:/var/lib/influxdb2
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: adminpassword
+      DOCKER_INFLUXDB_INIT_ORG: atempo
+      DOCKER_INFLUXDB_INIT_BUCKET: analytics
+      DOCKER_INFLUXDB_INIT_RETENTION: 0
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: "testtokenformspusecasewhichwillbeusedfortesting=="
+    #command: bash -c "influxd & /scripts/generate_token.sh"
+    labels:
+      - traefik.enable=false    
+    networks:
+      - easy-docker-host
+    expose:
+      - 8086
+
+  mailer:
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/mailer:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-mailer 
+    restart: always
+    pull_policy: always
+    labels:
+      - traefik.enable=false    
+    networks:
+      - easy-docker-host     
+    expose:
+      - 8010
+
+  lina-aggregator:
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/lina-aggregator:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-lina-aggregator
+    restart: always
+    pull_policy: always 
+    labels:
+      - traefik.enable=false        
+    networks:
+      - easy-docker-host
+    expose:
+      - 3002
+
+  lina-backend:
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/lina-backend:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-lina-backend
+    restart: always
+    pull_policy: always     
+    depends_on:
+      - "lina-aggregator"
+      - "mongodb"
+      - "influxdb"
+      - "mqtt"
+    environment:
+      DEBUG: '*'
+      NODE_ENV: development    
+      INFLUX_DB_URL: http://influxdb:8086
+      INFLUXDB_TOKEN: "testtokenformspusecasewhichwillbeusedfortesting=="
+      MQTT_SERVER: mqtt
+      MONGO_STRING: mongodb://mongodb/portal_admin?retryWrites=true&w=majority
+      LINA_AGGREGATOR_API_URL: http://lina-aggregator:3002/v1
+    labels:
+      - traefik.enable=false      
+    networks:
+      - easy-docker-host
+    expose:
+      - 8081
+ 
+  tina-aggregator:
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/tina-aggregator:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-tina-aggregator
+    restart: always
+    pull_policy: always
+    labels:
+      - traefik.enable=false    
+    networks:
+      - easy-docker-host    
+    expose:
+      - 3005
+   
+  tina-backend:
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/tina-backend:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-tina-backend
+    restart: always
+    pull_policy: always 
+    depends_on:
+      - "tina-aggregator"
+      - "mongodb"
+    environment:
+      DEBUG: '*'
+      NODE_ENV: development
+      MONGO_STRING : mongodb://mongodb/
+      MONGO_DB: portal_admin
+      TINA_AGGREGATOR_API_URL: http://tina-aggregator:3005
+    labels:
+      - traefik.enable=false      
+    networks:
+      - easy-docker-host
+    expose:
+      - 8082
+
+  portal-async-process:
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/portal-async-process:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-async-process
+    restart: always
+    pull_policy: always    
+    depends_on:
+      - "mongodb"
+      - "mailer"
+      - "minio"
+    environment:
+      MONGO_STRING : mongodb://mongodb/
+      MONGO_DB: portal_admin
+      MINIO_API_URL: http://minio:9000
+      MINIO_API_USER: admin
+      MINIO_API_PASSWORD: adminpassword
+      MINIO_API_BUCKET_NAME: mspportal
+      MAILER_API_URL: http://mailer:8010
+    labels:
+      - traefik.enable=false           
+    networks:
+      - easy-docker-host
+    expose:
+      - 8009
+
+  portal-backend:
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/portal-backend:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-backend
+    restart: always
+    pull_policy: always   
+    depends_on:
+      - "mongodb"
+      - "influxdb"
+      - "mailer"
+      - "mqtt"
+      - "minio"
+      - "lina-backend"
+      - "tina-backend"
+      - "portal-async-process"
+    environment:
+      DEBUG: '*'
+      NODE_ENV: development
+      LINA_BACKEND_API_URL: http://lina-backend:8081
+      TINA_BACKEND_API_URL: http://tina-backend:8082
+      PORTAL_ASYNC_PROCESS_API_URL: http://portal-async-process:8009
+      MQTT_SERVER: mqtt
+      MONGO_STRING: mongodb://mongodb/portal_admin?retryWrites=true&w=majority
+      MAILER_API_URL: http://mailer:8010
+      MINIO_API_URL: http://minio:9000
+      MINIO_API_USER: admin
+      MINIO_API_PASSWORD: adminpassword
+      MINIO_API_BUCKET_NAME: mspportal
+      SOCKET_SERVER_URL: http://portal-backend:8008
+      SUPER_ADMIN_USERNAME: ${SUPER_ADMIN_USERNAME:-superadmin@atempo.com}
+      SUPER_ADMIN_PASSWORD: ${SUPER_ADMIN_PASSWORD:-ATempo1992@}
+      MASTER_ORG_NAME: ${MASTER_ORG_NAME:-Atempo}
+      MASTER_ORG_DISPLAY_NAME: ${MASTER_ORG_DISPLAY_NAME:-Atempo Org}
+    labels:
+      - traefik.enable=false      
+    networks:
+      - easy-docker-host 
+    expose:
+      - 8008
+
+  portal-webui:
+    image: registry.atempo.com/${VERSION_TYPE:-public}/msp/portal-webui:${VERSION:-latest}
+    container_name: $COMPOSE_PROJECT_NAME-webui     
+    restart: always
+    pull_policy: always     
+    depends_on:
+      - "portal-backend"
+    environment:
+      VITE_APP_API_ROOT: /api/v1
+      VITE_APP_SOCKET_ENABLE: true
+      VITE_APP_SOCKET_HOST:
+    expose:
+      - 80
+    labels:
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-webui.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}.{any:.+}`)     
+    networks:
+      - easy-docker-host
+
+
+volumes:
+  msp_portal_mongodb:
+  msp_portal_influxdb:
+  msp_portal_minio:
+
+networks:
+  easy-docker-host:
+    external: true   

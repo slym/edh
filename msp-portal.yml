@@ -1,6 +1,4 @@
 x-mongoconfig: &mongo_config
-  # Pre v1.2
-  MONGO_STRING: mongodb://${MONGO_PORTAL_USERNAME:-msp}:${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}@mongodb/${MONGO_PORTAL_DATABASE:-portal_admin}?retryWrites=true&w=majority
   # Post v1.2
   MONGODB_URL: mongodb://${MONGO_PORTAL_USERNAME:-msp}:${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}@mongodb/${MONGO_PORTAL_DATABASE:-portal_admin}?retryWrites=true&w=majority
 
@@ -74,7 +72,7 @@ services:
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
       DOCKER_INFLUXDB_INIT_USERNAME: admin
-      DOCKER_INFLUXDB_INIT_PASSWORD: adminpassword
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}
       DOCKER_INFLUXDB_INIT_ORG: atempo
       DOCKER_INFLUXDB_INIT_BUCKET: analytics
       DOCKER_INFLUXDB_INIT_RETENTION: 0
@@ -160,9 +158,7 @@ services:
       DEBUG: '*'
       NODE_ENV: development
       TINA_AGGREGATOR_API_URL: http://tina-aggregator:3005
-      # Pre v1.2 : this container does not use the same syntax for MONGO_STRING ...
-      MONGO_STRING: mongodb://${MONGO_PORTAL_USERNAME:-msp}:${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}@mongodb/
-      MONGO_DB: ${MONGO_PORTAL_DATABASE:-portal_admin}
+      <<: *mongo_config
     labels:
       - traefik.enable=false      
     networks:
@@ -181,10 +177,7 @@ services:
       - "minio"
     environment:
       MAILER_API_URL: http://mailer:8010
-      <<: *minio_config
-      # Pre v1.2 : this container does not use the same syntax for MONGO_STRING ...
-      MONGO_STRING: mongodb://${MONGO_PORTAL_USERNAME:-msp}:${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}@mongodb/
-      MONGO_DB: ${MONGO_PORTAL_DATABASE:-portal_admin}
+      << : [*mongo_config, *minio_config]
     labels:
       - traefik.enable=false           
     networks:
