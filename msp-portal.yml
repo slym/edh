@@ -53,8 +53,8 @@ services:
       - msp_portal_mongodb:/data/db
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_PORTAL_DATABASE:-portal_admin}
-      MONGO_INITDB_ROOT_USERNAME : ${MONGO_PORTAL_USERNAME:-msp}
-      MONGO_INITDB_ROOT_PASSWORD : ${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_PORTAL_USERNAME:-msp}
+      MONGO_INITDB_ROOT_PASSWORD: ${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}
     labels:
       - traefik.enable=false      
     networks:
@@ -72,7 +72,7 @@ services:
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
       DOCKER_INFLUXDB_INIT_USERNAME: admin
-      DOCKER_INFLUXDB_INIT_PASSWORD: ${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}
+      DOCKER_INFLUXDB_INIT_PASSWORD: adminpassword
       DOCKER_INFLUXDB_INIT_ORG: atempo
       DOCKER_INFLUXDB_INIT_BUCKET: analytics
       DOCKER_INFLUXDB_INIT_RETENTION: 0
