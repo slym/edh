@@ -53,8 +53,13 @@ services:
       - msp_portal_mongodb:/data/db
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_PORTAL_DATABASE:-portal_admin}
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_PORTAL_USERNAME:-msp}
+      MONGO_INITDB_ROOT_USERNAME: "root"
       MONGO_INITDB_ROOT_PASSWORD: ${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}
+      MONGO_PORTAL_DATABASE:  portal_admin
+      MONGO_PORTAL_USERNAME : ${MONGO_PORTAL_USERNAME:-msp}
+      MONGO_PORTAL_PASSWORD : ${INTERNAL_PASSWORD:-hlXyij6fKFxiWefhP}
+
+
     labels:
       - traefik.enable=false      
     networks:
