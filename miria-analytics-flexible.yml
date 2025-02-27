@@ -42,7 +42,8 @@ services:
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.port=443
       - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.scheme=https
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}.{any:.+}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}\.(.*)$`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.ruleSyntax=v3
       - traefik.http.routers.$COMPOSE_PROJECT_NAME.service=$COMPOSE_PROJECT_NAME            
     depends_on:
       - "$COMPOSE_PROJECT_NAME-flex-db"

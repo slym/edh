@@ -16,11 +16,13 @@ services:
       - 8182 # Admin port
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-admin.loadbalancer.server.port=8182
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-admin.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-server.{any:.+}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-admin.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-server\.(.*)$`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-admin.ruleSyntax=v3
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-admin.service=$COMPOSE_PROJECT_NAME-admin
       - traefik.http.services.$COMPOSE_PROJECT_NAME-data.loadbalancer.server.port=8181
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-data.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-server-data.{any:.+}`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-data.service=$COMPOSE_PROJECT_NAME-data
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-data.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-server-data\.(.*)$`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-data.ruleSyntax=v3
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-data.service=$COMPOSE_PROJECT_NAME-data3
     environment:
       - ADE_SUPERADMIN_PASSWORD=${DEFAULT_PASSWORD:-ATempo1992@@}
       - ROOT_PASSWORD=${DEFAULT_PASSWORD:-ATempo1992@@}             
@@ -50,7 +52,8 @@ services:
       - 27261
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent01.loadbalancer.server.port=27261
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent01.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-agent01.{any:.+}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent01.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent01\.(.*)$`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent01.ruleSyntax=v3
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent01.service=$COMPOSE_PROJECT_NAME-agent01 
     depends_on:
       - "linaflex-server"
@@ -73,7 +76,8 @@ services:
       - 27261
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent02.loadbalancer.server.port=27261
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent02.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-agent02.{any:.+}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent02.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent02\.(.*)$`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent02.ruleSyntax=v3
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent02.service=$COMPOSE_PROJECT_NAME-agent02 
     depends_on:
       - "linaflex-server"
@@ -96,8 +100,9 @@ services:
       - 27261
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent03.loadbalancer.server.port=27261
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent03.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-agent03.{any:.+}`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent03.service=$COMPOSE_PROJECT_NAME-agent03
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent03.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent03\.(.*)$`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent03.ruleSyntax=v3
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent03.service=$COMPOSE_PROJECT_NAME-agent03 
     depends_on:
       - "linaflex-server" 
   linaflex-agent04:
@@ -119,7 +124,8 @@ services:
       - 27261
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent04.loadbalancer.server.port=27261
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent04.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-agent04.{any:.+}`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent04.service=$COMPOSE_PROJECT_NAME-agent04
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent04.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent04\.(.*)$`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent04.ruleSyntax=v3
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent04.service=$COMPOSE_PROJECT_NAME-agent04 
     depends_on:
       - "linaflex-server"               
