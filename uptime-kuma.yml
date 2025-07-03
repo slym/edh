@@ -8,7 +8,6 @@ networks:
     image: louislam/uptime-kuma:latest
     container_name: uptime-kuma
     pull_policy: always
-    restart: always
     networks: 
       - easy-docker-host    
     volumes:
