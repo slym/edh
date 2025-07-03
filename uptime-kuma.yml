@@ -4,9 +4,9 @@ networks:
   easy-docker-host:
     external: true
 
-  status:
+  uptime-kuma:
     image: louislam/uptime-kuma:latest
-    container_name: status
+    container_name: uptime-kuma
     pull_policy: always
     restart: always
     networks: 
