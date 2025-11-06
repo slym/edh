@@ -6,7 +6,7 @@ networks:
 
 services:
   minio-s3:
-    image: quay.io/minio/minio
+    image: quay.io/minio/minio:RELEASE.2023-08-23T10-07-06Z
     pull_policy: always    
     container_name: minio-s3
     restart: unless-stopped
