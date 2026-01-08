@@ -1,0 +1,104 @@
+version: '3'
+
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  miriaflex-db:
+    image: postgres:$POSTGRES_VERSION
+    pull_policy: always
+    container_name: $COMPOSE_PROJECT_NAME-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=rzKX2C5%bVY
+    ports:
+      - 5432        
+    networks:
+      - easy-docker-host
+    env_file:
+     - stack.env          
+  miriaflex:
+    image: registry.atempo.com/public/miria:$VERSION
+    pull_policy: always
+    container_name: $COMPOSE_PROJECT_NAME
+    restart: unless-stopped
+    privileged: true # Required to mount NFS
+    networks:
+      - easy-docker-host
+    ports:
+      - 80
+      - 443
+      - 9111
+      - 2524
+      - 5432
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.port=443
+      - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.scheme=https
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}.{any:.+}`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.service=$COMPOSE_PROJECT_NAME
+    hostname: $COMPOSE_PROJECT_NAME
+    depends_on:
+      - "miriaflex-db"
+    environment:
+      - POSTGRES_SERVER=$COMPOSE_PROJECT_NAME-db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=rzKX2C5%bVY
+      - POSTGRES_PORT=5432
+      - MM_AGENT=1
+      - MM_SERVER=1
+    env_file:
+     - stack.env
+# Env variables are provided by stack, below the list to use them manually if needed : 
+#      - POSTGRES_SERVER=$COMPOSE_PROJECT_NAME-db
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=rzKX2C5%bVY
+#      - POSTGRES_PORT=5432
+#      - DB_NAME=MIRIA
+#      - INITIAL_PASSWORD=ATempo1992$$
+#      - DEMO_LICENSE=1
+
+  miriaflex-agent1:
+    image:  registry.atempo.com/public/miria-agent:$VERSION
+    pull_policy: always
+    container_name: $COMPOSE_PROJECT_NAME-agent1
+    restart: unless-stopped
+    privileged: true # Required to mount NFS
+    networks:
+      - easy-docker-host
+    ports:
+      - 2524
+    hostname: $COMPOSE_PROJECT_NAME-agent1
+    environment:
+      - MIRIA_SERVER=$COMPOSE_PROJECT_NAME
+    depends_on:
+      - "miriaflex"
+    env_file:
+     - stack.env
+    labels:
+      - traefik.enable=false      
+# Env variables are provided by stack, below the list to use them manually if needed : 
+#      - CUSTOM_CMD=mkdir -p /mnt/nfs-nas && mount -v -o vers=4,loud nfs-nas:/ /nas-mounts/nfs1 
+
+  miriaflex-agent2:
+    image:  registry.atempo.com/public/miria-agent:$VERSION
+    pull_policy: always
+    container_name: $COMPOSE_PROJECT_NAME-agent2
+    restart: unless-stopped
+    privileged: true # Required to mount NFS
+    networks:
+      - easy-docker-host
+    ports:
+      - 2524
+    hostname: $COMPOSE_PROJECT_NAME-agent2
+    environment:
+      - MIRIA_SERVER=$COMPOSE_PROJECT_NAME
+    depends_on:
+      - "miriaflex"
+    env_file:
+     - stack.env
+    labels:
+      - traefik.enable=false     
+# Env variables are provided by stack, below the list to use them manually if needed : 
+#      - CUSTOM_CMD=mkdir -p /mnt/nfs-nas && mount -v -o vers=4,loud nfs-nas:/ /nas-mounts/nfs1
