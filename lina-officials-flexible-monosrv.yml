@@ -50,8 +50,9 @@ services:
       - easy-docker-host
     ports:
       - 27261
+      - 23235
     labels:
-      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent01.loadbalancer.server.port=27261
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent01.loadbalancer.server.port=23235
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent01.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent01\.(.*)$`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent01.ruleSyntax=v3
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent01.service=$COMPOSE_PROJECT_NAME-agent01 
@@ -74,8 +75,9 @@ services:
       - easy-docker-host
     ports:
       - 27261
+      - 23235      
     labels:
-      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent02.loadbalancer.server.port=27261
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent02.loadbalancer.server.port=23235
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent02.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent02\.(.*)$`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent02.ruleSyntax=v3
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent02.service=$COMPOSE_PROJECT_NAME-agent02 
@@ -98,8 +100,9 @@ services:
       - easy-docker-host
     ports:
       - 27261
+      - 23235      
     labels:
-      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent03.loadbalancer.server.port=27261
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent03.loadbalancer.server.port=23235
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent03.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent03\.(.*)$`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent03.ruleSyntax=v3
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent03.service=$COMPOSE_PROJECT_NAME-agent03 
@@ -122,8 +125,9 @@ services:
       - easy-docker-host
     ports:
       - 27261
+      - 23235      
     labels:
-      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent04.loadbalancer.server.port=27261
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent04.loadbalancer.server.port=23235
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent04.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent04\.(.*)$`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent04.ruleSyntax=v3
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent04.service=$COMPOSE_PROJECT_NAME-agent04 
