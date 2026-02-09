@@ -115,6 +115,7 @@ services:
       - 23235      
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent1.loadbalancer.server.port=23235
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent1.loadbalancer.server.scheme=https       
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent1.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent1\.(.*)$`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent1.ruleSyntax=v3
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent1.service=$COMPOSE_PROJECT_NAME-agent1 
@@ -142,6 +143,7 @@ services:
       - 23235      
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent2.loadbalancer.server.port=23235
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent2.loadbalancer.server.scheme=https      
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent2.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent2\.(.*)$`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent2.ruleSyntax=v3
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent2.service=$COMPOSE_PROJECT_NAME-agent2 
@@ -169,6 +171,7 @@ services:
       - 23235      
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent3.loadbalancer.server.port=23235
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent3.loadbalancer.server.scheme=https       
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent3.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent3\.(.*)$`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent3.ruleSyntax=v3
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent3.service=$COMPOSE_PROJECT_NAME-agent3 
@@ -196,6 +199,7 @@ services:
       - 23235      
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent4.loadbalancer.server.port=23235
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-agent4.loadbalancer.server.scheme=https       
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent4.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent4\.(.*)$`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent4.ruleSyntax=v3
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent4.service=$COMPOSE_PROJECT_NAME-agent4
