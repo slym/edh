@@ -1,0 +1,19 @@
+networks:
+  easy-docker-host:
+    external: true
+
+services:
+  tina-agent:
+    image: hub.atempo.cloud/$VERSION_TYPE/tina-agent:$VERSION
+    pull_policy: always   
+    container_name: $COMPOSE_PROJECT_NAME
+    restart: unless-stopped
+    networks:
+      - easy-docker-host
+    hostname: $COMPOSE_PROJECT_NAME
+    environment:
+      - TINA_SERVER_NAME=${TINA_SERVER_NAME:-tina} 
+      - TINA_SERVICE_TCP_NUM=${TINA_SERVICE_TCP_NUM:-2525}
+      - TINA_SERVICE_UDP_NUM=${TINA_SERVICE_UDP_NUM:-2526}
+      - TINA_CATALOG_NAME=${TINA_CATALOG_NAME:-catalog}
+      - ROOT_PASSWORD=${ROOT_PASSWORD:-ATempo1992@}
