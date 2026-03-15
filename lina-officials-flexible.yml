@@ -24,11 +24,11 @@ services:
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-master.loadbalancer.server.port=8182
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-master.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-master\.(.*)$`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-master.ruleSyntax=v3
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-master.
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-master.service=$COMPOSE_PROJECT_NAME-master
       - traefik.http.services.$COMPOSE_PROJECT_NAME-master-data.loadbalancer.server.port=8181
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-master-data.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-master-data\.(.*)$`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-master-data.ruleSyntax=v3
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-master-data.
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-master-data.service=$COMPOSE_PROJECT_NAME-master-data
     env_file:
      - stack.env    
@@ -52,11 +52,11 @@ services:
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-node1.loadbalancer.server.port=8182
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-node1.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-node1\.(.*)$`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-node1.ruleSyntax=v3
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-node1.
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-node1.service=$COMPOSE_PROJECT_NAME-node1
       - traefik.http.services.$COMPOSE_PROJECT_NAME-node1-data.loadbalancer.server.port=8181
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-node1-data.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-node1-data\.(.*)$`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-node1-data.ruleSyntax=v3
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-node1-data.
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-node1-data.service=$COMPOSE_PROJECT_NAME-node1-data          
     env_file:
      - stack.env      
@@ -83,11 +83,11 @@ services:
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-node2.loadbalancer.server.port=8182
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-node2.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-node2\.(.*)$`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-node2.ruleSyntax=v3
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-node2.
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-node2.service=$COMPOSE_PROJECT_NAME-node2
       - traefik.http.services.$COMPOSE_PROJECT_NAME-node2-data.loadbalancer.server.port=8181
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-node2-data.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-node2-data\.(.*)$`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-node2-data.ruleSyntax=v3
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-node2-data.
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-node2-data.service=$COMPOSE_PROJECT_NAME-node2-data          
     env_file:
      - stack.env      
@@ -117,7 +117,7 @@ services:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent1.loadbalancer.server.port=23235
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent1.loadbalancer.server.scheme=https       
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent1.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent1\.(.*)$`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent1.ruleSyntax=v3
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent1.
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent1.service=$COMPOSE_PROJECT_NAME-agent1 
     depends_on:
       - "linaflex-master"
@@ -145,7 +145,7 @@ services:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent2.loadbalancer.server.port=23235
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent2.loadbalancer.server.scheme=https      
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent2.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent2\.(.*)$`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent2.ruleSyntax=v3
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent2.
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent2.service=$COMPOSE_PROJECT_NAME-agent2 
     depends_on:
       - "linaflex-master"
@@ -173,7 +173,7 @@ services:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent3.loadbalancer.server.port=23235
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent3.loadbalancer.server.scheme=https       
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent3.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent3\.(.*)$`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent3.ruleSyntax=v3
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent3.
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent3.service=$COMPOSE_PROJECT_NAME-agent3 
     depends_on:
       - "linaflex-master"
@@ -201,7 +201,7 @@ services:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent4.loadbalancer.server.port=23235
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent4.loadbalancer.server.scheme=https       
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent4.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent4\.(.*)$`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent4.ruleSyntax=v3
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent4.
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent4.service=$COMPOSE_PROJECT_NAME-agent4
     depends_on:
       - "linaflex-master"
