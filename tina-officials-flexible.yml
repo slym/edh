@@ -23,13 +23,11 @@ services:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-official.loadbalancer.server.port=25088
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-official.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}.{any:.+}`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-official.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}\.(.*)$`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-official.
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-official.service=$COMPOSE_PROJECT_NAME-official
       - traefik.http.services.$COMPOSE_PROJECT_NAME-official-ade.loadbalancer.server.port=9182
       # Will match all URL containing minio-console.* => forwarding to admin console port
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-official-ade.rule=HostRegexp(`${COMPOSE_PROJECT_NAME}-ade.{any:.+}`)
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-official-ade.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-ade\.(.*)$`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-official-ade.
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-official-ade.service=$COMPOSE_PROJECT_NAME-official-ade     
     environment:
       USE_HTTP: "1"

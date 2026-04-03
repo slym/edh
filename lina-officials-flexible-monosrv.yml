@@ -55,7 +55,6 @@ services:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent01.loadbalancer.server.port=23235
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent01.loadbalancer.server.scheme=https       
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent01.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent01\.(.*)$`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent01.
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent01.service=$COMPOSE_PROJECT_NAME-agent01 
     depends_on:
       - "linaflex-server"
@@ -81,7 +80,6 @@ services:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent02.loadbalancer.server.port=23235
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent02.loadbalancer.server.scheme=https       
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent02.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent02\.(.*)$`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent02.
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent02.service=$COMPOSE_PROJECT_NAME-agent02 
     depends_on:
       - "linaflex-server"
@@ -107,7 +105,6 @@ services:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent03.loadbalancer.server.port=23235
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent03.loadbalancer.server.scheme=https       
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent03.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent03\.(.*)$`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent03.
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent03.service=$COMPOSE_PROJECT_NAME-agent03 
     depends_on:
       - "linaflex-server" 
@@ -133,7 +130,6 @@ services:
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent04.loadbalancer.server.port=23235
       - traefik.http.services.$COMPOSE_PROJECT_NAME-agent04.loadbalancer.server.scheme=https       
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent04.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-agent04\.(.*)$`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent04.
       - traefik.http.routers.$COMPOSE_PROJECT_NAME-agent04.service=$COMPOSE_PROJECT_NAME-agent04 
     depends_on:
       - "linaflex-server"               
