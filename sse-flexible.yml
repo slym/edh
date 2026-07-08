@@ -1,0 +1,35 @@
+services:
+  sse:
+    image:  hub.atempo.cloud/$VERSION_TYPE/$PRODUCT_NAME:$VERSION
+    container_name: $COMPOSE_PROJECT_NAME
+#    ports:
+#      - "8081:8081"   # Web UI (HTTP redirect)
+#      - "8443:8443"   # Web UI (HTTPS)
+#      - "8080:8080"   # Backend API
+#      - "9111:9111"   # supervisord web UI
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    privileged: true
+    volumes:
+      - sse-data:/var/lib/atempo/sse       # PostgreSQL + runtime data
+      - sse-config:/etc/atempo/sse         # config, certs, sse.env
+      - sse-logs:/opt/atempo/sse/logs      # application logs
+    env_file:
+     - stack.env
+    restart: unless-stopped
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.port=8443
+      - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.scheme=https
+    networks:
+      - easy-docker-host
+
+networks:
+  easy-docker-host:
+    external: true
+
+volumes:
+  sse-data:
+  sse-config:
+  sse-logs:
