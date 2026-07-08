@@ -22,6 +22,7 @@ services:
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.port=8443
       - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.scheme=https
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}\.(.*)$`)
     networks:
       - easy-docker-host
 
