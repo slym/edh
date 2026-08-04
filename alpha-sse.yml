@@ -1,0 +1,27 @@
+
+services:
+  alpha-sse:
+    image: harbor.atempo.dev/alpha-sse/sse:latest
+    pull_policy: always
+    privileged: true
+    ports:
+      - 8443
+    networks:
+      - easy-docker-host
+    volumes:
+      - ./scan-data:/scan-data:ro       # mount whatever host directory you want the PS to scan (read-only, ADR-0000/Q90-A)
+      - /DT:/DT:ro
+    restart: unless-stopped
+    environment:
+#      CUSTOM_CMD: "mkdir -p /nfs-nas && mount -v -o nolock 172.18.10.44:/export/test /nfs-nas"
+      - SSE_INITIAL_ADMIN_PASSWORD=${INITIAL_PASSWORD} 
+      - SSE_ADMIN_PASSWORD=${ADMIN_PASSWORD}
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.scheme=https
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}\.(.*)$`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.service=$COMPOSE_PROJECT_NAME
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.ruleSyntax=v3    
+
+networks:
+  easy-docker-host:
+    external: true
