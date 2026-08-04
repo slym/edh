@@ -13,7 +13,7 @@ services:
       - /DT:/DT:ro
     restart: unless-stopped
     environment:
-#      CUSTOM_CMD: "mkdir -p /nfs-nas && mount -v -o nolock 172.18.10.44:/export/test /nfs-nas"
+#      CUSTOM_CMD: "mkdir -p /nfs-nas && mount -v -o nolock 10.10.10.10:/export/test /nfs-nas"
       - SSE_INITIAL_ADMIN_PASSWORD=${INITIAL_PASSWORD} 
       - SSE_ADMIN_PASSWORD=${ADMIN_PASSWORD}
     labels:
