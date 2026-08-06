@@ -1,0 +1,127 @@
+# Which host ports are published is selected by COMPOSE_PROFILES:
+#
+#   dynamic-ports        only 80 (browser) and 9000 (S3), both reverse proxied
+#   smb-exposed        + 445 on the host
+#   nfs-exposed        + 2049 on the host
+#   smb-nfs-exposed    + 445 and 2049 on the host
+#
+# Exactly one of the four services below runs, so they all share the same
+# container_name and Traefik labels. COMPOSE_PROFILES has no default: leave it
+# unset and *nothing* starts, so always declare it in the stack variables.
+#
+# 2049 and 445 are fixed host ports and cannot be multiplexed, so only one
+# stack per host may pick a profile that publishes them. 80 and 9000 are
+# reached by name through Traefik and never conflict.
+
+x-fs-simulator: &fs-simulator
+  image: harbor.atempo.dev/alpha-sse/tools/fs-simulator:latest
+  container_name: $COMPOSE_PROJECT_NAME
+  cap_add:
+    - SYS_ADMIN
+    # Needed by nfs-ganesha's VFS backend (name_to_handle_at/open_by_handle_at).
+    - DAC_READ_SEARCH
+  devices:
+    - /dev/fuse:/dev/fuse
+  # Uncomment on hosts where AppArmor blocks the FUSE mount.
+  security_opt:
+    - apparmor:unconfined
+  networks:
+    - easy-docker-host
+  environment:
+    # The tree always holds one top-level directory per filesystem
+    # typology (generic, hpc, media, docs, backup, code, science, medical,
+    # logs, finance, legal, special-chars-utf8, flat-directory,
+    # 10-millions, 100-millions, 1-billion, edge-cases) — see README.md.
+    # Each keeps its own shape, naming scheme, file types and sizes;
+    # nothing selects or reshapes them.
+    # FS_SIMULATOR_SEED is the only knob: it changes the whole tree
+    # deterministically.
+    FS_SIMULATOR_SEED: "${SEED:-42}"
+
+    # NFSv4 pseudo-path and CIFS share name exposed to other containers.
+    FS_SIMULATOR_NFS_EXPORT: "export01"
+    FS_SIMULATOR_SMB_SHARE: "share01"
+
+    # Shared by SMB and S3. Uncomment to require auth on both instead of
+    # SMB guest access / anonymous S3 access.
+    AUTH_USER: ${USER:-admin}
+    AUTH_PASSWORD: ${PASSWORD:-admin}
+
+    # Customize ports
+    # FS_SIMULATOR_S3_PORT: "9000"
+    # FS_SIMULATOR_HTTP_PORT: "80"
+
+# Uncomment for local mount by other containers on the same host.
+# use prepare-host && stop and clean scripts
+#  volumes:
+#    - type: bind
+#      source: ./shared
+#      target: /shared
+#      bind:
+#        propagation: rshared
+
+  healthcheck:
+    test: [
+      "CMD-SHELL",
+      "mountpoint -q /shared/fs && ls -A /shared/fs | head -1 | grep -q . && pgrep -x ganesha.nfsd >/dev/null && pgrep -x smbd >/dev/null && pgrep -f 'rclone serve' >/dev/null && pgrep -f browser.py >/dev/null"
+    ]
+    interval: 2s
+    timeout: 1s
+    retries: 20
+    start_period: 2s
+  labels:
+    - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.port=80
+    - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}\.(.*)$`)
+    - traefik.http.routers.$COMPOSE_PROJECT_NAME.service=$COMPOSE_PROJECT_NAME
+    - traefik.http.routers.$COMPOSE_PROJECT_NAME.ruleSyntax=v3
+    - traefik.http.services.$COMPOSE_PROJECT_NAME-s3.loadbalancer.server.port=9000
+    - traefik.http.routers.$COMPOSE_PROJECT_NAME-s3.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-s3\.(.*)$`)
+    - traefik.http.routers.$COMPOSE_PROJECT_NAME-s3.service=$COMPOSE_PROJECT_NAME-s3
+    - traefik.http.routers.$COMPOSE_PROJECT_NAME-s3.ruleSyntax=v3
+  restart: unless-stopped
+
+# A YAML merge key does not merge sequences: each variant's `ports` replaces
+# the whole list, so the two reverse proxied entries are repeated every time.
+services:
+  fs-simulator:
+    <<: *fs-simulator
+    profiles: ["dynamic-ports"]
+    expose:
+      - "80" # Reverse proxied
+      - "9000" # Reverse proxied
+      - "2049"      
+      - "445"      
+
+  fs-simulator-smb:
+    <<: *fs-simulator
+    profiles: ["smb-exposed"]
+    expose:
+      - "80" # Reverse proxied
+      - "9000" # Reverse proxied    
+      - "2049" 
+    ports:           
+      - "445:445"
+
+  fs-simulator-nfs:
+    <<: *fs-simulator
+    profiles: ["nfs-exposed"]
+    expose:
+      - "80" # Reverse proxied
+      - "9000" # Reverse proxied    
+      - "445"
+    ports:
+      - "2049:2049"
+
+  fs-simulator-smb-nfs:
+    <<: *fs-simulator
+    profiles: ["smb-nfs-exposed"]
+    expose:
+      - "80" # Reverse proxied
+      - "9000" # Reverse proxied   
+    ports:
+      - "2049:2049"
+      - "445:445"
+
+networks:
+  easy-docker-host:
+    external: true
