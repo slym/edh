@@ -4,6 +4,8 @@ services:
     image: harbor.atempo.dev/alpha-sse/sse:latest
     pull_policy: always
     privileged: true
+    cap_add:
+      - SYS_ADMIN  
     ports:
       - 8443
     networks:
