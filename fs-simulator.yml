@@ -16,6 +16,7 @@
 x-fs-simulator: &fs-simulator
   image: harbor.atempo.dev/alpha-sse/tools/fs-simulator:latest
   container_name: $COMPOSE_PROJECT_NAME
+  pull_policy: always
   cap_add:
     - SYS_ADMIN
     # Needed by nfs-ganesha's VFS backend (name_to_handle_at/open_by_handle_at).
