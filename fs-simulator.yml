@@ -50,7 +50,8 @@ x-fs-simulator: &fs-simulator
     # Customize ports
     # FS_SIMULATOR_S3_PORT: "9000"
     # FS_SIMULATOR_HTTP_PORT: "80"
-
+    FS_SIMULATOR_DNS_NAME: "$COMPOSE_PROJECT_NAME"
+    FS_SIMULATOR_EXTERNAL_HOSTNAME: "$EXTERNAL_DOMAIN"
 # Uncomment for local mount by other containers on the same host.
 # use prepare-host && stop and clean scripts
 #  volumes:
