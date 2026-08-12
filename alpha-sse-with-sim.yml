@@ -1,0 +1,51 @@
+
+# With simulator
+services:
+  alpha-sse:
+    image: harbor.atempo.dev/alpha-sse/sse-with-sim:latest
+    pull_policy: always
+    privileged: true
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - /dev/fuse:/dev/fuse      
+    security_opt:
+      # Required on hosts where AppArmor blocks the FUSE mount; `label:disable`
+      # matches how the plain sse image is run here (its CUSTOM_CMD hook mounts
+      # CIFS/NFS scan targets).
+      - apparmor:unconfined
+      - label:disable
+    expose:
+      - 8443
+      - 80
+    networks:
+      - easy-docker-host
+    volumes:
+      - /DT:/DT:ro
+    restart: unless-stopped
+    environment:
+#      CUSTOM_CMD: "mkdir -p /nfs-nas && mount -v -o nolock 10.10.10.10:/export/test /nfs-nas"
+      - SSE_INITIAL_ADMIN_PASSWORD=${INITIAL_PASSWORD} 
+      - SSE_ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - CUSTOM_CMD=${CUSTOM_CMD}
+      - FS_SIMULATOR_MOUNTPOINT=/fs-simulator/local
+      - FS_SIMULATOR_SEED=${SEED:-42}
+
+    labels:
+      # SSE WebUI
+      - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.port=8443
+      - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.scheme=https
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}\.(.*)$`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.service=$COMPOSE_PROJECT_NAME
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.ruleSyntax=v3    
+
+      # FS Simulator Browser
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-sim.loadbalancer.server.port=80
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-sim.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-sim\.(.*)$`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-sim.service=$COMPOSE_PROJECT_NAME-sim
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-sim.ruleSyntax=v3   
+
+
+networks:
+  easy-docker-host:
+    external: true
