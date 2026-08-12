@@ -20,6 +20,7 @@ services:
 #      CUSTOM_CMD: "mkdir -p /nfs-nas && mount -v -o nolock 10.10.10.10:/export/test /nfs-nas"
       - SSE_INITIAL_ADMIN_PASSWORD=${INITIAL_PASSWORD} 
       - SSE_ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - CUSTOM_CMD=${CUSTOM_CMD}
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.scheme=https
       - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}\.(.*)$`)
