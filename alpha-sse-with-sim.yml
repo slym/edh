@@ -2,7 +2,7 @@
 # With simulator
 services:
   alpha-sse:
-    image: harbor.atempo.dev/alpha-sse/sse-with-sim:latest
+    image: harbor.atempo.dev/alpha-sse/sse-with-simulator:latest
     pull_policy: always
     privileged: true
     cap_add:
