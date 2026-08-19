@@ -21,6 +21,7 @@ services:
       - SSE_INITIAL_ADMIN_PASSWORD=${INITIAL_PASSWORD} 
       - SSE_ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - CUSTOM_CMD=${CUSTOM_CMD}
+      - SSE_LOG_LEVEL=${LOG_LEVEL:-INFO}      
     labels:
       - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.scheme=https
       - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}\.(.*)$`)

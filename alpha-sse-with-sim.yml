@@ -30,6 +30,7 @@ services:
       - CUSTOM_CMD=${CUSTOM_CMD}
       - FS_SIMULATOR_MOUNTPOINT=/fs-simulator/local
       - FS_SIMULATOR_SEED=${SEED:-42}
+      - SSE_LOG_LEVEL=${LOG_LEVEL:-INFO}
 
     labels:
       # SSE WebUI
