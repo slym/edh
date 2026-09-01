@@ -2,9 +2,9 @@ services:
   sse:
     image:  hub.atempo.cloud/$VERSION_TYPE/$PRODUCT_NAME:$VERSION
     container_name: $COMPOSE_PROJECT_NAME
-#    ports:
+    ports:
 #      - "8081:8081"   # Web UI (HTTP redirect)
-#      - "8443:8443"   # Web UI (HTTPS)
+      - "8443"   # Web UI (HTTPS)
 #      - "8080:8080"   # Backend API
 #      - "9111:9111"   # supervisord web UI
     cap_add:
@@ -23,7 +23,8 @@ services:
       - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.port=8443
       - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.scheme=https
       - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}\.(.*)$`)
-      - traefik.http.routers.$COMPOSE_PROJECT_NAME.service=$COMPOSE_PROJECT_NAME      
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.service=$COMPOSE_PROJECT_NAME
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME.ruleSyntax=v3        
     networks:
       - easy-docker-host
 
