@@ -21,6 +21,7 @@ x-fs-simulator: &fs-simulator
     - SYS_ADMIN
     # Needed by nfs-ganesha's VFS backend (name_to_handle_at/open_by_handle_at).
     - DAC_READ_SEARCH
+    - SYS_RESOURCE
   devices:
     - /dev/fuse:/dev/fuse
   # Uncomment on hosts where AppArmor blocks the FUSE mount.
