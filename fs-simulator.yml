@@ -14,7 +14,7 @@
 # reached by name through Traefik and never conflict.
 
 x-fs-simulator: &fs-simulator
-  image: harbor.atempo.dev/tools/fs-simulator:latest
+  image: $IMAGE_PATH
   container_name: $COMPOSE_PROJECT_NAME
   pull_policy: always
   cap_add:
