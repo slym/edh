@@ -1,0 +1,181 @@
+# FS Simulator + Protocol Tester, both on easy-docker-host and configured
+# from the same variables: what the simulator serves is exactly what the
+# tester expects.
+#
+# Which host ports the simulator publishes is selected by COMPOSE_PROFILES:
+#
+#   dynamic-ports        only 80 (browser) and 9000 (S3), both reverse proxied
+#   smb-exposed        + 445 on the host
+#   nfs-exposed        + 2049 on the host
+#   smb-nfs-exposed    + 445 and 2049 on the host
+#
+# Exactly one of the four simulator services below runs, so they all share the
+# same container_name and Traefik labels. The protocol tester belongs to all
+# four profiles and always runs alongside. COMPOSE_PROFILES has no default:
+# leave it unset and *nothing* starts, so always declare it in the stack
+# variables.
+#
+# 2049 and 445 are fixed host ports and cannot be multiplexed, so only one
+# stack per host may pick a profile that publishes them. 80, 9000 and the
+# tester's 8080 are reached by name through Traefik and never conflict:
+#
+#   $COMPOSE_PROJECT_NAME.<domain>          simulator browser
+#   $COMPOSE_PROJECT_NAME-s3.<domain>       simulator S3
+#   $COMPOSE_PROJECT_NAME-tester.<domain>   protocol tester web UI
+
+# The FS Simulator variables, shared by both containers.
+x-fs-simulator-env: &fs-simulator-env
+  # NFSv4 pseudo-path and CIFS share name exposed to other containers.
+  FS_SIMULATOR_NFS_EXPORT: "${NFS_EXPORT:-export01}"
+  FS_SIMULATOR_SMB_SHARE: "${SMB_SHARE:-share01}"
+  FS_SIMULATOR_SMB_BROWSEABLE: "${SMB_BROWSEABLE:-1}"
+
+  FS_SIMULATOR_ENABLE_NFS: "${ENABLE_NFS:-1}"
+  FS_SIMULATOR_ENABLE_NFS_V3: "${ENABLE_NFS_V3:-1}"
+  FS_SIMULATOR_ENABLE_SMB: "${ENABLE_SMB:-1}"
+  FS_SIMULATOR_ENABLE_S3: "${ENABLE_S3:-1}"
+
+  FS_SIMULATOR_NFS_KRB5_SEC: "${NFS_KRB5_SEC:-krb5,krb5i,krb5p}"
+  FS_SIMULATOR_KRB5_REALM: "${KRB5_REALM:-FS-SIMULATOR.TEST}"
+
+  # Shared by SMB and S3.
+  AUTH_USER: ${USER:-admin}
+  AUTH_PASSWORD: ${PASSWORD:-admin}
+
+  # The simulator's container name on easy-docker-host: the name the tester
+  # mounts by, and the simulator's Kerberos service principal
+  # nfs/$COMPOSE_PROJECT_NAME.
+  FS_SIMULATOR_DNS_NAME: "$COMPOSE_PROJECT_NAME"
+  FS_SIMULATOR_EXTERNAL_HOSTNAME: "$EXTERNAL_DOMAIN"
+
+x-fs-simulator: &fs-simulator
+  image: $IMAGE_PATH
+  container_name: $COMPOSE_PROJECT_NAME
+  pull_policy: always
+  cap_add:
+    - SYS_ADMIN
+    # Needed by nfs-ganesha's VFS backend (name_to_handle_at/open_by_handle_at).
+    - DAC_READ_SEARCH
+    - SYS_RESOURCE
+  devices:
+    - /dev/fuse:/dev/fuse
+  # Uncomment on hosts where AppArmor blocks the FUSE mount.
+  security_opt:
+    - apparmor:unconfined
+  networks:
+    - easy-docker-host
+  environment:
+    <<: *fs-simulator-env
+    # The tree always holds one top-level directory per filesystem
+    # typology (generic, hpc, media, docs, backup, code, science, medical,
+    # logs, finance, legal, special-chars-utf8, flat-directory,
+    # 10-millions, 100-millions, 1-billion, edge-cases) — see README.md.
+    # Each keeps its own shape, naming scheme, file types and sizes;
+    # nothing selects or reshapes them.
+    # FS_SIMULATOR_SEED is the only knob: it changes the whole tree
+    # deterministically.
+    FS_SIMULATOR_SEED: "${SEED:-42}"
+
+    # Customize ports
+    # FS_SIMULATOR_S3_PORT: "9000"
+    # FS_SIMULATOR_HTTP_PORT: "80"
+# Uncomment for local mount by other containers on the same host.
+# use prepare-host && stop and clean scripts
+#  volumes:
+#    - type: bind
+#      source: ./shared
+#      target: /shared
+#      bind:
+#        propagation: rshared
+
+  healthcheck:
+    test: [
+      "CMD-SHELL",
+      "mountpoint -q /shared/fs && ls -A /shared/fs | head -1 | grep -q . && pgrep -x ganesha.nfsd >/dev/null && pgrep -x smbd >/dev/null && pgrep -f 'rclone serve' >/dev/null && pgrep -f browser.py >/dev/null"
+    ]
+    interval: 2s
+    timeout: 1s
+    retries: 20
+    start_period: 2s
+  labels:
+    - traefik.http.services.$COMPOSE_PROJECT_NAME.loadbalancer.server.port=80
+    - traefik.http.routers.$COMPOSE_PROJECT_NAME.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}\.(.*)$`)
+    - traefik.http.routers.$COMPOSE_PROJECT_NAME.service=$COMPOSE_PROJECT_NAME
+    - traefik.http.routers.$COMPOSE_PROJECT_NAME.ruleSyntax=v3
+    - traefik.http.services.$COMPOSE_PROJECT_NAME-s3.loadbalancer.server.port=9000
+    - traefik.http.routers.$COMPOSE_PROJECT_NAME-s3.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-s3\.(.*)$`)
+    - traefik.http.routers.$COMPOSE_PROJECT_NAME-s3.service=$COMPOSE_PROJECT_NAME-s3
+    - traefik.http.routers.$COMPOSE_PROJECT_NAME-s3.ruleSyntax=v3
+  restart: unless-stopped
+
+# A YAML merge key does not merge sequences: each variant's `ports` replaces
+# the whole list, so the two reverse proxied entries are repeated every time.
+services:
+  fs-simulator:
+    <<: *fs-simulator
+    profiles: ["dynamic-ports"]
+    expose:
+      - "80" # Reverse proxied
+      - "9000" # Reverse proxied
+      - "2049"
+      - "445"
+
+  fs-simulator-smb:
+    <<: *fs-simulator
+    profiles: ["smb-exposed"]
+    expose:
+      - "80" # Reverse proxied
+      - "9000" # Reverse proxied
+      - "2049"
+    ports:
+      - "445:445"
+
+  fs-simulator-nfs:
+    <<: *fs-simulator
+    profiles: ["nfs-exposed"]
+    expose:
+      - "80" # Reverse proxied
+      - "9000" # Reverse proxied
+      - "445"
+    ports:
+      - "2049:2049"
+
+  fs-simulator-smb-nfs:
+    <<: *fs-simulator
+    profiles: ["smb-nfs-exposed"]
+    expose:
+      - "80" # Reverse proxied
+      - "9000" # Reverse proxied
+    ports:
+      - "2049:2049"
+      - "445:445"
+
+  protocol-tester:
+    image: $PROTOCOL_TESTER_IMAGE_PATH
+    container_name: $COMPOSE_PROJECT_NAME-tester
+    pull_policy: always
+    # Kernel NFS / CIFS mounts, rpc_pipefs and rpc.gssd.
+    privileged: true
+    networks:
+      - easy-docker-host
+    environment:
+      <<: *fs-simulator-env
+      # The simulator is reached by its container name on easy-docker-host.
+      # Without this, the target would be FS_SIMULATOR_EXTERNAL_HOSTNAME when
+      # set (a LAN name).
+      PROTOCOL_TESTER_TARGET_HOST: "${TESTER_TARGET_HOST:-$COMPOSE_PROJECT_NAME}"
+      PROTOCOL_TESTER_NFS_PRINCIPAL_HOST: "${TESTER_NFS_PRINCIPAL_HOST:-$COMPOSE_PROJECT_NAME}"
+      PROTOCOL_TESTER_PROFILE: "${TESTER_PROFILE:-fs-simulator}"
+      PROTOCOL_TESTER_RUN_ON_START: "${TESTER_RUN_ON_START:-1}"
+    expose:
+      - "8080" # Reverse proxied
+    labels:
+      - traefik.http.services.$COMPOSE_PROJECT_NAME-tester.loadbalancer.server.port=8080
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-tester.rule=HostRegexp(`(?i)^${COMPOSE_PROJECT_NAME}-tester\.(.*)$`)
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-tester.service=$COMPOSE_PROJECT_NAME-tester
+      - traefik.http.routers.$COMPOSE_PROJECT_NAME-tester.ruleSyntax=v3
+    restart: unless-stopped
+
+networks:
+  easy-docker-host:
+    external: true
