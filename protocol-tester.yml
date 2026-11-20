@@ -1,0 +1,20 @@
+# Protocol Tester alone, on easy-docker-host, with no exposed port.
+# Its only variable is PROTOCOL_TESTER_IMAGE_PATH.
+
+services:
+  protocol-tester:
+    image: $PROTOCOL_TESTER_IMAGE_PATH
+    container_name: $COMPOSE_PROJECT_NAME
+    pull_policy: always
+    # Kernel NFS / CIFS mounts, rpc_pipefs and rpc.gssd.
+    privileged: true
+    networks:
+      - easy-docker-host
+    restart: unless-stopped
+    environment:
+      PROTOCOL_TESTER_RUN_ON_START: "0"
+    expose:
+      - "8080" # Reverse proxied
+networks:
+  easy-docker-host:
+    external: true
