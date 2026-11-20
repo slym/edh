@@ -13,6 +13,7 @@ services:
     restart: unless-stopped
     environment:
       PROTOCOL_TESTER_RUN_ON_START: "0"
+      PROTOCOL_TESTER_PROFILE: "generic"
     expose:
       - "8080" # Reverse proxied
 networks:
