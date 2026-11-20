@@ -166,7 +166,10 @@ services:
       PROTOCOL_TESTER_TARGET_HOST: "${TESTER_TARGET_HOST:-$COMPOSE_PROJECT_NAME}"
       PROTOCOL_TESTER_NFS_PRINCIPAL_HOST: "${TESTER_NFS_PRINCIPAL_HOST:-$COMPOSE_PROJECT_NAME}"
       PROTOCOL_TESTER_PROFILE: "${TESTER_PROFILE:-fs-simulator}"
-      PROTOCOL_TESTER_RUN_ON_START: "${TESTER_RUN_ON_START:-1}"
+      # The simulator is reported healthy as soon as its daemons are up; give
+      # them 10 more seconds (Ganesha's grace period, the KDC) before the first
+      # run. The web UI is up meanwhile and counts down.
+      PROTOCOL_TESTER_START_DELAY: "${PROTOCOL_TESTER_START_DELAY:-10}"
     expose:
       - "8080" # Reverse proxied
     labels:
